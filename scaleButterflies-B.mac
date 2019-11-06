@@ -1,0 +1,30 @@
+load(pdiff)$
+declare(T,constant);
+declare(B,constant);
+declare(W,constant);
+declare(THETA,constant);
+butterflies:
+   diff(b(t,theta),t)= alpha*(f*theta/(D+theta)+1)*b(t,theta)*(K-b(t,theta))
+   - gamma*theta*w(t)*b(t,theta)/(c+b(t,theta))
+   + mu*diff(b(t,theta),theta,2);
+
+wasps:
+  diff(w(t),t)=
+      -d*w(t) + g*theta*w(t)*b(t,theta)/(c+b(t,theta));
+
+butterflies, b(t,theta):=B*bhat(t/T,theta/THETA),w(t):=W*what(t/T);
+
+%*T/B;
+%,theta=THETA*theta;
+scaledButterflies: %,t=T*s;
+/*scaledButterflies: % ; */ /* expand(%) */ 
+
+wasps, b(t,theta):=B*bhat(t/T,theta/THETA),w(t):=W*what(t/T);
+%*T/W;
+%,theta=THETA*theta;
+%,t=T*s;
+scaledWasps: % ; /* expand(%) */ 
+scaledButterflies;
+
+scaledButterflies, B=K,T=1/(a*K),THETA=D,W=alpha*K/(gamma*d);
+scaledWasps, B=K,T=1/(a*K),THETA=D,W=alpha*K/(gamma*d);
