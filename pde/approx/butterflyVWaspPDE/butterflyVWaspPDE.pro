@@ -8,4 +8,5 @@ SOURCES += \
 
 HEADERS += \
     legendre.h \
-    util.h
+    util.h \
+    lu_decomp.h

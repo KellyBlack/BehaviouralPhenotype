@@ -397,8 +397,8 @@ void Legendre<number>::leg_val(number **interp,number *x,int n,int rows) {
 //
 template <class number>
 void Legendre<number>::leg_val(number *interp,number *x,int num,int degree) {
-  number *l1 = NULL,
-    *l2 = NULL;
+  number *l1 = nullptr,
+    *l2 = nullptr;
 
   number *tmp;
 
@@ -447,10 +447,10 @@ void Legendre<number>::leg_der_val(number *interp,
                                                                      int num,
                                                                      int degree) {
 
-  number *l1 = NULL,
-    *l2 = NULL,
-    *l3 = NULL,
-    *l4 = NULL;
+  number *l1 = nullptr,
+    *l2 = nullptr,
+    *l3 = nullptr,
+    *l4 = nullptr;
 
   number *tmp;
 
@@ -511,12 +511,12 @@ void Legendre<number>::leg_2_der_val(number *interp,
                                                                          int num,
                                                                          int degree) {
 
-  number *l1 = NULL,
-    *l2 = NULL,
-    *l3 = NULL,
-    *l4 = NULL,
-    *l5 = NULL,
-    *l6 = NULL;
+  number *l1 = nullptr,
+    *l2 = nullptr,
+    *l3 = nullptr,
+    *l4 = nullptr,
+    *l5 = nullptr,
+    *l6 = nullptr;
 
   number *tmp;
 

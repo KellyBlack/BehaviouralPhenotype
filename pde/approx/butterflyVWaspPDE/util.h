@@ -36,31 +36,31 @@ number *****ArrayUtils<number>::fivetensor(int n1,int n2,int n3,int n4,int n5) {
 
   u = new number****[n1];
 
-  if(u==NULL) {
+  if(u==nullptr) {
     printf("Error - fivetensor. Could not allocate memory\n");
     exit(2);
   }
 
   u[0] = new number***[n1*n2];
-  if(u[0]==NULL) {
+  if(u[0]==nullptr) {
     printf("Error - fivetensor. Could not allocate memory for *** vector.\n");
     exit(2);
    }
 
   u[0][0] = new number**[n1*n2*n3];
-  if(u[0][0]==NULL) {
+  if(u[0][0]==nullptr) {
     printf("Error - fivetensor. Could not allocate memory for ** vector.\n");
     exit(2);
   }
 
   u[0][0][0] = new number*[n1*n2*n3*n4];
-  if(u[0][0][0]==NULL) {
+  if(u[0][0][0]==nullptr) {
     printf("Error - fivetensor. Could not allocate memory for * vector.\n");
     exit(2);
   }
 
   u[0][0][0][0] = new number[n1*n2*n3*n4*n5];
-  if(u[0][0][0][0]==NULL) {
+  if(u[0][0][0][0]==nullptr) {
     printf("Error - fivetensor. Could not allocate memory for * vector.\n");
     exit(2);
   }
@@ -93,25 +93,25 @@ number ****ArrayUtils<number>::fourtensor(int n1,int n2,int n3,int n4) {
 
   u = new number***[n1];
 
-  if(u==NULL) {
+  if(u==nullptr) {
     printf("Error - fourtensor. Could not allocate memory\n");
     exit(2);
   }
 
   u[0] = new number**[n1*n2];
-  if(u[0]==NULL) {
+  if(u[0]==nullptr) {
     printf("Error - fourtensor. Could not allocate memory for *** vector.\n");
     exit(2);
    }
 
   u[0][0] = new number*[n1*n2*n3];
-  if(u[0][0]==NULL) {
+  if(u[0][0]==nullptr) {
     printf("Error - fourtensor. Could not allocate memory for ** vector.\n");
     exit(2);
   }
 
   u[0][0][0] = new number[n1*n2*n3*n4];
-  if(u[0][0][0]==NULL) {
+  if(u[0][0][0]==nullptr) {
     printf("Error - fourtensor. Could not allocate memory for * vector.\n");
     exit(2);
   }
@@ -140,19 +140,19 @@ number ***ArrayUtils<number>::threetensor(int n1,int n2,int n3) {
 
   u = new number**[n1];
 
-  if(u==NULL) {
+  if(u==nullptr) {
     printf("Error - threetensor. Could not allocate memory.\n");
     exit(2);
   }
 
   u[0] = new number*[n1*n2];
-  if(u[0]==NULL) {
+  if(u[0]==nullptr) {
     printf("Error - threetensor. Could not allocate memory for ** vector.\n");
     exit(2);
   }
 
   u[0][0] = new number[n1*n2*n3];
-  if(u[0][0]==NULL) {
+  if(u[0][0]==nullptr) {
     printf("Error - threetensor. Could not allocate memory for * vector.\n");
     exit(2);
   }
@@ -180,13 +180,13 @@ number **ArrayUtils<number>::twotensor(int n1,int n2){
   u = new number*[n1];
 
 
-  if(u==NULL) {
+  if(u==nullptr) {
     printf("Error - twotensor. Could not allocate memory.\n");
     exit(2);
   }
 
   u[0] = new number[n1*n2];
-  if(u[0]==NULL) {
+  if(u[0]==nullptr) {
     printf("Error - twotensor. Could not allocate memory for vector.\n");
     exit(2);
   }
@@ -212,7 +212,7 @@ number *ArrayUtils<number>::onetensor(int n1) {
 
   u = new number[n1];
 
-  if (u==NULL) {
+  if (u==nullptr) {
     printf("Error - onetensor. Could not allocate memory.\n");
     exit(2);
   }
@@ -228,7 +228,7 @@ number *ArrayUtils<number>::onetensor(int n1) {
 template <class number>
 void ArrayUtils<number>::delfivetensor(number *****u) {
 
-    if(u==NULL)
+    if(u==nullptr)
     return;
 
     delete u[0][0][0][0];
@@ -243,7 +243,7 @@ void ArrayUtils<number>::delfivetensor(number *****u) {
 template <class number>
 void ArrayUtils<number>::delfourtensor(number ****u) {
 
-    if(u==NULL)
+    if(u==nullptr)
     return;
 
     delete u[0][0][0];
@@ -258,7 +258,7 @@ void ArrayUtils<number>::delfourtensor(number ****u) {
 template <class number>
 void ArrayUtils<number>::delthreetensor(number ***u) {
 
-    if(u==NULL)
+    if(u==nullptr)
     return;
 
   delete u[0][0];
@@ -273,7 +273,7 @@ template <class number>
 void ArrayUtils<number>::deltwotensor(number **u){
 
 
-    if(u==NULL)
+    if(u==nullptr)
     return;
 
   delete u[0];
@@ -286,7 +286,7 @@ void ArrayUtils<number>::deltwotensor(number **u){
 template <class number>
 void ArrayUtils<number>::delonetensor(number *u) {
 
-    if(u==NULL)
+    if(u==nullptr)
     return;
 
   delete [] u;
