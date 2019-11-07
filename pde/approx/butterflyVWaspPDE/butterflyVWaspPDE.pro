@@ -7,4 +7,5 @@ SOURCES += \
         main.cpp
 
 HEADERS += \
-    legendre.h
+    legendre.h \
+    util.h
