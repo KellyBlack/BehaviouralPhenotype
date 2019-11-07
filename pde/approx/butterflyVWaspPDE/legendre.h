@@ -13,7 +13,7 @@ class Legendre
 {
 
 public:
-    Legendre();
+    Legendre(){}
 
     // Take the exponential of x (raised to n)
     static number pythag(number a, number b);

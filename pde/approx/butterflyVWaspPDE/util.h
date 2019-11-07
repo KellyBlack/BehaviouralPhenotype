@@ -26,7 +26,7 @@ public:
 
 
 
-using namespace std;
+//using namespace std;
 
 
 template <class number>
