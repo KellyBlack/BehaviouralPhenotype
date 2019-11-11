@@ -4,9 +4,11 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+    butterflies.cpp
 
 HEADERS += \
     legendre.h \
     util.h \
-    lu_decomp.h
+    lu_decomp.h \
+    butterflies.h

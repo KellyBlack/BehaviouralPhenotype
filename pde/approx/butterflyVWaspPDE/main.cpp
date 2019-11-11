@@ -12,8 +12,6 @@ int main()
 {
     std::cout << "Pre-processing starting" << std::endl;
 
-    //ArrayUtils<double> arrayCreator;
-    //Legendre<double> legendre;
 
     // Define the number of grid points to use.
     // Define the matrices that are used to create the system of equations.
@@ -35,6 +33,11 @@ int main()
     double *deltaX  = ArrayUtils<double>::onetensor(N+1);
     int    *order     = ArrayUtils<int>::onetensor(N+1);
 
+    // Variables used to save the results of calculations into a
+    // data file.
+    std::ofstream resultsFile;
+    resultsFile.open(OUTPUTFILE);
+
     // Miscellaneous helper variables, for loops for example.
     int innerLupe;
     int outerLupe;
@@ -49,8 +52,8 @@ int main()
     Legendre<double>::stiffLeg(stiff,gaussWeights,D1,N);
 
     for(outerLupe=0;outerLupe<N;++outerLupe)
-        std::cout << gaussAbscissa[outerLupe] << ",";
-    std::cout << gaussAbscissa[N] << std::endl;
+        resultsFile << gaussAbscissa[outerLupe] << ",";
+    resultsFile << gaussAbscissa[N] << std::endl;
 
     // Build an approximation to an ODE
     for(outerLupe=0;outerLupe<=N;++outerLupe)
@@ -72,8 +75,8 @@ int main()
     {
         LU_Decomposition<double>::solve_lu(jacobian,deltaX,baseFunc,order,N+1);
         for(outerLupe=0;outerLupe<N;++outerLupe)
-            std::cout << deltaX[outerLupe] << ",";
-         std::cout << deltaX[N] << std::endl;
+            resultsFile << deltaX[outerLupe] << ",";
+         resultsFile << deltaX[N] << std::endl;
     }
 
     // Delete the arrays that have been allocated.
@@ -92,6 +95,9 @@ int main()
     ArrayUtils<double>::delonetensor(baseFunc);
     ArrayUtils<double>::delonetensor(deltaX);
     ArrayUtils<int>::delonetensor(order);
+
+    // Clean up the data file and close it
+    resultsFile.close();
 
     std::cout << "Done" << std::endl;
     return(0);
