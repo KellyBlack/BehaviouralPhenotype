@@ -1,6 +1,8 @@
 #ifndef BUTTERFLIES_H
 #define BUTTERFLIES_H
 
+#include <fstream>
+
 #include "util.h"
 #include "legendre.h"
 #include "lu_decomp.h"
@@ -17,6 +19,13 @@ public:
 
     void createArrays();
     void deleteArrays();
+    void initializeLegendreParams();
+
+    void buildJacobian();
+    void solveLinearizedSystem();
+
+    void writeAbscissa(std::ofstream &resultsFile);
+    void writeCurrentApprox(std::ofstream &resultsFile);
 
 protected:
 
