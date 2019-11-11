@@ -16,7 +16,7 @@ int main()
     // Define the number of grid points to use.
     // Define the matrices that are used to create the system of equations.
     int N = 40;
-    butterflies theButterflies(N);
+    Butterflies theButterflies(N);
 
     // Variables used to save the results of calculations into a
     // data file.

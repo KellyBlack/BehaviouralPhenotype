@@ -5,10 +5,12 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp \
+    pdeSolver.cpp \
     butterflies.cpp
 
 HEADERS += \
     legendre.h \
     util.h \
     lu_decomp.h \
+    pdeSolver.h \
     butterflies.h
