@@ -27,8 +27,8 @@ int butterflies::getNumber()
 
 void butterflies::createArrays()
 {
-    lhsArray    = ArrayUtils<double>::twotensor(N+1,N+1);
-    secondDeriv = ArrayUtils<double>::twotensor(N+1,N+1);
+    // Define the matrices used to store necessary values for
+    // the Legendre polynomials.
     lval        = ArrayUtils<double>::twotensor(N+1,N+1);
     D1          = ArrayUtils<double>::twotensor(N+1,N+1);
     stiff       = ArrayUtils<double>::twotensor(N+1,N+1);
@@ -48,10 +48,6 @@ void butterflies::createArrays()
 void butterflies::deleteArrays()
 {
     // Delete the arrays that have been allocated.
-    if(lhsArray!=nullptr)
-        ArrayUtils<double>::deltwotensor(lhsArray);
-    if(secondDeriv!=nullptr)
-        ArrayUtils<double>::deltwotensor(secondDeriv);
     if(lval!=nullptr)
         ArrayUtils<double>::deltwotensor(lval);
     if(stiff!=nullptr)
@@ -83,7 +79,6 @@ void butterflies::initializeLegendreParams()
     Legendre<double>::leg_quad(gaussAbscissa,gaussWeights,N);
 
     // Define the stiffness and mass matrices for the Legendre collocation method.
-    std::cout << "Pre-processing" << std::endl;
     Legendre<double>::leg_val(lval,gaussAbscissa,N,N);
     Legendre<double>::leg_der(D1,lval,gaussAbscissa,N,N);
     Legendre<double>::stiffLeg(stiff,gaussWeights,D1,N);
@@ -109,17 +104,14 @@ void butterflies::buildJacobian()
 
 }
 
-void butterflies::solveLinearizedSystem()
+bool butterflies::solveLinearizedSystem()
 {
-    if(!LU_Decomposition<double>::lu_decomp(jacobian,order,N+1))
-    {
-        std::cout << "The matrix is singular" << std::endl;
-    }
-    else
+    if(LU_Decomposition<double>::lu_decomp(jacobian,order,N+1))
     {
         LU_Decomposition<double>::solve_lu(jacobian,deltaX,baseFunc,order,N+1);
+        return(true);
     }
-
+    return(false);
 }
 
 void butterflies::writeAbscissa(std::ofstream &resultsFile)

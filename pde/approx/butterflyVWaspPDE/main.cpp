@@ -11,7 +11,7 @@
 
 int main()
 {
-    std::cout << "Pre-processing starting" << std::endl;
+    std::cout << "Starting" << std::endl;
 
     // Define the number of grid points to use.
     // Define the matrices that are used to create the system of equations.
@@ -30,9 +30,12 @@ int main()
     theButterflies.writeAbscissa(resultsFile);
 
     // Build the system.
+    std::cout << "Calculating an approximation" << std::endl;
     theButterflies.buildJacobian();
-    theButterflies.solveLinearizedSystem();
-    theButterflies.writeCurrentApprox(resultsFile);
+    if(theButterflies.solveLinearizedSystem())
+    {
+        theButterflies.writeCurrentApprox(resultsFile);
+    }
 
     // Clean up the data file and close it
     resultsFile.close();

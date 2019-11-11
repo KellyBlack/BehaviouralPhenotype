@@ -22,7 +22,7 @@ public:
     void initializeLegendreParams();
 
     void buildJacobian();
-    void solveLinearizedSystem();
+    bool solveLinearizedSystem();
 
     void writeAbscissa(std::ofstream &resultsFile);
     void writeCurrentApprox(std::ofstream &resultsFile);
@@ -32,8 +32,7 @@ protected:
 private:
     int N;
 
-    double **lhsArray    = nullptr;
-    double **secondDeriv = nullptr;
+    // Define the matrices used for
     double **lval        = nullptr;
     double **D1          = nullptr;
     double **stiff       = nullptr;
