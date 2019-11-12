@@ -29,6 +29,9 @@ int PDESolver::getNumber()
 
 void PDESolver::createArrays()
 {
+    // First delete all of the current arrays.
+    deleteArrays();
+
     // Define the matrices used to store necessary values for
     // the Legendre polynomials.
     lval        = ArrayUtils<double>::twotensor(N+1,N+1);
@@ -96,6 +99,15 @@ bool PDESolver::solveLinearizedSystem()
         return(true);
     }
     return(false);
+}
+
+double PDESolver::normDelta()
+{
+    double value(0.0);
+    int lupe;
+    for(lupe=0;lupe<=N;++lupe)
+        value += deltaX[lupe]*deltaX[lupe];
+    return(value);
 }
 
 void PDESolver::writeAbscissa(std::ofstream &resultsFile)

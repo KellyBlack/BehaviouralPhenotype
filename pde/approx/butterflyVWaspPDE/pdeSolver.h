@@ -21,7 +21,9 @@ public:
     void initializeLegendreParams();
 
     virtual void buildJacobian() = 0;
+    virtual void updateNewtonStep() = 0;
     bool solveLinearizedSystem();
+    double normDelta();
 
     void writeAbscissa(std::ofstream &resultsFile);
     void writeCurrentApprox(std::ofstream &resultsFile);
