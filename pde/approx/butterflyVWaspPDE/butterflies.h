@@ -11,6 +11,7 @@ public:
 
     virtual void buildJacobian();
     virtual void updateNewtonStep();
+    void copyCurrentStateToTemp();
 
     void initializeButterflies();
     void deleteButterflies();
@@ -34,7 +35,8 @@ protected:
 
 private:
 
-    double *butterflies;
+    double *butterflies  = nullptr;
+    double *prevTimeStep = nullptr;
 
     double mu = 1.0;
     double c  = 3.0;

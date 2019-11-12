@@ -36,8 +36,9 @@ int main()
     theButterflies.initializeLegendreParams();
     theButterflies.writeAbscissa(resultsFile);
 
-    // Build the system.
+    // Build the system and solve.
     std::cout << "Calculating an approximation" << std::endl;
+    theButterflies.copyCurrentStateToTemp();
     bool canInvert(true);
     do
     {

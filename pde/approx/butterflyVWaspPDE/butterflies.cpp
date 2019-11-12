@@ -36,8 +36,11 @@ void Butterflies::buildJacobian()
 
     for(outerLupe=0;outerLupe<=N;++outerLupe)
     {
-        jacobian[outerLupe][outerLupe] += gaussWeights[outerLupe]*(1.0-2.0*butterflies[outerLupe]);
-        baseFunc[outerLupe] -= gaussWeights[outerLupe]*butterflies[outerLupe]*(1.0-butterflies[outerLupe]);
+        jacobian[outerLupe][outerLupe] += gaussWeights[outerLupe]*(1.0+(1.0-2.0*butterflies[outerLupe]));
+        baseFunc[outerLupe] -= gaussWeights[outerLupe]*(
+                    butterflies[outerLupe]*(1.0-butterflies[outerLupe]) +
+                    prevTimeStep[outerLupe] +
+                    butterflies[outerLupe]);
     }
 
 }
@@ -49,13 +52,32 @@ void Butterflies::updateNewtonStep()
         butterflies[lupe] += deltaX[lupe];
 }
 
+void Butterflies::copyCurrentStateToTemp()
+{
+    int number = getNumber();
+    for(int lupe=0;lupe<=number;++lupe)
+        prevTimeStep[lupe] = butterflies[lupe];
+}
+
 void Butterflies::initializeButterflies()
 {
     int number = getNumber();
     if(butterflies!=nullptr)
         ArrayUtils<double>::delonetensor(butterflies);
+
+    if(prevTimeStep!=nullptr)
+        ArrayUtils<double>::delonetensor(prevTimeStep);
+
     if(number>0)
-         butterflies = ArrayUtils<double>::onetensor(number+1);
+    {
+         butterflies  = ArrayUtils<double>::onetensor(number+1);
+         prevTimeStep = ArrayUtils<double>::onetensor(number+1);
+         for(int lupe=0;lupe<=number;++lupe)
+         {
+             butterflies[lupe]  = 1.0;
+             prevTimeStep[lupe] = butterflies[lupe];
+         }
+    }
 }
 
 void Butterflies::deleteButterflies()
