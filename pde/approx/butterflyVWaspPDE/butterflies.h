@@ -16,7 +16,7 @@ public:
 
     void initializeButterflies();
     void deleteButterflies();
-    virtual void writeCurrentApprox(std::ofstream &resultsFile);
+    virtual void writeCurrentApprox(double time,std::ofstream &resultsFile);
 
     void setMu(double value) { mu = value; }
     double getMu() { return(mu); }

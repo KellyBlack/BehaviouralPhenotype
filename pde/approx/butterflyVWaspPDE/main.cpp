@@ -11,6 +11,10 @@
 
 int main()
 {
+    // Set up the temporal variables.
+    double t        = 0.0;
+    double dt       = 0.01;
+    int    timeLupe = 0;
     std::cout << "Starting" << std::endl;
 
     // Define the number of grid points to use.
@@ -24,7 +28,7 @@ int main()
     theButterflies.setF(2.0);
     theButterflies.setG(0.2);
     theButterflies.setD(0.5);
-    theButterflies.setDT(0.001);
+    theButterflies.setDT(dt);
 
     // Variables used to save the results of calculations into a
     // data file.
@@ -37,27 +41,34 @@ int main()
     theButterflies.initializeLegendreParams();
     theButterflies.writeAbscissa(resultsFile);
 
-    // Build the system and solve.
-    std::cout << "Calculating an approximation" << std::endl;
-    theButterflies.calculateRHS();
-    theButterflies.copyCurrentStateToTemp();
-    bool canInvert(true);
-    do
+    // Start the time loop, and calculation an approximation at
+    // each time step.
+    for(timeLupe=0;timeLupe<10;++timeLupe)
     {
-        theButterflies.buildJacobian();
-        canInvert = theButterflies.solveLinearizedSystem();
-        if(canInvert)
-        {
-            theButterflies.updateNewtonStep();
-            std::cout << "  stepping" << std::endl;
-        }
-        else
-        {
-            std::cout << "  System not invertible" << std::endl;
-        }
 
-    } while((theButterflies.normDelta()>0.001) && canInvert);
-    theButterflies.writeCurrentApprox(resultsFile);
+        // Build the system and solve.
+        std::cout << "Calculating an approximation" << std::endl;
+        theButterflies.calculateRHS();
+        theButterflies.copyCurrentStateToTemp();
+        bool canInvert(true);
+        do
+        {
+            theButterflies.buildJacobian();
+            canInvert = theButterflies.solveLinearizedSystem();
+            if(canInvert)
+            {
+                theButterflies.updateNewtonStep();
+                std::cout << "  stepping" << std::endl;
+            }
+            else
+            {
+                std::cout << "  System not invertible" << std::endl;
+            }
+
+        } while((theButterflies.normDelta()>0.001) && canInvert);
+        theButterflies.writeCurrentApprox(static_cast<double>(timeLupe)*dt,resultsFile);
+
+    }
 
     // Clean up the data file and close it
     resultsFile.close();

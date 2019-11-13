@@ -51,8 +51,8 @@ void Butterflies::updateNewtonStep()
     int lupe;
     for(lupe=0;lupe<=N;++lupe)
     {
-        butterflies[lupe] += deltaX[lupe];
-        std::cout << lupe << ": " << deltaX[lupe] << "/" << butterflies[lupe] << std::endl;
+        butterflies[lupe] -= deltaX[lupe];
+        //std::cout << lupe << ": " << deltaX[lupe] << "/" << butterflies[lupe] << std::endl;
     }
 }
 
@@ -98,7 +98,7 @@ void Butterflies::initializeButterflies()
          prevTimeStep = ArrayUtils<double>::onetensor(number+1);
          for(int lupe=0;lupe<=number;++lupe)
          {
-             butterflies[lupe]  = 0.5;
+             butterflies[lupe]  = 0.9;
          }
          copyCurrentStateToTemp();
     }
@@ -110,10 +110,11 @@ void Butterflies::deleteButterflies()
         ArrayUtils<double>::delonetensor(butterflies);
 }
 
-void Butterflies::writeCurrentApprox(std::ofstream &resultsFile)
+void Butterflies::writeCurrentApprox(double time, std::ofstream &resultsFile)
 {
-    for(int outerLupe=0;outerLupe<N;++outerLupe)
-        resultsFile << butterflies[outerLupe] << ",";
-     resultsFile << butterflies[N] << std::endl;
+    resultsFile << time;
+    for(int outerLupe=0;outerLupe<=N;++outerLupe)
+        resultsFile << "," << butterflies[outerLupe];
+
 }
 

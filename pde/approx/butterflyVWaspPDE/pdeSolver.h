@@ -29,7 +29,7 @@ public:
     double normDelta();
 
     void writeAbscissa(std::ofstream &resultsFile);
-    virtual void writeCurrentApprox(std::ofstream &resultsFile) = 0;
+    virtual void writeCurrentApprox(double time,std::ofstream &resultsFile) = 0;
 
 protected:
 
