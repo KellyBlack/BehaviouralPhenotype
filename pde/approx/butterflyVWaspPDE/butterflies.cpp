@@ -29,18 +29,19 @@ void Butterflies::buildJacobian()
         baseFunc[outerLupe] = 0.0;
         for(innerLupe=0;innerLupe<=N;++innerLupe)
         {
-            jacobian[outerLupe][innerLupe] = mu*stiff[outerLupe][innerLupe];
-            baseFunc[outerLupe] -= mu*stiff[outerLupe][innerLupe]*butterflies[innerLupe];
+            jacobian[outerLupe][innerLupe] = -0.5*dt*mu*stiff[outerLupe][innerLupe];
+            baseFunc[outerLupe] -= stiff[outerLupe][innerLupe]*butterflies[innerLupe];
         }
+        baseFunc[outerLupe] *= 0.5*dt*mu;
     }
 
     for(outerLupe=0;outerLupe<=N;++outerLupe)
     {
-        jacobian[outerLupe][outerLupe] += gaussWeights[outerLupe]*(1.0+(1.0-2.0*butterflies[outerLupe]));
-        baseFunc[outerLupe] -= gaussWeights[outerLupe]*(
-                    butterflies[outerLupe]*(1.0-butterflies[outerLupe]) +
-                    prevTimeStep[outerLupe] +
-                    butterflies[outerLupe]);
+        jacobian[outerLupe][outerLupe] += gaussWeights[outerLupe]*(1.0-0.5*dt*(1.0-2.0*butterflies[outerLupe]));
+        baseFunc[outerLupe] += gaussWeights[outerLupe]*(
+                    butterflies[outerLupe] -
+                    0.5*dt*butterflies[outerLupe]*(1.0-butterflies[outerLupe]))
+                - rhs[outerLupe];
     }
 
 }
@@ -49,7 +50,30 @@ void Butterflies::updateNewtonStep()
 {
     int lupe;
     for(lupe=0;lupe<=N;++lupe)
+    {
         butterflies[lupe] += deltaX[lupe];
+        std::cout << lupe << ": " << deltaX[lupe] << "/" << butterflies[lupe] << std::endl;
+    }
+}
+
+void Butterflies::calculateRHS()
+{
+    int outerLupe;
+    int innerLupe;
+
+    for(outerLupe=0;outerLupe<=N;++outerLupe)
+    {
+        rhs[outerLupe] = 0.0;
+        for(innerLupe=0;innerLupe<=N;++innerLupe)
+        {
+            rhs[outerLupe] += stiff[outerLupe][innerLupe]*butterflies[innerLupe];
+        }
+        rhs[outerLupe] = 0.5*dt*mu*rhs[outerLupe] +
+                gaussWeights[outerLupe]*(
+                    butterflies[outerLupe] +
+                    0.5*dt*butterflies[outerLupe]*(1.0-butterflies[outerLupe])
+                    );
+    }
 }
 
 void Butterflies::copyCurrentStateToTemp()
@@ -74,9 +98,9 @@ void Butterflies::initializeButterflies()
          prevTimeStep = ArrayUtils<double>::onetensor(number+1);
          for(int lupe=0;lupe<=number;++lupe)
          {
-             butterflies[lupe]  = 1.0;
-             prevTimeStep[lupe] = butterflies[lupe];
+             butterflies[lupe]  = 0.5;
          }
+         copyCurrentStateToTemp();
     }
 }
 
@@ -85,3 +109,11 @@ void Butterflies::deleteButterflies()
     if(butterflies!=nullptr)
         ArrayUtils<double>::delonetensor(butterflies);
 }
+
+void Butterflies::writeCurrentApprox(std::ofstream &resultsFile)
+{
+    for(int outerLupe=0;outerLupe<N;++outerLupe)
+        resultsFile << butterflies[outerLupe] << ",";
+     resultsFile << butterflies[N] << std::endl;
+}
+

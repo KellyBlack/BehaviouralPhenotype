@@ -27,6 +27,16 @@ int PDESolver::getNumber()
     return(N);
 }
 
+void PDESolver::setDT(double value)
+{
+    dt = value;
+}
+
+double PDESolver::getDT()
+{
+    return(dt);
+}
+
 void PDESolver::createArrays()
 {
     // First delete all of the current arrays.
@@ -46,6 +56,7 @@ void PDESolver::createArrays()
     // Define the matrices and vectors used to solve the linear systems.
     jacobian = ArrayUtils<double>::twotensor(N+1,N+1);
     baseFunc = ArrayUtils<double>::onetensor(N+1);
+    rhs      = ArrayUtils<double>::onetensor(N+1);
     deltaX   = ArrayUtils<double>::onetensor(N+1);
     order    = ArrayUtils<int>::onetensor(N+1);
 }
@@ -71,6 +82,8 @@ void PDESolver::deleteArrays()
         ArrayUtils<double>::deltwotensor(jacobian);
     if(baseFunc!=nullptr)
         ArrayUtils<double>::delonetensor(baseFunc);
+    if(rhs!=nullptr)
+        ArrayUtils<double>::delonetensor(rhs);
     if(deltaX!=nullptr)
         ArrayUtils<double>::delonetensor(deltaX);
     if(order!=nullptr)
@@ -117,9 +130,3 @@ void PDESolver::writeAbscissa(std::ofstream &resultsFile)
     resultsFile << gaussAbscissa[N] << std::endl;
 }
 
-void PDESolver::writeCurrentApprox(std::ofstream &resultsFile)
-{
-    for(int outerLupe=0;outerLupe<N;++outerLupe)
-        resultsFile << deltaX[outerLupe] << ",";
-     resultsFile << deltaX[N] << std::endl;
-}

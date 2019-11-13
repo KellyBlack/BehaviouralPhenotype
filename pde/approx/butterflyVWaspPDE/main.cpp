@@ -24,6 +24,7 @@ int main()
     theButterflies.setF(2.0);
     theButterflies.setG(0.2);
     theButterflies.setD(0.5);
+    theButterflies.setDT(0.001);
 
     // Variables used to save the results of calculations into a
     // data file.
@@ -38,15 +39,21 @@ int main()
 
     // Build the system and solve.
     std::cout << "Calculating an approximation" << std::endl;
+    theButterflies.calculateRHS();
     theButterflies.copyCurrentStateToTemp();
     bool canInvert(true);
     do
     {
         theButterflies.buildJacobian();
         canInvert = theButterflies.solveLinearizedSystem();
-        if(canInvert){
+        if(canInvert)
+        {
             theButterflies.updateNewtonStep();
             std::cout << "  stepping" << std::endl;
+        }
+        else
+        {
+            std::cout << "  System not invertible" << std::endl;
         }
 
     } while((theButterflies.normDelta()>0.001) && canInvert);

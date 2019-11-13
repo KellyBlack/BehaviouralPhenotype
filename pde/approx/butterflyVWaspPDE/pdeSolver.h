@@ -16,6 +16,9 @@ public:
     void setNumber(int number);
     int getNumber();
 
+    void setDT(double value);
+    double getDT();
+
     void createArrays();
     void deleteArrays();
     void initializeLegendreParams();
@@ -26,13 +29,14 @@ public:
     double normDelta();
 
     void writeAbscissa(std::ofstream &resultsFile);
-    void writeCurrentApprox(std::ofstream &resultsFile);
+    virtual void writeCurrentApprox(std::ofstream &resultsFile) = 0;
 
 protected:
 
     ~PDESolver();
 
     int N;
+    double dt = 0.0;
 
     // Define the matrices used for
     double **lval        = nullptr;
@@ -48,6 +52,7 @@ protected:
     double **jacobian = nullptr;
     double *baseFunc  = nullptr;
     double *deltaX    = nullptr;
+    double *rhs       = nullptr;
     int    *order     = nullptr;
 
 private:

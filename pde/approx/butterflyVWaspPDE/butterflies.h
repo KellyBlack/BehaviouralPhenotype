@@ -11,10 +11,12 @@ public:
 
     virtual void buildJacobian();
     virtual void updateNewtonStep();
+    void calculateRHS();
     void copyCurrentStateToTemp();
 
     void initializeButterflies();
     void deleteButterflies();
+    virtual void writeCurrentApprox(std::ofstream &resultsFile);
 
     void setMu(double value) { mu = value; }
     double getMu() { return(mu); }
