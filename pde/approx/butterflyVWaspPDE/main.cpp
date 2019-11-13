@@ -45,6 +45,7 @@ int main()
     // each time step.
     for(timeLupe=0;timeLupe<10;++timeLupe)
     {
+        t = static_cast<double>(timeLupe)*dt;
 
         // Build the system and solve.
         std::cout << "Calculating an approximation" << std::endl;
@@ -66,7 +67,7 @@ int main()
             }
 
         } while((theButterflies.normDelta()>0.001) && canInvert);
-        theButterflies.writeCurrentApprox(static_cast<double>(timeLupe)*dt,resultsFile);
+        theButterflies.writeCurrentApprox(t,resultsFile);
 
     }
 

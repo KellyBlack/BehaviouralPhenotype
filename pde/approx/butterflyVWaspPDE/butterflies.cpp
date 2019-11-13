@@ -115,6 +115,7 @@ void Butterflies::writeCurrentApprox(double time, std::ofstream &resultsFile)
     resultsFile << time;
     for(int outerLupe=0;outerLupe<=N;++outerLupe)
         resultsFile << "," << butterflies[outerLupe];
+    resultsFile << std::endl;
 
 }
 
