@@ -11,10 +11,13 @@
 class PDESolver
 {
 public:
-    PDESolver(int number=0);
+    PDESolver(int number=0,int numberState=0);
 
     void setNumber(int number);
     int getNumber();
+
+    void setStateSize(int number);
+    int getStateSize();
 
     void setDT(double value);
     double getDT();
@@ -36,6 +39,7 @@ protected:
     ~PDESolver();
 
     int N;
+    int stateSize;
     double dt = 0.0;
 
     // Define the matrices used for

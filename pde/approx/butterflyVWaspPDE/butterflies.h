@@ -6,7 +6,7 @@
 class Butterflies : public PDESolver
 {
 public:
-    Butterflies(int number=0);
+    Butterflies(int number=0,int sizeState=0);
     virtual ~Butterflies();
 
     virtual void buildJacobian();

@@ -2,11 +2,12 @@
 
 #include "pdeSolver.h"
 
-PDESolver::PDESolver(int number)
+PDESolver::PDESolver(int number, int numberState)
 {
     std::cout << "PDE Solver start" << std::endl;
     setNumber(number);
-    if(number>0)
+    setStateSize(numberState);
+    if((number>0)&&(numberState>0))
         createArrays();
 
 }
@@ -26,6 +27,17 @@ int PDESolver::getNumber()
 {
     return(N);
 }
+
+void PDESolver::setStateSize(int number)
+{
+    stateSize = number;
+}
+
+int PDESolver::getStateSize()
+{
+    return(stateSize);
+}
+
 
 void PDESolver::setDT(double value)
 {
@@ -54,11 +66,11 @@ void PDESolver::createArrays()
     gaussAbscissa = ArrayUtils<double>::onetensor(N+1);
 
     // Define the matrices and vectors used to solve the linear systems.
-    jacobian = ArrayUtils<double>::twotensor(N+1,N+1);
-    baseFunc = ArrayUtils<double>::onetensor(N+1);
-    rhs      = ArrayUtils<double>::onetensor(N+1);
-    deltaX   = ArrayUtils<double>::onetensor(N+1);
-    order    = ArrayUtils<int>::onetensor(N+1);
+    jacobian = ArrayUtils<double>::twotensor(stateSize,stateSize);
+    baseFunc = ArrayUtils<double>::onetensor(stateSize);
+    rhs      = ArrayUtils<double>::onetensor(stateSize);
+    deltaX   = ArrayUtils<double>::onetensor(stateSize);
+    order    = ArrayUtils<int>::onetensor(stateSize);
 }
 
 void PDESolver::deleteArrays()
@@ -106,9 +118,9 @@ void PDESolver::initializeLegendreParams()
 
 bool PDESolver::solveLinearizedSystem()
 {
-    if(LU_Decomposition<double>::lu_decomp(jacobian,order,N+1))
+    if(LU_Decomposition<double>::lu_decomp(jacobian,order,stateSize))
     {
-        LU_Decomposition<double>::solve_lu(jacobian,deltaX,baseFunc,order,N+1);
+        LU_Decomposition<double>::solve_lu(jacobian,deltaX,baseFunc,order,stateSize);
         return(true);
     }
     return(false);
@@ -118,7 +130,7 @@ double PDESolver::normDelta()
 {
     double value(0.0);
     int lupe;
-    for(lupe=0;lupe<=N;++lupe)
+    for(lupe=0;lupe<stateSize;++lupe)
         value += deltaX[lupe]*deltaX[lupe];
     return(value);
 }

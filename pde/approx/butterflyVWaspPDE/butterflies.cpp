@@ -3,7 +3,8 @@
 #include "butterflies.h"
 #include "util.h"
 
-Butterflies::Butterflies(int number) : PDESolver::PDESolver(number)
+Butterflies::Butterflies(int number, int sizeState) :
+    PDESolver::PDESolver(number,sizeState)
 {
     std::cout << "Butterflies begin" << std::endl;
 
