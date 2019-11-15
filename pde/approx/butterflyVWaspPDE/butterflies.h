@@ -35,6 +35,8 @@ public:
 
 protected:
 
+    double parameterDistribution(double theta);
+
 private:
 
     double *butterflies  = nullptr;

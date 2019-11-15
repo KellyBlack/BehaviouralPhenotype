@@ -8,7 +8,7 @@
 #include "butterflies.h"
 
 #define OUTPUTFILE "approximation.csv"
-#define NUMBER_TIME_LOOP 100000
+#define NUMBER_TIME_LOOP 1000
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
@@ -17,7 +17,7 @@ int main()
 {
     // Set up the temporal variables.
     double t        = 0.0;
-    double dt       = 0.0001;
+    double dt       = 0.000185;
     int    timeLupe = 0;
     std::cout << "Starting" << std::endl;
 

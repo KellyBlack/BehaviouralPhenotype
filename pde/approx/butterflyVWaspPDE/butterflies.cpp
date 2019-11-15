@@ -41,12 +41,12 @@ void Butterflies::buildJacobian()
         jacobian[outerLupe][outerLupe] += gaussWeights[outerLupe]*
                 (
                     1.0-0.5*dt*(1.0-2.0*butterflies[outerLupe])
-                    + 0.5*dt*c/((butterflies[outerLupe]+c)*(butterflies[outerLupe]+c))
+                    + 0.5*dt*gaussAbscissa[outerLupe]*c/((butterflies[outerLupe]+c)*(butterflies[outerLupe]+c))
                  );
         baseFunc[outerLupe] += gaussWeights[outerLupe]*(
                     butterflies[outerLupe] -
                     0.5*dt*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) +
-                    0.5*dt*butterflies[outerLupe]/(c+butterflies[outerLupe]))
+                    0.5*dt*gaussAbscissa[outerLupe]*butterflies[outerLupe]/(c+butterflies[outerLupe]))
                 - rhs[outerLupe];
     }
 
@@ -78,7 +78,7 @@ void Butterflies::calculateRHS()
                 gaussWeights[outerLupe]*(
                     butterflies[outerLupe] +
                     0.5*dt*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) -
-                    0.5*dt*butterflies[outerLupe]/(c+butterflies[outerLupe])
+                    0.5*dt*parameterDistribution(gaussAbscissa[outerLupe])*butterflies[outerLupe]/(c+butterflies[outerLupe])
                     );
     }
 }
@@ -126,3 +126,7 @@ void Butterflies::writeCurrentApprox(double time, std::ofstream &resultsFile)
 
 }
 
+double Butterflies::parameterDistribution(double theta)
+{
+    return((theta+1.0)*0.5);
+}
