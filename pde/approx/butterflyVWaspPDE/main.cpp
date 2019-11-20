@@ -26,7 +26,7 @@ int main()
     // of equations are initialized.
     // Next, set the values of various constants.
     int N = LEGENDRE_POLY_DEGREE;
-    Butterflies theButterflies(N,N+1);
+    Butterflies theButterflies(N,N+2);
     theButterflies.setMu(1.0);
     theButterflies.setC(3.0);
     theButterflies.setF(2.0);

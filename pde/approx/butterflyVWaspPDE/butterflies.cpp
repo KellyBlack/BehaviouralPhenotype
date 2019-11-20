@@ -36,26 +36,37 @@ void Butterflies::buildJacobian()
         baseFunc[outerLupe] *= 0.5*dt*mu;
     }
 
+    baseFunc[N+1] = butterflies[N+1]*(1.0+0.5*dt*getD())-rhs[N+1];
+    double theta;
+    double integralSum = 0.0;
     for(outerLupe=0;outerLupe<=N;++outerLupe)
     {
+        theta = 0.5*(gaussAbscissa[outerLupe]+1.0);
         jacobian[outerLupe][outerLupe] += gaussWeights[outerLupe]*
                 (
-                    1.0-0.5*dt*(1.0-2.0*butterflies[outerLupe])
-                    + 0.5*dt*gaussAbscissa[outerLupe]*c/((butterflies[outerLupe]+c)*(butterflies[outerLupe]+c))
+                    1.0-0.5*dt*(1.0-2.0*butterflies[outerLupe])*parameterDistribution(theta)
+                    + 0.5*dt*butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)))
                  );
         baseFunc[outerLupe] += gaussWeights[outerLupe]*(
                     butterflies[outerLupe] -
-                    0.5*dt*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) +
-                    0.5*dt*gaussAbscissa[outerLupe]*butterflies[outerLupe]/(c+butterflies[outerLupe]))
+                    0.5*dt*parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) +
+                    0.5*dt*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta)))
                 - rhs[outerLupe];
+
+        jacobian[N+1][outerLupe] =
+                gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)));
+        baseFunc[N+1] -= gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+        integralSum += gaussWeights[outerLupe]*0.5*dt*getG()*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
     }
+    //theta = 0.5*(gaussAbscissa[N]+1.0);
+    jacobian[N+1][N+1] = 1.0+0.5*dt*getD() - integralSum;
 
 }
 
 void Butterflies::updateNewtonStep()
 {
     int lupe;
-    for(lupe=0;lupe<=N;++lupe)
+    for(lupe=0;lupe<=N+1;++lupe)
     {
         butterflies[lupe] -= deltaX[lupe];
         //std::cout << lupe << ": " << deltaX[lupe] << "/" << butterflies[lupe] << std::endl;
@@ -67,8 +78,10 @@ void Butterflies::calculateRHS()
     int outerLupe;
     int innerLupe;
 
+    rhs[N+1] = butterflies[N+1]*(1.0-dt*0.5*getD());
     for(outerLupe=0;outerLupe<=N;++outerLupe)
     {
+        double theta = 0.5*(gaussAbscissa[outerLupe]+1.0);
         rhs[outerLupe] = 0.0;
         for(innerLupe=0;innerLupe<=N;++innerLupe)
         {
@@ -77,9 +90,10 @@ void Butterflies::calculateRHS()
         rhs[outerLupe] = 0.5*dt*mu*rhs[outerLupe] +
                 gaussWeights[outerLupe]*(
                     butterflies[outerLupe] +
-                    0.5*dt*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) -
-                    0.5*dt*parameterDistribution(gaussAbscissa[outerLupe])*butterflies[outerLupe]/(c+butterflies[outerLupe])
+                    0.5*dt*parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) -
+                    0.5*dt*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta))
                     );
+        rhs[N+1] += gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
     }
 }
 
@@ -107,6 +121,7 @@ void Butterflies::initializeButterflies()
          {
              butterflies[lupe]  = 0.9;
          }
+         butterflies[number+1] = 0.5;
          copyCurrentStateToTemp();
     }
 }
