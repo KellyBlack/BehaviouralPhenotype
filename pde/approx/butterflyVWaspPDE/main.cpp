@@ -8,6 +8,7 @@
 #include "butterflies.h"
 
 #define OUTPUTFILE "approximation.csv"
+#define BINARYOUTPUTFILE "approximation.bin"
 #define NUMBER_TIME_LOOP 1000
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
@@ -38,6 +39,7 @@ int main()
     // data file.
     std::ofstream resultsFile;
     resultsFile.open(OUTPUTFILE);
+    std::fstream binFile (BINARYOUTPUTFILE, std::ios::out | std::ios::binary);
 
 
     std::cout << "Pre-processing" << std::endl;
@@ -51,6 +53,12 @@ int main()
     for(timeLupe=0;(timeLupe<NUMBER_TIME_LOOP)&&(stepDeltaNorm<MAX_DELTA_NORM);++timeLupe)
     {
         t = static_cast<double>(timeLupe)*dt;
+
+        if(timeLupe%10==0)
+        {
+            theButterflies.writeCurrentApprox(t,resultsFile);
+            theButterflies.writeBinaryCurrentApprox(t,binFile);
+        }
 
         // Build the system and solve.
         std::cout << "Calculating an approximation" << std::endl;
@@ -74,12 +82,12 @@ int main()
             }
 
         } while((stepDeltaNorm>MAX_DELTA_NORM) && canInvert && (maxNewtonSteps-- > 0));
-        theButterflies.writeCurrentApprox(t,resultsFile);
 
     }
 
     // Clean up the data file and close it
     resultsFile.close();
+    binFile.close();
 
     std::cout << "Done" << std::endl;
     return(0);

@@ -141,6 +141,12 @@ void Butterflies::writeCurrentApprox(double time, std::ofstream &resultsFile)
 
 }
 
+void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFile)
+{
+    resultsFile.write(reinterpret_cast<char*>(&time),sizeof(double));
+    resultsFile.write(reinterpret_cast<char*>(butterflies),static_cast<long>(N+2)*static_cast<long>(sizeof(double)));
+}
+
 double Butterflies::parameterDistribution(double theta)
 {
     return((theta+1.0)*0.5);
