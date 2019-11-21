@@ -7,9 +7,10 @@
 #include "lu_decomp.h"
 #include "butterflies.h"
 
-#define OUTPUTFILE "approximation.csv"
+//#define OUTPUTFILE "approximation.csv"
 #define BINARYOUTPUTFILE "approximation.bin"
-#define NUMBER_TIME_LOOP 1000
+#define TIMESKIP 30
+#define NUMBER_TIME_LOOP 1000000
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
@@ -28,24 +29,32 @@ int main()
     // Next, set the values of various constants.
     int N = LEGENDRE_POLY_DEGREE;
     Butterflies theButterflies(N,N+2);
-    theButterflies.setMu(1.0);
-    theButterflies.setC(3.0);
+    theButterflies.setMu(0.1);
+    theButterflies.setC(0.9);
     theButterflies.setF(2.0);
-    theButterflies.setG(0.2);
-    theButterflies.setD(0.5);
+    theButterflies.setG(1.8);
+    theButterflies.setD(0.6);
     theButterflies.setDT(dt);
 
     // Variables used to save the results of calculations into a
     // data file.
+#ifdef OUTPUTFILE
     std::ofstream resultsFile;
     resultsFile.open(OUTPUTFILE);
+#endif
+#ifdef BINARYOUTPUTFILE
     std::fstream binFile (BINARYOUTPUTFILE, std::ios::out | std::ios::binary);
-
+#endif
 
     std::cout << "Pre-processing" << std::endl;
     // Define the Gauss quadrature.
     theButterflies.initializeLegendreParams();
+#ifdef OUTPUTFILE
     theButterflies.writeAbscissa(resultsFile);
+#endif
+#ifdef BINARYOUTPUTFILE
+    theButterflies.writeBinaryHeader(binFile);
+#endif
 
     // Start the time loop, and calculation an approximation at
     // each time step.
@@ -54,14 +63,18 @@ int main()
     {
         t = static_cast<double>(timeLupe)*dt;
 
-        if(timeLupe%10==0)
+        if(timeLupe%(TIMESKIP)==0)
         {
+#ifdef OUTPUTFILE
             theButterflies.writeCurrentApprox(t,resultsFile);
+#endif
+#ifdef BINARYOUTPUTFILE
             theButterflies.writeBinaryCurrentApprox(t,binFile);
+#endif
+            std::cout << "Calculating an approximation: " << timeLupe << " (" << t << ")" << std::endl;
         }
 
         // Build the system and solve.
-        std::cout << "Calculating an approximation" << std::endl;
         theButterflies.calculateRHS();
         theButterflies.copyCurrentStateToTemp();
         bool canInvert(true);
@@ -73,7 +86,7 @@ int main()
             if(canInvert)
             {
                 theButterflies.updateNewtonStep();
-                std::cout << "  stepping " << MAX_NEWTON_STEPS - maxNewtonSteps << std::endl;
+                std::cout << "  stepping " << MAX_NEWTON_STEPS - maxNewtonSteps << ", ";
                 stepDeltaNorm = theButterflies.normDelta();
             }
             else
@@ -84,10 +97,16 @@ int main()
         } while((stepDeltaNorm>MAX_DELTA_NORM) && canInvert && (maxNewtonSteps-- > 0));
 
     }
+    std::cout << std::endl;
+
 
     // Clean up the data file and close it
+#ifdef OUTPUTFILE
     resultsFile.close();
+#endif
+#ifdef BINARYOUTPUTFILE
     binFile.close();
+#endif
 
     std::cout << "Done" << std::endl;
     return(0);

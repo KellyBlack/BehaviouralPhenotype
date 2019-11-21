@@ -149,5 +149,5 @@ void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFil
 
 double Butterflies::parameterDistribution(double theta)
 {
-    return((theta+1.0)*0.5);
+    return((theta+1.0)*0.5+1.1);
 }

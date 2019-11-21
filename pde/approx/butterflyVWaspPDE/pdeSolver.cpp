@@ -142,3 +142,10 @@ void PDESolver::writeAbscissa(std::ofstream &resultsFile)
     resultsFile << gaussAbscissa[N] << std::endl;
 }
 
+void PDESolver::writeBinaryHeader(std::fstream &resultsFile)
+{
+    resultsFile.write(reinterpret_cast<char*>(&N),sizeof(int));
+    resultsFile.write(reinterpret_cast<char*>(&stateSize),sizeof(int));
+    resultsFile.write(reinterpret_cast<char*>(gaussAbscissa),static_cast<long>(N+1)*static_cast<long>(sizeof(double)));
+}
+
