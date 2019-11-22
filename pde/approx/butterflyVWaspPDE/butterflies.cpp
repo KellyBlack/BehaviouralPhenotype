@@ -119,9 +119,9 @@ void Butterflies::initializeButterflies()
          prevTimeStep = ArrayUtils<double>::onetensor(number+1);
          for(int lupe=0;lupe<=number;++lupe)
          {
-             butterflies[lupe]  = 0.9;
+             butterflies[lupe]  = 0.1;
          }
-         butterflies[number+1] = 0.5;
+         butterflies[number+1] = 0.7;
          copyCurrentStateToTemp();
     }
 }
@@ -149,5 +149,5 @@ void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFil
 
 double Butterflies::parameterDistribution(double theta)
 {
-    return((theta+1.0)*0.5+1.1);
+    return((theta+1.0)*0.5+a);
 }

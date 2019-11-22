@@ -10,7 +10,7 @@
 //#define OUTPUTFILE "approximation.csv"
 #define BINARYOUTPUTFILE "approximation.bin"
 #define TIMESKIP 30
-#define NUMBER_TIME_LOOP 1000000
+#define NUMBER_TIME_LOOP 100000000
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
@@ -29,12 +29,14 @@ int main()
     // Next, set the values of various constants.
     int N = LEGENDRE_POLY_DEGREE;
     Butterflies theButterflies(N,N+2);
-    theButterflies.setMu(0.1);
-    theButterflies.setC(0.9);
-    theButterflies.setF(2.0);
-    theButterflies.setG(1.8);
-    theButterflies.setD(0.6);
+    theButterflies.setMu(0.01); //(0.02); //(0.02); //(0.02); //0.1);
+    theButterflies.setC(0.8); //(0.80); //(0.9); //(1.4); //0.9);
+    //theButterflies.setF(); //2.0);
+    theButterflies.setG(1.5); //(1.1); //(0.8); //(1.5); //1.8);
+    theButterflies.setD(0.4); //(0.3); //(0.4); //(0.6); //0.6);
+    theButterflies.setA(0.4); //(0.3); //(0.1); //(0.4);
     theButterflies.setDT(dt);
+
 
     // Variables used to save the results of calculations into a
     // data file.
@@ -81,23 +83,28 @@ int main()
         int maxNewtonSteps = MAX_NEWTON_STEPS;
         do
         {
+            // Perform the Newton steps to approximate the nonlinear
+            // equations associated with the implicit system.
             theButterflies.buildJacobian();
             canInvert = theButterflies.solveLinearizedSystem();
             if(canInvert)
             {
                 theButterflies.updateNewtonStep();
-                std::cout << "  stepping " << MAX_NEWTON_STEPS - maxNewtonSteps << ", ";
+                if(timeLupe%(TIMESKIP)==0)
+                    std::cout << "  step: " << MAX_NEWTON_STEPS - maxNewtonSteps << ", ";
                 stepDeltaNorm = theButterflies.normDelta();
             }
             else
             {
                 std::cout << "  System not invertible" << std::endl;
+                maxNewtonSteps = 0;
             }
 
         } while((stepDeltaNorm>MAX_DELTA_NORM) && canInvert && (maxNewtonSteps-- > 0));
 
     }
-    std::cout << std::endl;
+    if(timeLupe%(TIMESKIP)==0)
+        std::cout << std::endl;
 
 
     // Clean up the data file and close it
