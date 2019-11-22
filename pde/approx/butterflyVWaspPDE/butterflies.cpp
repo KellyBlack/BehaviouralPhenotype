@@ -8,6 +8,9 @@ Butterflies::Butterflies(int number, int sizeState) :
 {
     std::cout << "Butterflies begin" << std::endl;
 
+    butterflies =nullptr;
+    prevTimeStep =nullptr;
+
     if(number>0)
         initializeButterflies();
 }
@@ -56,7 +59,7 @@ void Butterflies::buildJacobian()
         jacobian[N+1][outerLupe] =
                 gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)));
         baseFunc[N+1] -= gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
-        integralSum += gaussWeights[outerLupe]*0.5*dt*getG()*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+        integralSum   += gaussWeights[outerLupe]*0.5*dt*getG()*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
     }
     //theta = 0.5*(gaussAbscissa[N]+1.0);
     jacobian[N+1][N+1] = 1.0+0.5*dt*getD() - integralSum;
@@ -104,24 +107,52 @@ void Butterflies::copyCurrentStateToTemp()
         prevTimeStep[lupe] = butterflies[lupe];
 }
 
+//#define INITIAL_METHOD_ONE
 void Butterflies::initializeButterflies()
 {
     int number = getNumber();
-    if(butterflies!=nullptr)
-        ArrayUtils<double>::delonetensor(butterflies);
-
-    if(prevTimeStep!=nullptr)
-        ArrayUtils<double>::delonetensor(prevTimeStep);
-
     if(number>0)
     {
-         butterflies  = ArrayUtils<double>::onetensor(number+1);
-         prevTimeStep = ArrayUtils<double>::onetensor(number+1);
-         for(int lupe=0;lupe<=number;++lupe)
+        if(butterflies==nullptr)
+             butterflies  = ArrayUtils<double>::onetensor(number+1);
+        if(prevTimeStep==nullptr)
+             prevTimeStep = ArrayUtils<double>::onetensor(number+1);
+
+        double integral1 = 0.0;
+        double integral2 = 0.0;
+        for(int lupe=0;lupe<=number;++lupe)
          {
-             butterflies[lupe]  = 0.1;
+             double theta = 0.5*(gaussAbscissa[lupe]+1.0);
+             double steady = d*c/(parameterDistribution(theta)*(g-d));
+             if(steady>1.0)
+             {
+                 butterflies[lupe]  = 1.0;
+             }
+             else if (steady>0.0)
+             {
+                 butterflies[lupe]  = steady;
+             }
+             else
+             {
+                 butterflies[lupe] = 0.01;
+             }
+             //integral1 += gaussWeights[lupe]*(1.0-butterflies[lupe])*(c+butterflies[lupe]*parameterDistribution(theta));
+#ifdef INITIAL_METHOD_ONE
+             integral1 += gaussWeights[lupe]*(c+butterflies[lupe]*parameterDistribution(theta));
+             integral2 += gaussWeights[lupe]*(1.0-butterflies[lupe]);
+#else
+             integral1 += gaussWeights[lupe]*parameterDistribution(theta)*butterflies[lupe]/(c+butterflies[lupe]*parameterDistribution(theta));
+             integral2 += gaussWeights[lupe]*parameterDistribution(theta)*butterflies[lupe]*(1.0-butterflies[lupe]);
+#endif
          }
-         butterflies[number+1] = 0.7;
+#ifdef INITIAL_METHOD_ONE
+         butterflies[number+1] = integral2*integral1;
+#else
+         butterflies[number+1] = integral2/integral1;
+#endif
+
+         //double steady = d*c/(parameterDistribution(1.0)*(g-d));
+         //butterflies[number+1] = (1.0-steady)*(c+steady*parameterDistribution(1.0));
          copyCurrentStateToTemp();
     }
 }
@@ -149,5 +180,5 @@ void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFil
 
 double Butterflies::parameterDistribution(double theta)
 {
-    return((theta+1.0)*0.5+a);
+    return(theta+a);
 }

@@ -9,8 +9,9 @@
 
 //#define OUTPUTFILE "approximation.csv"
 #define BINARYOUTPUTFILE "approximation.bin"
-#define TIMESKIP 30
-#define NUMBER_TIME_LOOP 100000000
+#define SKIP_PRINT_UPDATE 8000
+#define SKIP_FILE_SAVE 75
+#define NUMBER_TIME_LOOP 1000000
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
@@ -29,12 +30,11 @@ int main()
     // Next, set the values of various constants.
     int N = LEGENDRE_POLY_DEGREE;
     Butterflies theButterflies(N,N+2);
-    theButterflies.setMu(0.01); //(0.02); //(0.02); //(0.02); //0.1);
-    theButterflies.setC(0.8); //(0.80); //(0.9); //(1.4); //0.9);
-    //theButterflies.setF(); //2.0);
-    theButterflies.setG(1.5); //(1.1); //(0.8); //(1.5); //1.8);
-    theButterflies.setD(0.4); //(0.3); //(0.4); //(0.6); //0.6);
-    theButterflies.setA(0.4); //(0.3); //(0.1); //(0.4);
+    theButterflies.setMu(0.1);
+    theButterflies.setC(0.7);
+    theButterflies.setG(4.0);
+    theButterflies.setD(2.0);
+    theButterflies.setA(0.2);
     theButterflies.setDT(dt);
 
 
@@ -51,6 +51,7 @@ int main()
     std::cout << "Pre-processing" << std::endl;
     // Define the Gauss quadrature.
     theButterflies.initializeLegendreParams();
+    theButterflies.initializeButterflies();
 #ifdef OUTPUTFILE
     theButterflies.writeAbscissa(resultsFile);
 #endif
@@ -65,7 +66,12 @@ int main()
     {
         t = static_cast<double>(timeLupe)*dt;
 
-        if(timeLupe%(TIMESKIP)==0)
+        if(timeLupe%(SKIP_PRINT_UPDATE)==0)
+        {
+            std::cout << "Calculating an approximation: " << timeLupe << " (" << t << ")" << std::endl;
+        }
+
+        if(timeLupe%SKIP_FILE_SAVE==0)
         {
 #ifdef OUTPUTFILE
             theButterflies.writeCurrentApprox(t,resultsFile);
@@ -73,7 +79,6 @@ int main()
 #ifdef BINARYOUTPUTFILE
             theButterflies.writeBinaryCurrentApprox(t,binFile);
 #endif
-            std::cout << "Calculating an approximation: " << timeLupe << " (" << t << ")" << std::endl;
         }
 
         // Build the system and solve.
@@ -90,7 +95,7 @@ int main()
             if(canInvert)
             {
                 theButterflies.updateNewtonStep();
-                if(timeLupe%(TIMESKIP)==0)
+                if(timeLupe%(SKIP_PRINT_UPDATE)==0)
                     std::cout << "  step: " << MAX_NEWTON_STEPS - maxNewtonSteps << ", ";
                 stepDeltaNorm = theButterflies.normDelta();
             }
@@ -103,7 +108,7 @@ int main()
         } while((stepDeltaNorm>MAX_DELTA_NORM) && canInvert && (maxNewtonSteps-- > 0));
 
     }
-    if(timeLupe%(TIMESKIP)==0)
+    if(timeLupe%(SKIP_PRINT_UPDATE)==0)
         std::cout << std::endl;
 
 

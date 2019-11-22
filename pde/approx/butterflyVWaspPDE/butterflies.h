@@ -25,9 +25,6 @@ public:
     void setC(double value) { c = value; }
     double getC() { return(c); }
 
-    //void setF(double value) { f = value; }
-    //double getF() { return(f); }
-
     void setG(double value) { g = value; }
     double getG() { return(g); }
 
@@ -49,7 +46,6 @@ private:
 
     double mu = 1.0;
     double c  = 3.0;
-    //double f  = 2.0;
     double g  = 0.2;
     double d  = 0.5;
     double a  = 0.1;
