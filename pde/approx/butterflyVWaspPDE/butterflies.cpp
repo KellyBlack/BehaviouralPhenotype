@@ -196,7 +196,16 @@ void Butterflies::writeCurrentApprox(double time, std::ofstream &resultsFile)
 
 void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFile)
 {
+    // First approximate the total butterfly population.
+    double integral = 0.0;
+    for(int lupe=0;lupe<=N;++lupe)
+    {
+        integral += butterflies[lupe]*gaussWeights[lupe];
+    }
+
+    // Write the time, the total population, and then the full state vector.
     resultsFile.write(reinterpret_cast<char*>(&time),sizeof(double));
+    resultsFile.write(reinterpret_cast<char*>(&integral),sizeof(double));
     resultsFile.write(reinterpret_cast<char*>(butterflies),static_cast<long>(N+2)*static_cast<long>(sizeof(double)));
 }
 

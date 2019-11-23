@@ -34,7 +34,7 @@ int main()
     theButterflies.setC(0.7);
     theButterflies.setG(4.0);
     theButterflies.setD(2.0);
-    theButterflies.setA(0.7);
+    theButterflies.setA(0.8 /*0.7*/);
     theButterflies.setDT(dt);
 
 
