@@ -16,6 +16,7 @@ public:
 
     void initializeButterflies();
     void deleteButterflies();
+    virtual void writeParameters(std::fstream &resultsFile);
     virtual void writeCurrentApprox(double time,std::ofstream &resultsFile);
     virtual void writeBinaryCurrentApprox(double &time, std::fstream &resultsFile);
 

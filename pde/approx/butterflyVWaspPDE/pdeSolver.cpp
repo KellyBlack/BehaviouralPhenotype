@@ -140,6 +140,11 @@ void PDESolver::writeAbscissa(std::ofstream &resultsFile)
     for(int outerLupe=0;outerLupe<N;++outerLupe)
         resultsFile << gaussAbscissa[outerLupe] << ",";
     resultsFile << gaussAbscissa[N] << std::endl;
+
+    for(int outerLupe=0;outerLupe<N;++outerLupe)
+        resultsFile << gaussWeights[outerLupe] << ",";
+    resultsFile << gaussWeights[N] << std::endl;
+
 }
 
 void PDESolver::writeBinaryHeader(std::fstream &resultsFile)
@@ -147,5 +152,6 @@ void PDESolver::writeBinaryHeader(std::fstream &resultsFile)
     resultsFile.write(reinterpret_cast<char*>(&N),sizeof(int));
     resultsFile.write(reinterpret_cast<char*>(&stateSize),sizeof(int));
     resultsFile.write(reinterpret_cast<char*>(gaussAbscissa),static_cast<long>(N+1)*static_cast<long>(sizeof(double)));
+    resultsFile.write(reinterpret_cast<char*>(gaussWeights),static_cast<long>(N+1)*static_cast<long>(sizeof(double)));
 }
 

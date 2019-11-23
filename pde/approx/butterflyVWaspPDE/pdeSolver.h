@@ -33,6 +33,7 @@ public:
 
     void writeAbscissa(std::ofstream &resultsFile);
     void writeBinaryHeader(std::fstream &resultsFile);
+    virtual void writeParameters(std::fstream &resultsFile) = 0;
     virtual void writeCurrentApprox(double time,std::ofstream &resultsFile) = 0;
     virtual void writeBinaryCurrentApprox(double &time,std::fstream &resultsFile) = 0;
 

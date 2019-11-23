@@ -170,6 +170,15 @@ void Butterflies::initializeButterflies()
     }
 }
 
+void Butterflies::writeParameters(std::fstream &resultsFile)
+{
+    resultsFile.write(reinterpret_cast<char*>(&mu),sizeof(double));
+    resultsFile.write(reinterpret_cast<char*>(&c),sizeof(double));
+    resultsFile.write(reinterpret_cast<char*>(&g),sizeof(double));
+    resultsFile.write(reinterpret_cast<char*>(&d),sizeof(double));
+    resultsFile.write(reinterpret_cast<char*>(&a),sizeof(double));
+}
+
 void Butterflies::deleteButterflies()
 {
     if(butterflies!=nullptr)
