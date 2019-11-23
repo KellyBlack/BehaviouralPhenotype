@@ -39,8 +39,7 @@ int approximateSystem(double mu,double c,double g,double d,double a,
 
     // Start the time loop, and calculation an approximation at
     // each time step.
-    double stepDeltaNorm = 0.0;
-    for(timeLupe=0;(timeLupe<maxTimeLupe)&&(stepDeltaNorm<MAX_DELTA_NORM);++timeLupe)
+    for(timeLupe=0;timeLupe<maxTimeLupe;++timeLupe)
     {
         t = static_cast<double>(timeLupe)*dt;
 
@@ -96,11 +95,11 @@ int main()
 #endif
     std::fstream binFile (BINARYOUTPUTFILE, std::ios::out | std::ios::binary);
 
-    double mu = 0.5;
+    double mu = 0.02;
     double c  = 0.7;
     double g  = 4.0;
     double d  = 2.0;
-    double a  = 0.6;
+    double a  = 0.3;
     approximateSystem(mu,c,g,d,a,
                       dt,NUMBER_TIME_LOOP,
                       theButterflies,
