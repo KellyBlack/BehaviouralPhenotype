@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <string>
+#include <sstream>
+#include <iomanip>
 
 #include "util.h"
 #include "legendre.h"
@@ -45,7 +48,11 @@ int approximateSystem(double mu,double c,double g,double d,double a,
 
         if(timeLupe%(SKIP_PRINT_UPDATE)==0)
         {
-            std::cout << "Calculating an approximation: " << timeLupe << " (" << t << ") ";
+            std::cout << "Calculating an approximation: "
+                         << std::fixed
+                         << std::setw(8)
+                         << std::setprecision(4)
+                         << timeLupe << " (" << t << ") ";
         }
 
         if(theButterflies.singleTimeStep(
@@ -86,6 +93,14 @@ int main()
     theButterflies.setA(0.6 /*0.5*/ /*0.7*/);
     theButterflies.setDT(dt);
 
+    /*
+    std::ostringstream filename("");
+    double value = 0.1;
+    //filename.unsetf(std::ios::fixed | std::ios::scientific);
+    filename << BINARYOUTPUTFILE << std::setw(8) << std::fixed << std::setprecision(4) << std::setfill('0') << value;
+    std::cout << filename.str() << std::endl;
+    return(0);
+    */
 
     // Variables used to save the results of calculations into a
     // data file.
