@@ -11,7 +11,7 @@ public:
 
     virtual void buildJacobian();
     virtual void updateNewtonStep();
-    void calculateRHS();
+    virtual void calculateRHS();
     void copyCurrentStateToTemp();
 
     void initializeButterflies();

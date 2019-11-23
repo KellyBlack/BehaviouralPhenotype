@@ -28,8 +28,11 @@ public:
 
     virtual void buildJacobian() = 0;
     virtual void updateNewtonStep() = 0;
+    virtual void calculateRHS() = 0;
+    virtual void copyCurrentStateToTemp() = 0;
     bool solveLinearizedSystem();
     double normDelta();
+    int singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool printInfo);
 
     void writeAbscissa(std::ofstream &resultsFile);
     void writeBinaryHeader(std::fstream &resultsFile);

@@ -135,6 +135,42 @@ double PDESolver::normDelta()
     return(value);
 }
 
+int PDESolver::singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool printInfo)
+{
+    // Build the system and solve.
+    calculateRHS();
+    copyCurrentStateToTemp();
+    bool canInvert(true);
+    double stepDeltaNorm = 0.0;
+    int totalStepsPossible = maxNewtonSteps;
+    do
+    {
+        // Perform the Newton steps to approximate the nonlinear
+        // equations associated with the implicit system.
+        buildJacobian();
+        canInvert = solveLinearizedSystem();
+        if(canInvert)
+        {
+            updateNewtonStep();
+            if(printInfo)
+                std::cout << "  step: " << totalStepsPossible - maxNewtonSteps << ", ";
+            stepDeltaNorm = normDelta();
+        }
+        else
+        {
+            std::cout << "  System not invertible" << std::endl;
+            return(-1);
+        }
+
+    } while((stepDeltaNorm>maxNewtonDiffNorm) && canInvert && (maxNewtonSteps-- > 0));
+
+    if(printInfo)
+        std::cout << std::endl;
+
+    return(totalStepsPossible - maxNewtonSteps);
+
+}
+
 void PDESolver::writeAbscissa(std::ofstream &resultsFile)
 {
     for(int outerLupe=0;outerLupe<N;++outerLupe)
