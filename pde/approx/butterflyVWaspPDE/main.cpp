@@ -11,7 +11,7 @@
 #define BINARYOUTPUTFILE "approximation.bin"
 #define SKIP_PRINT_UPDATE 8000
 #define SKIP_FILE_SAVE 75
-#define NUMBER_TIME_LOOP 1000000
+#define NUMBER_TIME_LOOP 10000000
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
@@ -34,7 +34,7 @@ int main()
     theButterflies.setC(0.7);
     theButterflies.setG(4.0);
     theButterflies.setD(2.0);
-    theButterflies.setA(0.2);
+    theButterflies.setA(0.7);
     theButterflies.setDT(dt);
 
 

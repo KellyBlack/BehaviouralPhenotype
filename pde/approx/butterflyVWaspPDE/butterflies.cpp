@@ -107,7 +107,7 @@ void Butterflies::copyCurrentStateToTemp()
         prevTimeStep[lupe] = butterflies[lupe];
 }
 
-//#define INITIAL_METHOD_ONE
+
 void Butterflies::initializeButterflies()
 {
     int number = getNumber();
@@ -118,8 +118,9 @@ void Butterflies::initializeButterflies()
         if(prevTimeStep==nullptr)
              prevTimeStep = ArrayUtils<double>::onetensor(number+1);
 
-        double integral1 = 0.0;
-        double integral2 = 0.0;
+        // First set the initial profile for the butterflies. It will be normalized
+        // later so its average value is something more reasonable.
+        double butterflyIntegral = 0.0;
         for(int lupe=0;lupe<=number;++lupe)
          {
              double theta = 0.5*(gaussAbscissa[lupe]+1.0);
@@ -136,7 +137,19 @@ void Butterflies::initializeButterflies()
              {
                  butterflies[lupe] = 0.01;
              }
-             //integral1 += gaussWeights[lupe]*(1.0-butterflies[lupe])*(c+butterflies[lupe]*parameterDistribution(theta));
+             butterflyIntegral += gaussWeights[lupe]*butterflies[lupe];
+         }
+
+//#define INITIAL_METHOD_ONE
+        double integral1 = 0.0;
+        double integral2 = 0.0;
+        butterflyIntegral = d*c/(parameterDistribution(1.0)*(g-d))/butterflyIntegral;
+        // Now normalize the butterflies and integrate the butterfly DE assuming
+        // steady state to get the initial approximation for the wasps.
+        for(int lupe=0;lupe<=number;++lupe)
+         {
+            double theta = 0.5*(gaussAbscissa[lupe]+1.0);
+            butterflies[lupe] *= butterflyIntegral;
 #ifdef INITIAL_METHOD_ONE
              integral1 += gaussWeights[lupe]*(c+butterflies[lupe]*parameterDistribution(theta));
              integral2 += gaussWeights[lupe]*(1.0-butterflies[lupe]);
