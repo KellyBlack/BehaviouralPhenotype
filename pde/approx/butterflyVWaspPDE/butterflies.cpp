@@ -125,11 +125,13 @@ void Butterflies::initializeButterflies()
          {
              double theta = 0.5*(gaussAbscissa[lupe]+1.0);
              double steady = d*c/(parameterDistribution(theta)*(g-d));
+             /*
              if(steady>1.0)
              {
                  butterflies[lupe]  = 1.0;
-             }
-             else if (steady>0.0)
+             } else
+             */
+             if (steady>0.0)
              {
                  butterflies[lupe]  = steady;
              }

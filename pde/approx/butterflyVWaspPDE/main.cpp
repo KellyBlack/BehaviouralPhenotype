@@ -30,11 +30,11 @@ int main()
     // Next, set the values of various constants.
     int N = LEGENDRE_POLY_DEGREE;
     Butterflies theButterflies(N,N+2);
-    theButterflies.setMu(0.1);
+    theButterflies.setMu(0.5);
     theButterflies.setC(0.7);
     theButterflies.setG(4.0);
     theButterflies.setD(2.0);
-    theButterflies.setA(0.8 /*0.7*/);
+    theButterflies.setA(0.6 /*0.5*/ /*0.7*/);
     theButterflies.setDT(dt);
 
 
