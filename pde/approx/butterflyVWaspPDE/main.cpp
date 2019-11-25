@@ -110,11 +110,11 @@ int main()
 #endif
     std::fstream binFile (BINARYOUTPUTFILE, std::ios::out | std::ios::binary);
 
-    double mu = 0.02;
+    double mu = 0.2;
     double c  = 0.7;
-    double g  = 4.0;
-    double d  = 2.0;
-    double a  = 0.3;
+    double g  = 2.0;
+    double d  = 1.0;
+    double a  = 0.6;
     approximateSystem(mu,c,g,d,a,
                       dt,NUMBER_TIME_LOOP,
                       theButterflies,
