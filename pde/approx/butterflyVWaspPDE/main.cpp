@@ -11,7 +11,7 @@
 #include "butterflies.h"
 
 //#define OUTPUTFILE "approximation.csv"
-#define BINARYOUTPUTFILE "approximation.bin"
+#define BINARYOUTPUTFILE "approximation"
 #define SKIP_PRINT_UPDATE 10000
 #define SKIP_FILE_SAVE 75
 #define NUMBER_TIME_LOOP 1000000
@@ -90,17 +90,21 @@ int main()
     theButterflies.setC(0.7);
     theButterflies.setG(4.0);
     theButterflies.setD(2.0);
-    theButterflies.setA(0.6 /*0.5*/ /*0.7*/);
+    theButterflies.setA(0.7 /*0.5*/ /*0.7*/);
     theButterflies.setDT(dt);
 
-    /*
+    double mu = 0.2;
+    double c  = 0.7;
+    double g  = 2.0;
+    double d  = 1.0;
+    double a  = 0.2;
+
     std::ostringstream filename("");
-    double value = 0.1;
-    //filename.unsetf(std::ios::fixed | std::ios::scientific);
-    filename << BINARYOUTPUTFILE << std::setw(8) << std::fixed << std::setprecision(4) << std::setfill('0') << value;
-    std::cout << filename.str() << std::endl;
-    return(0);
-    */
+    filename << BINARYOUTPUTFILE
+             << "-a-" <<  std::setw(6) << std::fixed << std::setprecision(4) << std::setfill('0') << a
+             << "-mu-" << mu
+             << ".bin";
+    std::cout << "Writing to " << filename.str() << std::endl;
 
     // Variables used to save the results of calculations into a
     // data file.
@@ -108,13 +112,8 @@ int main()
     std::ofstream resultsFile;
     resultsFile.open(OUTPUTFILE);
 #endif
-    std::fstream binFile (BINARYOUTPUTFILE, std::ios::out | std::ios::binary);
+    std::fstream binFile (filename.str(), std::ios::out | std::ios::binary);
 
-    double mu = 0.2;
-    double c  = 0.7;
-    double g  = 2.0;
-    double d  = 1.0;
-    double a  = 0.6;
     approximateSystem(mu,c,g,d,a,
                       dt,NUMBER_TIME_LOOP,
                       theButterflies,
