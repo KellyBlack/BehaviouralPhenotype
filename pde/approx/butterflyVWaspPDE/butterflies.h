@@ -32,8 +32,8 @@ public:
     void setD(double value) { d = value; }
     double getD() { return(d); }
 
-    void setA(double value) { a = value; }
-    double getA() { return(d); }
+    void setM(double value) { m = value; }
+    double getM() { return(d); }
 
 
 protected:
@@ -49,7 +49,7 @@ private:
     double c  = 3.0;
     double g  = 0.2;
     double d  = 0.5;
-    double a  = 0.1;
+    double m  = 0.7;
 };
 
 #endif // BUTTERFLIES_H

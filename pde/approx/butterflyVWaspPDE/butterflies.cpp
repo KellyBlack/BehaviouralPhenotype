@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 #include "butterflies.h"
 #include "util.h"
@@ -125,6 +126,7 @@ void Butterflies::initializeButterflies()
          {
              double theta = 0.5*(gaussAbscissa[lupe]+1.0);
              double steady = d*c/(parameterDistribution(theta)*(g-d));
+             steady = 0.5*exp(-(theta-0.0)*(theta-0.0)/.02);
              /*
              if(steady>1.0)
              {
@@ -145,19 +147,19 @@ void Butterflies::initializeButterflies()
 //#define INITIAL_METHOD_ONE
         double integral1 = 0.0;
         double integral2 = 0.0;
-        butterflyIntegral = d*c/(parameterDistribution(1.0)*(g-d))/butterflyIntegral;
+        butterflyIntegral = d*c/(parameterDistribution(0.0)*(g-d))/butterflyIntegral;
         // Now normalize the butterflies and integrate the butterfly DE assuming
         // steady state to get the initial approximation for the wasps.
         for(int lupe=0;lupe<=number;++lupe)
          {
             double theta = 0.5*(gaussAbscissa[lupe]+1.0);
-            butterflies[lupe] *= butterflyIntegral;
+            //butterflies[lupe] *= butterflyIntegral;
 #ifdef INITIAL_METHOD_ONE
              integral1 += gaussWeights[lupe]*(c+butterflies[lupe]*parameterDistribution(theta));
              integral2 += gaussWeights[lupe]*(1.0-butterflies[lupe]);
 #else
              integral1 += gaussWeights[lupe]*parameterDistribution(theta)*butterflies[lupe]/(c+butterflies[lupe]*parameterDistribution(theta));
-             integral2 += gaussWeights[lupe]*parameterDistribution(theta)*butterflies[lupe]*(1.0-butterflies[lupe]);
+             integral2 += gaussWeights[lupe]*parameterDistribution(theta)*butterflies[lupe]*fabs((1.0-butterflies[lupe]));
 #endif
          }
 #ifdef INITIAL_METHOD_ONE
@@ -166,8 +168,8 @@ void Butterflies::initializeButterflies()
          butterflies[number+1] = integral2/integral1;
 #endif
 
-         //double steady = d*c/(parameterDistribution(1.0)*(g-d));
-         //butterflies[number+1] = (1.0-steady)*(c+steady*parameterDistribution(1.0));
+         double steady = d*c/(parameterDistribution(0.0)*(g-d));
+         butterflies[number+1] = fabs(1.0-steady)*(c+steady*parameterDistribution(0.0));
          copyCurrentStateToTemp();
     }
 }
@@ -178,7 +180,7 @@ void Butterflies::writeParameters(std::fstream &resultsFile)
     resultsFile.write(reinterpret_cast<char*>(&c),sizeof(double));
     resultsFile.write(reinterpret_cast<char*>(&g),sizeof(double));
     resultsFile.write(reinterpret_cast<char*>(&d),sizeof(double));
-    resultsFile.write(reinterpret_cast<char*>(&a),sizeof(double));
+    resultsFile.write(reinterpret_cast<char*>(&m),sizeof(double));
 }
 
 void Butterflies::deleteButterflies()
@@ -213,5 +215,5 @@ void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFil
 
 double Butterflies::parameterDistribution(double theta)
 {
-    return(theta+a);
+    return(m*theta+1.0);
 }
