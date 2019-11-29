@@ -16,7 +16,7 @@
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
 
-int saveSeparateRunsBym(double mu,double c,double g,double d,
+int saveSeparateRunsByM(double mu,double c,double g,double d,
                         double lowM,double highM,double stepM,double dt,
                         NumericalTrials &trials);
 
@@ -24,7 +24,6 @@ int main()
 {
     // Set up the temporal variables.
     double dt = 0.0001;
-    std::cout << "Starting" << std::endl;
 
     NumericalTrials trials;
 
@@ -34,15 +33,16 @@ int main()
     double g  = 2.0;
     double d  = 1.0;
     //double m  = 0.2;
-    saveSeparateRunsBym(mu,c,g,d,0.2,1.3,0.2,dt,trials);
 
-
+    std::cout << "Starting" << std::endl;
+    saveSeparateRunsByM(mu,c,g,d,0.2,1.3,0.2,dt,trials);
     std::cout << "Done" << std::endl;
+
     return(0);
 }
 
 
-int saveSeparateRunsBym(double mu,double c,double g,double d,
+int saveSeparateRunsByM(double mu,double c,double g,double d,
                         double lowM,double highM,double stepM,double dt,
                         NumericalTrials &trials)
 {
