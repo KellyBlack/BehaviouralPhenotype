@@ -6,11 +6,13 @@ CONFIG -= qt
 SOURCES += \
         main.cpp \
     pdeSolver.cpp \
-    butterflies.cpp
+    butterflies.cpp \
+    numericaltrials.cpp
 
 HEADERS += \
     legendre.h \
     util.h \
     lu_decomp.h \
     pdeSolver.h \
-    butterflies.h
+    butterflies.h \
+    numericaltrials.h
