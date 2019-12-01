@@ -16,11 +16,11 @@ class LU_Decomposition
 
 public:
     LU_Decomposition(){}
-    static void ring_order(int order[][2],int place[][2],int v_len,int dimension);
-    static int  lu_decomp(number **a,int *place,int num);
-    static void solve_lu(number **a,number *x,number *b,int *place,int num);
-    static void diag3(number a[][3],number x[],number b[],int size,int num);
-    static int inverse(number **a,number **res,int num);
+    void ring_order(int order[][2],int place[][2],int v_len,int dimension);
+    int  lu_decomp(number **a,int *place,int num);
+    void solve_lu(number **a,number *x,number *b,int *place,int num);
+    void diag3(number a[][3],number x[],number b[],int size,int num);
+    int inverse(number **a,number **res,int num);
 };
 
 

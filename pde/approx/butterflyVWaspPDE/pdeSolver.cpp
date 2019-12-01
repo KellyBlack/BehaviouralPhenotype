@@ -163,9 +163,10 @@ void PDESolver::initializeLegendreParams()
 
 bool PDESolver::solveLinearizedSystem()
 {
-    if(LU_Decomposition<double>::lu_decomp(jacobian,order,stateSize))
+    LU_Decomposition<double> solver;
+    if(solver.lu_decomp(jacobian,order,stateSize))
     {
-        LU_Decomposition<double>::solve_lu(jacobian,deltaX,baseFunc,order,stateSize);
+        solver.solve_lu(jacobian,deltaX,baseFunc,order,stateSize);
         return(true);
     }
     return(false);
