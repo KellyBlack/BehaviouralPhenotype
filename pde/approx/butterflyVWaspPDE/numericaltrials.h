@@ -14,6 +14,16 @@ class NumericalTrials
 public:
     NumericalTrials();
 
+    static void multipleApproximationsByM(
+            double mu, double c, double g, double d,
+            double lowM, double highM, double stepM,
+            double dt, int maxTimeLupe,
+            int legendrePolyDegree,
+            double maxDeltaNorm, int maxNewtonSteps,
+            int skipPrint,
+            int skipFileSave,
+            int numberThreads);
+
     int approximateSystem(
             double mu, double c, double g, double d, double m,
             double dt, int maxTimeLupe,
