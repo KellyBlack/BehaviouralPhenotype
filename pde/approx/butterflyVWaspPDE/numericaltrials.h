@@ -1,6 +1,8 @@
 #ifndef NUMERICALTRIALS_H
 #define NUMERICALTRIALS_H
 
+#include <string>
+
 #include "util.h"
 #include "legendre.h"
 #include "lu_decomp.h"
@@ -17,7 +19,7 @@ public:
             double dt, int maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
-            std::fstream &binFile,
+            std::string filename,
             int skipPrint,
             int skipFileSave);
 

@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "numericaltrials.h"
 
 NumericalTrials::NumericalTrials()
@@ -5,16 +7,19 @@ NumericalTrials::NumericalTrials()
 
 }
 
-int NumericalTrials::approximateSystem(
-        double mu, double c, double g, double d, double m,
+int NumericalTrials::approximateSystem(double mu, double c, double g, double d, double m,
         double dt, int maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
-        std::fstream &binFile,
+        std::string filename,
         int skipPrint, int skipFileSave)
 {
     double t        = 0.0;
     int    timeLupe = 0;
+
+    // Variables used to save the results of calculations into a
+    // data file.
+    std::fstream binFile (filename, std::ios::out | std::ios::binary);
 
     std::cout << "Pre-processing" << std::endl;
     int N = legendrePolyDegree;
@@ -61,6 +66,8 @@ int NumericalTrials::approximateSystem(
 
     }
 
+    // Clean up the data file and close it
+    binFile.close();
 
     return(1);
 }

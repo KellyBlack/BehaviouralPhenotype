@@ -18,14 +18,14 @@
 
 int saveSeparateRunsByM(double mu,double c,double g,double d,
                         double lowM,double highM,double stepM,double dt,
-                        NumericalTrials &trials);
+                        NumericalTrials *trials);
 
 int main()
 {
     // Set up the temporal variables.
     double dt = 0.0001;
 
-    NumericalTrials trials;
+    NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
     double mu = 0.01;
@@ -38,13 +38,14 @@ int main()
     saveSeparateRunsByM(mu,c,g,d,0.2,1.3,0.2,dt,trials);
     std::cout << "Done" << std::endl;
 
+    delete trials;
     return(0);
 }
 
 
-int saveSeparateRunsByM(double mu,double c,double g,double d,
-                        double lowM,double highM,double stepM,double dt,
-                        NumericalTrials &trials)
+int saveSeparateRunsByM(double mu, double c, double g, double d,
+                        double lowM, double highM, double stepM, double dt,
+                        NumericalTrials *trials)
 {
 
     for(double m=lowM;m<=highM;m+=stepM)
@@ -56,23 +57,16 @@ int saveSeparateRunsByM(double mu,double c,double g,double d,
                  << ".bin";
         std::cout << "Writing to " << filename.str() << std::endl;
 
-        // Variables used to save the results of calculations into a
-        // data file.
-        std::fstream binFile (filename.str(), std::ios::out | std::ios::binary);
-
-        if(trials.approximateSystem(
+        if(trials->approximateSystem(
                     mu,c,g,d,m,
                     dt,NUMBER_TIME_LOOP,
                     LEGENDRE_POLY_DEGREE,
                     MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-                    binFile,
+                    filename.str(),
                     SKIP_PRINT_UPDATE,
                     SKIP_FILE_SAVE
           ) == 0)
             return(0);
-
-        // Clean up the data file and close it
-        binFile.close();
 
     }
 
