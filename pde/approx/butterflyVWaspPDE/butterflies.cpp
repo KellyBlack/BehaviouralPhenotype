@@ -9,10 +9,7 @@ Butterflies::Butterflies(int number, int sizeState) :
 {
     std::cout << "Butterflies begin" << std::endl;
 
-    butterflies =nullptr;
-    prevTimeStep =nullptr;
-
-    if(number>0)
+    if(getNumber()>0)
         initializeButterflies();
 }
 
@@ -103,8 +100,8 @@ void Butterflies::calculateRHS()
 
 void Butterflies::copyCurrentStateToTemp()
 {
-    int number = getNumber();
-    for(int lupe=0;lupe<=number;++lupe)
+    int number = getStateSize();
+    for(int lupe=0;lupe<number;++lupe)
         prevTimeStep[lupe] = butterflies[lupe];
 }
 
@@ -115,9 +112,9 @@ void Butterflies::initializeButterflies()
     if(number>0)
     {
         if(butterflies==nullptr)
-             butterflies  = ArrayUtils<double>::onetensor(number+1);
+             butterflies  = ArrayUtils<double>::onetensor(getStateSize());
         if(prevTimeStep==nullptr)
-             prevTimeStep = ArrayUtils<double>::onetensor(number+1);
+             prevTimeStep = ArrayUtils<double>::onetensor(getStateSize());
 
         // First set the initial profile for the butterflies. It will be normalized
         // later so its average value is something more reasonable.
@@ -187,6 +184,12 @@ void Butterflies::deleteButterflies()
 {
     if(butterflies!=nullptr)
         ArrayUtils<double>::delonetensor(butterflies);
+    butterflies = nullptr;
+
+    if(prevTimeStep!=nullptr)
+        ArrayUtils<double>::delonetensor(prevTimeStep);
+    prevTimeStep = nullptr;
+
 }
 
 void Butterflies::writeCurrentApprox(double time, std::ofstream &resultsFile)

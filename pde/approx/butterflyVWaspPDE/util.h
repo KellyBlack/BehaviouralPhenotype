@@ -229,13 +229,14 @@ template <class number>
 void ArrayUtils<number>::delfivetensor(number *****u) {
 
     if(u==nullptr)
-    return;
+       return;
 
     delete u[0][0][0][0];
     delete u[0][0][0];
     delete u[0][0];
     delete u[0];
     delete [] u;
+    u = nullptr;
 
 }
 
@@ -244,12 +245,13 @@ template <class number>
 void ArrayUtils<number>::delfourtensor(number ****u) {
 
     if(u==nullptr)
-    return;
+       return;
 
     delete u[0][0][0];
     delete u[0][0];
     delete u[0];
     delete [] u;
+    u = nullptr;
 
 }
 
@@ -258,12 +260,13 @@ void ArrayUtils<number>::delfourtensor(number ****u) {
 template <class number>
 void ArrayUtils<number>::delthreetensor(number ***u) {
 
-    if(u==nullptr)
+  if(u==nullptr)
     return;
 
   delete u[0][0];
   delete u[0];
   delete [] u;
+  u = nullptr;
 
 }
 
@@ -273,12 +276,12 @@ template <class number>
 void ArrayUtils<number>::deltwotensor(number **u){
 
 
-    if(u==nullptr)
+  if(u==nullptr)
     return;
 
   delete u[0];
   delete [] u;
-
+  u = nullptr;
 
 }
 
@@ -286,10 +289,11 @@ void ArrayUtils<number>::deltwotensor(number **u){
 template <class number>
 void ArrayUtils<number>::delonetensor(number *u) {
 
-    if(u==nullptr)
+  if(u==nullptr)
     return;
 
   delete [] u;
+  u = nullptr;
 
 }
 

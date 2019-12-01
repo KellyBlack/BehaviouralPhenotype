@@ -77,41 +77,80 @@ void PDESolver::deleteArrays()
 {
     // Delete the arrays that have been allocated.
     if(lval!=nullptr)
+    {
         ArrayUtils<double>::deltwotensor(lval);
+        lval = nullptr;
+    }
+
     if(stiff!=nullptr)
+    {
         ArrayUtils<double>::deltwotensor(stiff);
+        stiff  = nullptr;
+    }
+
     if(D1!=nullptr)
+    {
         ArrayUtils<double>::deltwotensor(D1);
+        D1  = nullptr;
+    }
 
     // Delete the vectors that have been allocated.
     if(gaussWeights!=nullptr)
+    {
         ArrayUtils<double>::delonetensor(gaussWeights);
+        gaussWeights = nullptr;
+    }
+
     if(gaussAbscissa!=nullptr)
+    {
         ArrayUtils<double>::delonetensor(gaussAbscissa);
+        gaussAbscissa = nullptr;
+    }
 
     // Delete the arrays and vectors used for the linear systems.
     if(jacobian!=nullptr)
+    {
         ArrayUtils<double>::deltwotensor(jacobian);
-    if(baseFunc!=nullptr)
-        ArrayUtils<double>::delonetensor(baseFunc);
-    if(rhs!=nullptr)
-        ArrayUtils<double>::delonetensor(rhs);
-    if(deltaX!=nullptr)
-        ArrayUtils<double>::delonetensor(deltaX);
-    if(order!=nullptr)
-        ArrayUtils<int>::delonetensor(order);
+        jacobian  = nullptr;
+    }
 
+    if(baseFunc!=nullptr)
+    {
+        ArrayUtils<double>::delonetensor(baseFunc);
+        baseFunc = nullptr;
+    }
+
+    if(rhs!=nullptr)
+    {
+        ArrayUtils<double>::delonetensor(rhs);
+        rhs = nullptr;
+    }
+
+    if(deltaX!=nullptr)
+    {
+        ArrayUtils<double>::delonetensor(deltaX);
+        deltaX = nullptr;
+    }
+
+    if(order!=nullptr)
+    {
+        ArrayUtils<int>::delonetensor(order);
+        order = nullptr;
+    }
 }
 
 void PDESolver::initializeLegendreParams()
 {
-    // Define the Gauss quadrature.
-    Legendre<double>::leg_quad(gaussAbscissa,gaussWeights,N);
+    if(getNumber()>0)
+    {
+        // Define the Gauss quadrature.
+        Legendre<double>::leg_quad(gaussAbscissa,gaussWeights,N);
 
-    // Define the stiffness and mass matrices for the Legendre collocation method.
-    Legendre<double>::leg_val(lval,gaussAbscissa,N,N);
-    Legendre<double>::leg_der(D1,lval,gaussAbscissa,N,N);
-    Legendre<double>::stiffLeg(stiff,gaussWeights,D1,N);
+        // Define the stiffness and mass matrices for the Legendre collocation method.
+        Legendre<double>::leg_val(lval,gaussAbscissa,N,N);
+        Legendre<double>::leg_der(D1,lval,gaussAbscissa,N,N);
+        Legendre<double>::stiffLeg(stiff,gaussWeights,D1,N);
+    }
 
 }
 
