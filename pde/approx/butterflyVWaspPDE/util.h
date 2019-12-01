@@ -10,17 +10,17 @@ class ArrayUtils
 
 public:
     ArrayUtils(){}
-    static number *****fivetensor(int n1,int n2,int n3,int n4,int n5);
-    static number ****fourtensor(int n1,int n2,int n3,int n4);
-    static number ***threetensor(int n1,int n2,int n3);
-    static number **twotensor(int n1,int n2);
-    static number *onetensor(int n1);
+    number *****fivetensor(int n1,int n2,int n3,int n4,int n5);
+    number ****fourtensor(int n1,int n2,int n3,int n4);
+    number ***threetensor(int n1,int n2,int n3);
+    number **twotensor(int n1,int n2);
+    number *onetensor(int n1);
 
-    static void delfivetensor(number *****u);
-    static void delfourtensor(number ****u);
-    static void delthreetensor(number ***u);
-    static void deltwotensor(number **u);
-    static void delonetensor(number *u);
+    void delfivetensor(number *****u);
+    void delfourtensor(number ****u);
+    void delthreetensor(number ***u);
+    void deltwotensor(number **u);
+    void delonetensor(number *u);
 
 };
 

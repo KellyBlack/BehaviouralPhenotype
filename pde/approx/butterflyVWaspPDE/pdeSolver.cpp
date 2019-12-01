@@ -51,90 +51,95 @@ double PDESolver::getDT()
 
 void PDESolver::createArrays()
 {
+    ArrayUtils<double> arrays;
+    ArrayUtils<int> arraysInt;
     // First delete all of the current arrays.
     deleteArrays();
 
     // Define the matrices used to store necessary values for
     // the Legendre polynomials.
-    lval        = ArrayUtils<double>::twotensor(N+1,N+1);
-    D1          = ArrayUtils<double>::twotensor(N+1,N+1);
-    stiff       = ArrayUtils<double>::twotensor(N+1,N+1);
+    lval        = arrays.twotensor(N+1,N+1);
+    D1          = arrays.twotensor(N+1,N+1);
+    stiff       = arrays.twotensor(N+1,N+1);
 
     // Define the vectors that are used.
     // Includes the Gauss quadrature (abscissa and weights)
-    gaussWeights  = ArrayUtils<double>::onetensor(N+1);
-    gaussAbscissa = ArrayUtils<double>::onetensor(N+1);
+    gaussWeights  = arrays.onetensor(N+1);
+    gaussAbscissa = arrays.onetensor(N+1);
 
     // Define the matrices and vectors used to solve the linear systems.
-    jacobian = ArrayUtils<double>::twotensor(stateSize,stateSize);
-    baseFunc = ArrayUtils<double>::onetensor(stateSize);
-    rhs      = ArrayUtils<double>::onetensor(stateSize);
-    deltaX   = ArrayUtils<double>::onetensor(stateSize);
-    order    = ArrayUtils<int>::onetensor(stateSize);
+    jacobian = arrays.twotensor(stateSize,stateSize);
+    baseFunc = arrays.onetensor(stateSize);
+    rhs      = arrays.onetensor(stateSize);
+    deltaX   = arrays.onetensor(stateSize);
+    order    = arraysInt.onetensor(stateSize);
 }
 
 void PDESolver::deleteArrays()
 {
+    ArrayUtils<double> arrays;
+    ArrayUtils<int> arraysInt;
+
     // Delete the arrays that have been allocated.
     if(lval!=nullptr)
     {
-        ArrayUtils<double>::deltwotensor(lval);
+        arrays.deltwotensor(lval);
         lval = nullptr;
     }
 
     if(stiff!=nullptr)
     {
-        ArrayUtils<double>::deltwotensor(stiff);
+        arrays.deltwotensor(stiff);
         stiff  = nullptr;
     }
 
     if(D1!=nullptr)
     {
-        ArrayUtils<double>::deltwotensor(D1);
+        arrays.deltwotensor(D1);
         D1  = nullptr;
     }
 
     // Delete the vectors that have been allocated.
     if(gaussWeights!=nullptr)
     {
-        ArrayUtils<double>::delonetensor(gaussWeights);
+        arrays.delonetensor(gaussWeights);
         gaussWeights = nullptr;
     }
 
     if(gaussAbscissa!=nullptr)
     {
-        ArrayUtils<double>::delonetensor(gaussAbscissa);
+        arrays.delonetensor(gaussAbscissa);
         gaussAbscissa = nullptr;
     }
 
     // Delete the arrays and vectors used for the linear systems.
     if(jacobian!=nullptr)
     {
-        ArrayUtils<double>::deltwotensor(jacobian);
+        arrays.deltwotensor(jacobian);
         jacobian  = nullptr;
     }
 
     if(baseFunc!=nullptr)
     {
-        ArrayUtils<double>::delonetensor(baseFunc);
+        arrays.delonetensor(baseFunc);
         baseFunc = nullptr;
     }
 
     if(rhs!=nullptr)
     {
-        ArrayUtils<double>::delonetensor(rhs);
+        arrays.delonetensor(rhs);
         rhs = nullptr;
     }
 
     if(deltaX!=nullptr)
     {
-        ArrayUtils<double>::delonetensor(deltaX);
+        arrays.delonetensor(deltaX);
         deltaX = nullptr;
     }
 
     if(order!=nullptr)
     {
-        ArrayUtils<int>::delonetensor(order);
+        arraysInt.delonetensor(order);
         order = nullptr;
     }
 }
@@ -143,13 +148,14 @@ void PDESolver::initializeLegendreParams()
 {
     if(getNumber()>0)
     {
+        Legendre<double> legendre;
         // Define the Gauss quadrature.
-        Legendre<double>::leg_quad(gaussAbscissa,gaussWeights,N);
+        legendre.leg_quad(gaussAbscissa,gaussWeights,N);
 
         // Define the stiffness and mass matrices for the Legendre collocation method.
-        Legendre<double>::leg_val(lval,gaussAbscissa,N,N);
-        Legendre<double>::leg_der(D1,lval,gaussAbscissa,N,N);
-        Legendre<double>::stiffLeg(stiff,gaussWeights,D1,N);
+        legendre.leg_val(lval,gaussAbscissa,N,N);
+        legendre.leg_der(D1,lval,gaussAbscissa,N,N);
+        legendre.stiffLeg(stiff,gaussWeights,D1,N);
     }
 
 }

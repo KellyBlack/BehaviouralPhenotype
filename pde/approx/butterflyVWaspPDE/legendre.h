@@ -16,7 +16,7 @@ public:
     Legendre(){}
 
     // Take the exponential of x (raised to n)
-    static number pythag(number a, number b);
+    number pythag(number a, number b);
 
 
 
@@ -28,7 +28,7 @@ public:
             e[ ] = subdiagonal elements (e[1] arbitrary)
 
   */
-    static void tqli(number *d,number *e,int n,int size,number **z);
+    void tqli(number *d,number *e,int n,int size,number **z);
 
 
 
@@ -36,14 +36,14 @@ public:
      Uses Golub's method, SIAM Review, Vol. 15, No.2 April, 73,
      Page 318.
   */
-    static void leg_quad(number *x,number *w,int n);
+    void leg_quad(number *x,number *w,int n);
 
 
   /* Routine to find the Legendre-Gauus quadrature.
      Uses Golub's method, SIAM Review, Vol. 15, No.2 April, 73,
      Page 318.
   */
-    static void leg_quad_Gauss(number *x,number *w,int n);
+    void leg_quad_Gauss(number *x,number *w,int n);
 
 
     // Values of the Legendre polynomials at the point defined by *x
@@ -51,14 +51,14 @@ public:
     // degree:
     //      interp[i][j] = L_i(x_j)
     //
-    static void leg_val(number **interp,number *x,int n,int rows);
+    void leg_val(number **interp,number *x,int n,int rows);
 
     // Values of the Legendre polynomials at the point defined by *x
     // for the degree given by degree.
     // Returns only the polynomials to the indicated degree:
     //    interp[i] = L_num(x_i)
     //
-    static void leg_val(number *interp ,number *x,int n,int degree);
+    void leg_val(number *interp ,number *x,int n,int degree);
 
 
 
@@ -66,37 +66,37 @@ public:
     // specified points (x) for the given degree (degree)
     //      interp[i] = L'_degree(x_i)
     //         i = 0...num
-    static void leg_der_val(number *interp,number *x,int num,int degree);
+    void leg_der_val(number *interp,number *x,int num,int degree);
 
 
     // Values of the derivatives of the Legendre polynomials at the
     // specified points (x) for the given degree (degree)
     //      interp[i] = L''_degree(x_i)
     //         i = 0...num
-    static void leg_2_der_val(number *interp,number *x,int num,int degree);
+    void leg_2_der_val(number *interp,number *x,int num,int degree);
 
 
     // Legendre (Gauss-Lobatto) collocation derivative matrix
-    static void leg_der(number **d1,number **lval,number x[],int n,int size);
+    void leg_der(number **d1,number **lval,number x[],int n,int size);
 
     // Legendre (Gauss) collocation derivative matrix
-    static void leg_gauss_der(number **d1,number *x,int n);
+    void leg_gauss_der(number **d1,number *x,int n);
 
     // Routine to calculate the entries in the stiffness
     // matrix for a Legendre-collocation type of method.
-    static void stiffLeg(number **stiff,number *w,number **D1,int N);
+    void stiffLeg(number **stiff,number *w,number **D1,int N);
 
     // Values of the Lagrange interpolates (Gauss) at the endpoints
-    static void gauss_collocation_end_values(number *left,number *right,
+    void gauss_collocation_end_values(number *left,number *right,
                                                                                      number *x,int n);
 
     // Petrov-Galerkin mass and stiffness matrices
-    static void petrov(number **mass,number **stiff,number *x,number *w,
-                                         number **lval,int n,int size);
+    void petrov(number **mass,number **stiff,number *x,number *w,
+                number **lval,int n,int size);
 
 
     // Legendre-Tau stiffness and mass matrices
-    static void tauMatrices(number **stiff,number **mass,number **der,
+    void tauMatrices(number **stiff,number **mass,number **der,
                                                     int numuse);
 
     /* ******************************************
@@ -104,7 +104,7 @@ public:
          mass, and derivative matrices for the
          galerkin method.
          ********************************************* */
-    static void galerkinMatrices(number **stiff,number **mass,number **der,
+    void galerkinMatrices(number **stiff,number **mass,number **der,
                                                              int numuse);
 
 
@@ -113,16 +113,17 @@ public:
          mass, and derivative matrices for the
          galerkin method. (infinite domain)
          ********************************************* */
-    static void galerkinInfinite(number **rightStiff,number **leftStiff,
+    void galerkinInfinite(number **rightStiff,number **leftStiff,
                                                              number **mass,number **der,
                                                              int num);
 
+private:
+    number sqrarg;
 };
 
 
 
 
-static double sqrarg;
 #define SQR(a) ((sqrarg=(a)) == 0.0 ? 0.0 : sqrarg*sqrarg)
 #define SIGN(a,b) ((b)>0.0 ? fabs(a) : -fabs(a))
 
@@ -256,9 +257,10 @@ void Legendre<number>::leg_quad(number *x,number *w,int n) {
   int i,j,k;
   number norm,p;
 
-  d = ArrayUtils<number>::onetensor(n+2);
-  e = ArrayUtils<number>::onetensor(n+2);
-  v = ArrayUtils<number>::twotensor(n+2,n+2);
+  ArrayUtils<number> arrays;
+  d = arrays.onetensor(n+2);
+  e = arrays.onetensor(n+2);
+  v = arrays.twotensor(n+2,n+2);
 
 
   d[1] = 0.0;
@@ -283,9 +285,9 @@ void Legendre<number>::leg_quad(number *x,number *w,int n) {
     x[i] = d[i+1];
   }
 
-  ArrayUtils<number>::delonetensor(d);
-  ArrayUtils<number>::delonetensor(e);
-  ArrayUtils<number>::deltwotensor(v);
+  arrays.delonetensor(d);
+  arrays.delonetensor(e);
+  arrays.deltwotensor(v);
 
   for(i=0;i<n;++i) {
     p = x[k=i];
@@ -310,13 +312,14 @@ void Legendre<number>::leg_quad_Gauss(number *x,number *w,int n) {
      Page 318.
   */
 
+  ArrayUtils<number> arrays;
   number *d,*e,**v;
   int i,j,k;
   number norm,p;
 
-  d = ArrayUtils<number>::onetensor(n+2);
-  e = ArrayUtils<number>::onetensor(n+2);
-  v = ArrayUtils<number>::twotensor(n+2,n+2);
+  d = arrays.onetensor(n+2);
+  e = arrays.onetensor(n+2);
+  v = arrays.twotensor(n+2,n+2);
 
 
   d[1] = 0.0;
@@ -338,9 +341,9 @@ void Legendre<number>::leg_quad_Gauss(number *x,number *w,int n) {
     x[i] = d[i+1];
   }
 
-  ArrayUtils<number>::delonetensor(d);
-  ArrayUtils<number>::delonetensor(e);
-  ArrayUtils<number>::deltwotensor(v);
+  arrays.delonetensor(d);
+  arrays.delonetensor(e);
+  arrays.deltwotensor(v);
 
   for(i=0;i<n;++i) {
     p = x[k=i];
@@ -397,7 +400,8 @@ void Legendre<number>::leg_val(number **interp,number *x,int n,int rows) {
 //
 template <class number>
 void Legendre<number>::leg_val(number *interp,number *x,int num,int degree) {
-  number *l1 = nullptr,
+    ArrayUtils<number> arrays;
+    number *l1 = nullptr,
     *l2 = nullptr;
 
   number *tmp;
@@ -406,8 +410,8 @@ void Legendre<number>::leg_val(number *interp,number *x,int num,int degree) {
   int i,j,k;
   number l;
 
-  l1 = ArrayUtils<number>::onetensor(num+1);
-  l2 = ArrayUtils<number>::onetensor(num+1);
+  l1 = arrays.onetensor(num+1);
+  l2 = arrays.onetensor(num+1);
 
   for(i=0;i<=num;++i) {
     l1[i] = 1.0;
@@ -430,8 +434,8 @@ void Legendre<number>::leg_val(number *interp,number *x,int num,int degree) {
   for(j=0;j<=num;++j)
     interp[j] = l2[j];
 
-  ArrayUtils<number>::delonetensor(l1);
-  ArrayUtils<number>::delonetensor(l2);
+  arrays.delonetensor(l1);
+  arrays.delonetensor(l2);
 
 }
 
@@ -447,7 +451,8 @@ void Legendre<number>::leg_der_val(number *interp,
                                                                      int num,
                                                                      int degree) {
 
-  number *l1 = nullptr,
+    ArrayUtils<number> arrays;
+    number *l1 = nullptr,
     *l2 = nullptr,
     *l3 = nullptr,
     *l4 = nullptr;
@@ -458,10 +463,10 @@ void Legendre<number>::leg_der_val(number *interp,
   int i,j,k;
   number l;
 
-  l1 = ArrayUtils<number>::onetensor(num+1);
-  l2 = ArrayUtils<number>::onetensor(num+1);
-  l3 = ArrayUtils<number>::onetensor(num+1);
-  l4 = ArrayUtils<number>::onetensor(num+1);
+  l1 = arrays.onetensor(num+1);
+  l2 = arrays.onetensor(num+1);
+  l3 = arrays.onetensor(num+1);
+  l4 = arrays.onetensor(num+1);
 
 
   for(i=0;i<=num;++i) {
@@ -493,10 +498,10 @@ void Legendre<number>::leg_der_val(number *interp,
   for(j=0;j<=num;++j)
     interp[j] = l4[j];
 
-  ArrayUtils<number>::delonetensor(l1);
-  ArrayUtils<number>::delonetensor(l2);
-  ArrayUtils<number>::delonetensor(l3);
-  ArrayUtils<number>::delonetensor(l4);
+  arrays.delonetensor(l1);
+  arrays.delonetensor(l2);
+  arrays.delonetensor(l3);
+  arrays.delonetensor(l4);
 
 }
 
@@ -511,7 +516,8 @@ void Legendre<number>::leg_2_der_val(number *interp,
                                                                          int num,
                                                                          int degree) {
 
-  number *l1 = nullptr,
+    ArrayUtils<number> arrays;
+    number *l1 = nullptr,
     *l2 = nullptr,
     *l3 = nullptr,
     *l4 = nullptr,
@@ -524,12 +530,12 @@ void Legendre<number>::leg_2_der_val(number *interp,
   int i,j,k;
   number l;
 
-  l1 = ArrayUtils<number>::onetensor(num+1);
-  l2 = ArrayUtils<number>::onetensor(num+1);
-  l3 = ArrayUtils<number>::onetensor(num+1);
-  l4 = ArrayUtils<number>::onetensor(num+1);
-  l5 = ArrayUtils<number>::onetensor(num+1);
-  l6 = ArrayUtils<number>::onetensor(num+1);
+  l1 = arrays.onetensor(num+1);
+  l2 = arrays.onetensor(num+1);
+  l3 = arrays.onetensor(num+1);
+  l4 = arrays.onetensor(num+1);
+  l5 = arrays.onetensor(num+1);
+  l6 = arrays.onetensor(num+1);
 
 
   for(i=0;i<=num;++i) {
@@ -568,12 +574,12 @@ void Legendre<number>::leg_2_der_val(number *interp,
   for(j=0;j<=num;++j)
     interp[j] = l6[j];
 
-  ArrayUtils<number>::delonetensor(l1);
-  ArrayUtils<number>::delonetensor(l2);
-  ArrayUtils<number>::delonetensor(l3);
-  ArrayUtils<number>::delonetensor(l4);
-  ArrayUtils<number>::delonetensor(l5);
-  ArrayUtils<number>::delonetensor(l6);
+  arrays.delonetensor(l1);
+  arrays.delonetensor(l2);
+  arrays.delonetensor(l3);
+  arrays.delonetensor(l4);
+  arrays.delonetensor(l5);
+  arrays.delonetensor(l6);
 
 }
 
@@ -602,12 +608,13 @@ void Legendre<number>::leg_der(number **d1,number **lval,number *x,int n,int) {
 template <class number>
 void Legendre<number>::leg_gauss_der(number **d1,number *x,int n) {
 
+  ArrayUtils<number> arrays;
   int i,j;
   number *p1;
   number *p2;
 
-  p1 = ArrayUtils<number>::onetensor(n+1);
-  p2 = ArrayUtils<number>::onetensor(n+1);
+  p1 = arrays.onetensor(n+1);
+  p2 = arrays.onetensor(n+1);
 
   leg_2_der_val(p2,x,n,n+1);
   leg_der_val(p1,x,n,n+1);
@@ -620,15 +627,16 @@ void Legendre<number>::leg_gauss_der(number **d1,number *x,int n) {
       d1[i][j] = p1[i]/((x[i]-x[j])*p1[j]);
   }
 
-  ArrayUtils<number>::delonetensor(p1);
-  ArrayUtils<number>::delonetensor(p2);
+  arrays.delonetensor(p1);
+  arrays.delonetensor(p2);
 
 }
 
 // Routine to calculate the entries in the stiffness
 // matrix for a Legendre-collocation type of method.
 template <class number>
-void Legendre<number>::stiffLeg(number **stiff,number *w,number **D1,int N){
+void Legendre<number>::stiffLeg(number **stiff,number *w,number **D1,int N)
+{
 
   int i,j,m;
 
@@ -648,10 +656,12 @@ void Legendre<number>::stiffLeg(number **stiff,number *w,number **D1,int N){
 // Values of the Lagrange interpolates (Gauss) at the endpoints
 template <class number>
 void Legendre<number>::gauss_collocation_end_values(number *left,number *right,
-                                                                                                        number *x,int n){
+                                                    number *x,int n)
+{
+  ArrayUtils<number> arrays;
   int i;
   number *p1;
-  p1 = ArrayUtils<number>::onetensor(n+1);
+  p1 = arrays.onetensor(n+1);
   leg_der_val(p1,x,n,n+1);
 
   for(i=0;i<=n;++i) {
@@ -660,7 +670,7 @@ void Legendre<number>::gauss_collocation_end_values(number *left,number *right,
     // cout << right[i] << "  " << left[i] << endl;
   }
 
-  ArrayUtils<number>::delonetensor(p1);
+  arrays.delonetensor(p1);
 
 }
 
@@ -669,15 +679,18 @@ void Legendre<number>::gauss_collocation_end_values(number *left,number *right,
 // Petrov-Galerkin mass and stiffness matrices
 template <class number>
 void Legendre<number>::petrov(number **mass,number **stiff,number *x,number *w,
-                                                            number **lval,int n,int) {
+                                                            number **lval,int n,int)
+{
+
+  ArrayUtils<number> arrays;
   int i,j,k;
   number *gamma;
   number *diag,*off;
   number x1,x2,x3;
 
-  gamma = ArrayUtils<number>::onetensor(n+1);
-  diag  = ArrayUtils<number>::onetensor(n+1);
-  off   = ArrayUtils<number>::onetensor(n+1);
+  gamma = arrays.onetensor(n+1);
+  diag  = arrays.onetensor(n+1);
+  off   = arrays.onetensor(n+1);
 
   gamma[n] = 0.5*static_cast<number>(n);
   for(i=0;i<n;++i)
@@ -741,9 +754,9 @@ void Legendre<number>::petrov(number **mass,number **stiff,number *x,number *w,
       stiff[j+1][k] = w[k]*x2;
     }
 
-  ArrayUtils<number>::delonetensor(gamma);
-  ArrayUtils<number>::delonetensor(diag);
-  ArrayUtils<number>::delonetensor(off);
+  arrays.delonetensor(gamma);
+  arrays.delonetensor(diag);
+  arrays.delonetensor(off);
 
 }
 

@@ -23,18 +23,18 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
 
     std::cout << "Pre-processing" << std::endl;
     int N = legendrePolyDegree;
-    Butterflies theButterflies(N,N+2);
-    theButterflies.initializeLegendreParams();
-    theButterflies.setMu(mu);
-    theButterflies.setC(c);
-    theButterflies.setG(g);
-    theButterflies.setD(d);
-    theButterflies.setM(m);
-    theButterflies.setDT(dt);
+    Butterflies *theButterflies = new Butterflies(N,N+2);
+    theButterflies->initializeLegendreParams();
+    theButterflies->setMu(mu);
+    theButterflies->setC(c);
+    theButterflies->setG(g);
+    theButterflies->setD(d);
+    theButterflies->setM(m);
+    theButterflies->setDT(dt);
 
-    theButterflies.initializeButterflies();
-    theButterflies.writeParameters(binFile);
-    theButterflies.writeBinaryHeader(binFile);
+    theButterflies->initializeButterflies();
+    theButterflies->writeParameters(binFile);
+    theButterflies->writeBinaryHeader(binFile);
 
     // Start the time loop, and calculation an approximation at
     // each time step.
@@ -52,7 +52,7 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
         }
 
         if(
-           theButterflies.singleTimeStep(maxDeltaNorm,maxNewtonSteps,timeLupe%(skipPrint)==0)
+           theButterflies->singleTimeStep(maxDeltaNorm,maxNewtonSteps,timeLupe%(skipPrint)==0)
                 < 0)
         {
             std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
@@ -61,13 +61,14 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
 
         if(timeLupe%skipFileSave==0)
         {
-            theButterflies.writeBinaryCurrentApprox(t,binFile);
+            theButterflies->writeBinaryCurrentApprox(t,binFile);
         }
 
     }
 
     // Clean up the data file and close it
     binFile.close();
+    delete theButterflies;
 
     return(1);
 }

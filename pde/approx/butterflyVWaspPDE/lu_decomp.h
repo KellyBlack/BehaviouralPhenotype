@@ -94,7 +94,8 @@ in place on the matrix A[][]
   int tmp,pivot;
 
 
-  work = ArrayUtils<number>::onetensor(num);
+  ArrayUtils<number> arrays;
+  work = arrays.onetensor(num);
   if(work==NULL) {
     perror("Error - Could not allocate memory in lu_decomp\n");
     exit(2);
@@ -136,7 +137,7 @@ in place on the matrix A[][]
 
     }
 
-  ArrayUtils<number>::delonetensor(work);
+  arrays.delonetensor(work);
   return(1);
 }
 
@@ -161,7 +162,8 @@ void LU_Decomposition<number>::solve_lu(number **a,number *x,number *b,int *plac
     number *c;
     int i,j;
 
-    c = ArrayUtils<number>::onetensor(num);
+    ArrayUtils<number> arrays;
+    c = arrays.onetensor(num);
 
     c[place[0]] = b[place[0]];
     for (i=1;i<num;++i)
@@ -180,7 +182,7 @@ void LU_Decomposition<number>::solve_lu(number **a,number *x,number *b,int *plac
             x[place[i]] = x[place[i]]/a[place[i]][i];
     }
 
-    ArrayUtils<number>::delonetensor(c);
+    arrays.delonetensor(c);
 
 }
 
@@ -234,8 +236,9 @@ is returned in RES.
   int i,j;
   int *place;
 
-  wrk1 = ArrayUtils<number>::onetensor(num);
-  wrk2 = ArrayUtils<number>::onetensor(num);
+  ArrayUtils<number> arrays;
+  wrk1 = arrays.onetensor(num);
+  wrk2 = arrays.onetensor(num);
   place = new int[num];
   if (place==nullptr) {
     printf("Could not allocate memory in inverse\n");
@@ -266,8 +269,8 @@ is returned in RES.
                 res[i][j] = wrk2[place[i]];
         }
 
-  ArrayUtils<number>::delonetensor(wrk1);
-  ArrayUtils<number>::delonetensor(wrk2);
+  arrays.delonetensor(wrk1);
+  arrays.delonetensor(wrk2);
   delete place;
   return(1);
 

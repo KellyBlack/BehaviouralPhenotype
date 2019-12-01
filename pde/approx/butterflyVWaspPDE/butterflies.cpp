@@ -111,10 +111,11 @@ void Butterflies::initializeButterflies()
     int number = getNumber();
     if(number>0)
     {
+        ArrayUtils <double> arrays;
         if(butterflies==nullptr)
-             butterflies  = ArrayUtils<double>::onetensor(getStateSize());
+             butterflies  = arrays.onetensor(getStateSize());
         if(prevTimeStep==nullptr)
-             prevTimeStep = ArrayUtils<double>::onetensor(getStateSize());
+             prevTimeStep = arrays.onetensor(getStateSize());
 
         // First set the initial profile for the butterflies. It will be normalized
         // later so its average value is something more reasonable.
@@ -182,12 +183,13 @@ void Butterflies::writeParameters(std::fstream &resultsFile)
 
 void Butterflies::deleteButterflies()
 {
+    ArrayUtils<double> arrays;
     if(butterflies!=nullptr)
-        ArrayUtils<double>::delonetensor(butterflies);
+        arrays.delonetensor(butterflies);
     butterflies = nullptr;
 
     if(prevTimeStep!=nullptr)
-        ArrayUtils<double>::delonetensor(prevTimeStep);
+        arrays.delonetensor(prevTimeStep);
     prevTimeStep = nullptr;
 
 }
