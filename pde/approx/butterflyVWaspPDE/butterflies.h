@@ -15,6 +15,7 @@ public:
     void copyCurrentStateToTemp();
 
     void initializeButterflies();
+    void initializeButterfliesGaussian(double center, double variance);
     void deleteButterflies();
     virtual void writeParameters(std::fstream &resultsFile);
     virtual void writeCurrentApprox(double time,std::ofstream &resultsFile);

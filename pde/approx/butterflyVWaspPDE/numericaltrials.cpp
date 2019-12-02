@@ -104,7 +104,7 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
     theButterflies->setM(m);
     theButterflies->setDT(dt);
 
-    theButterflies->initializeButterflies();
+    theButterflies->initializeButterfliesGaussian(0.0,mu);
     theButterflies->writeParameters(binFile);
     theButterflies->writeBinaryHeader(binFile);
 
@@ -144,3 +144,60 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
 
     return(1);
 }
+
+int NumericalTrials::approximateSystemTrackRepeating(
+        double mu, double c, double g, double d, double m,
+        double dt, int maxTimeLupe,
+        int legendrePolyDegree,
+        double maxDeltaNorm, int maxNewtonSteps,
+        int skipPrint)
+{
+    double t        = 0.0;
+    int    timeLupe = 0;
+
+
+    std::cout << "Pre-processing" << std::endl;
+    int N = legendrePolyDegree;
+    Butterflies *theButterflies = new Butterflies(N,N+2);
+    theButterflies->initializeLegendreParams();
+    theButterflies->setMu(mu);
+    theButterflies->setC(c);
+    theButterflies->setG(g);
+    theButterflies->setD(d);
+    theButterflies->setM(m);
+    theButterflies->setDT(dt);
+
+    theButterflies->initializeButterflies();
+
+    // Start the time loop, and calculation an approximation at
+    // each time step.
+    for(timeLupe=0;timeLupe<maxTimeLupe;++timeLupe)
+    {
+        t = static_cast<double>(timeLupe)*dt;
+
+        if(timeLupe%(skipPrint)==0)
+        {
+            std::cout << "Calculating an approximation: "
+                         << std::fixed
+                         << std::setw(8)
+                         << std::setprecision(4)
+                         << timeLupe << " (" << t << ") ";
+        }
+
+        if(
+           theButterflies->singleTimeStep(maxDeltaNorm,maxNewtonSteps,timeLupe%(skipPrint)==0)
+                < 0)
+        {
+            std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
+            return(0);
+        }
+
+
+    }
+
+    // Clean up the data file and close it
+    delete theButterflies;
+
+    return(1);
+}
+

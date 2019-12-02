@@ -185,7 +185,7 @@ int PDESolver::singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool p
 {
     // Build the system and solve.
     calculateRHS();
-    copyCurrentStateToTemp();
+    //copyCurrentStateToTemp();
     bool canInvert(true);
     double stepDeltaNorm = 0.0;
     int totalStepsPossible = maxNewtonSteps;

@@ -33,6 +33,12 @@ public:
             int skipPrint,
             int skipFileSave);
 
+    int approximateSystemTrackRepeating(double mu, double c, double g, double d, double m,
+            double dt, int maxTimeLupe,
+            int legendrePolyDegree,
+            double maxDeltaNorm, int maxNewtonSteps,
+            int skipPrint);
+
 };
 
 #endif // NUMERICALTRIALS_H

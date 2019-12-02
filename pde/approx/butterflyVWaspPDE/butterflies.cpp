@@ -124,7 +124,6 @@ void Butterflies::initializeButterflies()
          {
              double theta = 0.5*(gaussAbscissa[lupe]+1.0);
              double steady = d*c/(parameterDistribution(theta)*(g-d));
-             steady = 0.5*exp(-(theta-0.0)*(theta-0.0)/.02);
              /*
              if(steady>1.0)
              {
@@ -151,7 +150,7 @@ void Butterflies::initializeButterflies()
         for(int lupe=0;lupe<=number;++lupe)
          {
             double theta = 0.5*(gaussAbscissa[lupe]+1.0);
-            //butterflies[lupe] *= butterflyIntegral;
+            butterflies[lupe] *= butterflyIntegral;
 #ifdef INITIAL_METHOD_ONE
              integral1 += gaussWeights[lupe]*(c+butterflies[lupe]*parameterDistribution(theta));
              integral2 += gaussWeights[lupe]*(1.0-butterflies[lupe]);
@@ -165,6 +164,31 @@ void Butterflies::initializeButterflies()
 #else
          butterflies[number+1] = integral2/integral1;
 #endif
+
+         copyCurrentStateToTemp();
+    }
+}
+
+void Butterflies::initializeButterfliesGaussian(double center,double variance)
+{
+    int number = getNumber();
+    if(number>0)
+    {
+        ArrayUtils <double> arrays;
+        if(butterflies==nullptr)
+             butterflies  = arrays.onetensor(getStateSize());
+        if(prevTimeStep==nullptr)
+             prevTimeStep = arrays.onetensor(getStateSize());
+
+        // First set the initial profile for the butterflies. It will be normalized
+        // later so its average value is something more reasonable.
+        double butterflyIntegral = 0.0;
+        for(int lupe=0;lupe<=number;++lupe)
+         {
+            double theta = 0.5*(gaussAbscissa[lupe]+1.0);
+            butterflies[lupe]  = 0.5*exp(-(theta-center)*(theta-center)/variance);
+            butterflyIntegral += gaussWeights[lupe]*butterflies[lupe];
+         }
 
          double steady = d*c/(parameterDistribution(0.0)*(g-d));
          butterflies[number+1] = fabs(1.0-steady)*(c+steady*parameterDistribution(0.0));
