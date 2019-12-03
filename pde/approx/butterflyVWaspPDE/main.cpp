@@ -2,7 +2,7 @@
 
 #include "numericaltrials.h"
 
-#define SKIP_PRINT_UPDATE 10000
+#define SKIP_PRINT_UPDATE 40000
 #define SKIP_FILE_SAVE 150
 #define NUMBER_TIME_LOOP 3000000
 #define MAX_NEWTON_STEPS 50

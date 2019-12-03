@@ -102,7 +102,8 @@ in place on the matrix A[][]
   }
 
 
-  for (i=0;i<num;++i) {
+  for (i=0;i<num;++i)
+  {
     place[i] = i;
     work[i] = fabs(a[i][0]);
     for (j=1;j<num;++j)
@@ -110,7 +111,8 @@ in place on the matrix A[][]
                 work[i] = fabs(a[i][j]);
   }
 
-  for (i=0;i<num;++i) {
+  for (i=0;i<num;++i)
+  {
     pivot = i;
     for (j=i+1;j<num;++j)
             if (fabs(a[place[j]][i])/work[place[j]] >
@@ -123,17 +125,17 @@ in place on the matrix A[][]
 
     if (a[place[i]][i] == 0.0)
             {
-                free(work);
+                arrays.delonetensor(work);
                 return(0);
             }
 
     for (j=i+1;j<num;++j)
-            if (a[place[j]][i] != 0.0)
-                {
-          a[place[j]][i] = a[place[j]][i]/a[place[i]][i];
-          for (k=i+1;k<num;++k)
-                        a[place[j]][k] -= a[place[j]][i]*a[place[i]][k];
-                }
+        if (a[place[j]][i] != 0.0)
+        {
+            a[place[j]][i] = a[place[j]][i]/a[place[i]][i];
+            for (k=i+1;k<num;++k)
+                a[place[j]][k] -= a[place[j]][i]*a[place[i]][k];
+        }
 
     }
 

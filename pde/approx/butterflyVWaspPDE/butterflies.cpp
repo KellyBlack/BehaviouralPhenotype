@@ -4,113 +4,187 @@
 #include "butterflies.h"
 #include "util.h"
 
+// Constructor for the Butterfly class.
 Butterflies::Butterflies(int number, int sizeState) :
     PDESolver::PDESolver(number,sizeState)
 {
-    std::cout << "Butterflies begin" << std::endl;
-
+    // If a size was passed, so go ahead and allocate the
+    // matrices and set up the initial condition.
     if(getNumber()>0)
         initializeButterflies();
 }
 
+// Destructor for the class.
 Butterflies::~Butterflies()
 {
+    // De-allocate the arrays and vectors that are in use.
     deleteButterflies();
-    std::cout << "Butterflies End" << std::endl;
 }
 
 
+// Routine to set up the entries in the Jacobian for the
+// full nonlinear implicit time step.
 void Butterflies::buildJacobian()
 {
+    // integers used in various loops.
     int outerLupe;
     int innerLupe;
 
     // Build an approximation to an ODE
+    // Set up the pointers that are used to step through the
+    // columns of the matrix. (Assumes the arrays are in
+    // row major order.)
+    double *j;
+    double *s;
+    double *b = baseFunc;
+
+    // Add the coefficients of the stiffness matrix for the
+    // whole Jacobian assocated with the butterfly state vector.
     for(outerLupe=0;outerLupe<=N;++outerLupe)
     {
-        baseFunc[outerLupe] = 0.0;
+        // Initialize the base function to zero.
+        *b = 0.0;
+        j = jacobian[outerLupe];
+        s = stiff[outerLupe];
+
+        // For each column in the current row set the entries in the
+        // Jacobian to be the associated entries in the stiffness matrix.
+        // Add up the dot product with the row in the stiffness matrix
+        // and the butterfly state vector for the function base function.
         for(innerLupe=0;innerLupe<=N;++innerLupe)
         {
-            jacobian[outerLupe][innerLupe] = -0.5*dt*mu*stiff[outerLupe][innerLupe];
-            baseFunc[outerLupe] -= stiff[outerLupe][innerLupe]*butterflies[innerLupe];
+            *j++ = -0.5*dt*mu*(*s);
+            *b -= (*s++)*butterflies[innerLupe];
         }
-        baseFunc[outerLupe] *= 0.5*dt*mu;
+        // Multiply the stiffness matrix product by the diffusion term and
+        // the time step associated with the implicit scheme.
+        *b++ *= 0.5*dt*mu;
     }
 
+    // Now go through and add the terms associated with the diagonal entries
+    // of the Jacobian as well as the terms associated with the equation
+    // for the wasps.
+
+    // Initialize the base function term associated with the wasps.
     baseFunc[N+1] = butterflies[N+1]*(1.0+0.5*dt*getD())-rhs[N+1];
     double theta;
     double integralSum = 0.0;
     for(outerLupe=0;outerLupe<=N;++outerLupe)
     {
+        // Add all of the derivatives associated with the diagonal entries of the Jacobian.
         theta = 0.5*(gaussAbscissa[outerLupe]+1.0);
         jacobian[outerLupe][outerLupe] += gaussWeights[outerLupe]*
                 (
                     1.0-0.5*dt*(1.0-2.0*butterflies[outerLupe])*parameterDistribution(theta)
                     + 0.5*dt*butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)))
                  );
+
+        // Add all of the function values associated with the diagonal entries to the base function.
         baseFunc[outerLupe] += gaussWeights[outerLupe]*(
                     butterflies[outerLupe] -
                     0.5*dt*parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) +
                     0.5*dt*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta)))
                 - rhs[outerLupe];
 
+        // Add all of the remaining nonlinear terms to the bottom row of the Jacobian.
+        // These are the partial derivatives associated with the integral of the butterfly state space.
         jacobian[N+1][outerLupe] =
                 gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)));
+
+        // Add the integral terms to the base function for the wasps. Also keep track of the partial derivative of
+        // the integral with respect to the wasps.
         baseFunc[N+1] -= gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
         integralSum   += gaussWeights[outerLupe]*0.5*dt*getG()*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
     }
-    //theta = 0.5*(gaussAbscissa[N]+1.0);
+
+    // Finally update the Jacobian for the partial derivative of the wasps with respect to the wasps.
     jacobian[N+1][N+1] = 1.0+0.5*dt*getD() - integralSum;
 
 }
 
+// Method to add the deltaX from the Newton method solve to the current state space.
 void Butterflies::updateNewtonStep()
 {
     int lupe;
+    double *b = butterflies;
+    double *dx = deltaX;
     for(lupe=0;lupe<=N+1;++lupe)
     {
-        butterflies[lupe] -= deltaX[lupe];
-        //std::cout << lupe << ": " << deltaX[lupe] << "/" << butterflies[lupe] << std::endl;
+        *b++ -= *dx++;
     }
 }
 
+// Method to calculate the function value associated with the
+// previous time step. These are the known values of the time
+// stepping equation.
 void Butterflies::calculateRHS()
 {
+    // loop variables.
     int outerLupe;
     int innerLupe;
 
+    // Initialize the values associated with the linear terms in the equation for the wasps.
     rhs[N+1] = butterflies[N+1]*(1.0-dt*0.5*getD());
+
+    // Initialize the pointer to the rhs vector.
+    double *r = rhs;
+    double *s;
+    double *b;
     for(outerLupe=0;outerLupe<=N;++outerLupe)
     {
+        // Initialize the value in the RHS vector to be zero.
+        // Later we will add the terms from the function evaluation.
         double theta = 0.5*(gaussAbscissa[outerLupe]+1.0);
-        rhs[outerLupe] = 0.0;
+        *r = 0.0;
+
+        // Initialize the pointers to the current row of the stiffness matrix
+        // and the starting of the state vector for the butterflies.
+        s = stiff[outerLupe];
+        b = butterflies;
         for(innerLupe=0;innerLupe<=N;++innerLupe)
         {
-            rhs[outerLupe] += stiff[outerLupe][innerLupe]*butterflies[innerLupe];
+            // Add the terms to the RHS for the dot product of the
+            // current row in the stiffness matrix and the butterfly
+            // state vector.
+            *r += (*s++)*(*b++);
         }
-        rhs[outerLupe] = 0.5*dt*mu*rhs[outerLupe] +
+
+        // Add all of the terms associated with the remaining terms in the butterfly
+        // equation. (All of the terms not associated with the stiffness matrix.)
+        *r++ = 0.5*dt*mu*rhs[outerLupe] +
                 gaussWeights[outerLupe]*(
                     butterflies[outerLupe] +
                     0.5*dt*parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) -
                     0.5*dt*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta))
                     );
-        rhs[N+1] += gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+
+        // Add the terms associated with the integral in the wasp equation.
+        rhs[N+1] += gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*
+                butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
     }
 }
 
+// Method to copy the current state vector to the prevTimeStep vector.
+// Is this really needed???? Does not seem to be necessary?
 void Butterflies::copyCurrentStateToTemp()
 {
     int number = getStateSize();
+    double *p = prevTimeStep;
+    double *b = butterflies;
     for(int lupe=0;lupe<number;++lupe)
-        prevTimeStep[lupe] = butterflies[lupe];
+        *p++ = *b++;
 }
 
 
+// Method to allocate space for the state vector and also set the initial
+// conditions for the butterflies and the wasps.
 void Butterflies::initializeButterflies()
 {
     int number = getNumber();
     if(number>0)
     {
+        // This object know how big it should be. Allocate the space
+        // if it has not already been done.
         ArrayUtils <double> arrays;
         if(butterflies==nullptr)
              butterflies  = arrays.onetensor(getStateSize());
@@ -122,6 +196,7 @@ void Butterflies::initializeButterflies()
         double butterflyIntegral = 0.0;
         for(int lupe=0;lupe<=number;++lupe)
          {
+             // Use the theoretical steady state predicted by the ODE.
              double theta = 0.5*(gaussAbscissa[lupe]+1.0);
              double steady = d*c/(parameterDistribution(theta)*(g-d));
              /*
@@ -132,16 +207,25 @@ void Butterflies::initializeButterflies()
              */
              if (steady>0.0)
              {
+                 // The predicted steady state is positive so assume it is okay.
                  butterflies[lupe]  = steady;
              }
              else
              {
+                 // The predicted steady state was negative so just make it
+                 // something close to zero.
                  butterflies[lupe] = 0.01;
              }
+
+             // Keep track of the integral of the butterflies to estimate
+             // the total number of butterflies in the population.
              butterflyIntegral += gaussWeights[lupe]*butterflies[lupe];
          }
 
 //#define INITIAL_METHOD_ONE
+        // Normalize the butterfly density so that the total number
+        // is a reasonable overall value. Reuse the butterflyIntegral
+        // variable to be the new scaling factor.
         double integral1 = 0.0;
         double integral2 = 0.0;
         butterflyIntegral = d*c/(parameterDistribution(0.0)*(g-d))/butterflyIntegral;
@@ -149,19 +233,25 @@ void Butterflies::initializeButterflies()
         // steady state to get the initial approximation for the wasps.
         for(int lupe=0;lupe<=number;++lupe)
          {
+            // Go through and normalize every value in the state vector associated
+            // with the butterflies.
             double theta = 0.5*(gaussAbscissa[lupe]+1.0);
             butterflies[lupe] *= butterflyIntegral;
 #ifdef INITIAL_METHOD_ONE
+            // Integrate the terms in the steady state equation for each butterfly value.
              integral1 += gaussWeights[lupe]*(c+butterflies[lupe]*parameterDistribution(theta));
              integral2 += gaussWeights[lupe]*(1.0-butterflies[lupe]);
 #else
+            // Integrate the terms in the full butterfly, time varying, equation assuming that the time derivative is zero.
              integral1 += gaussWeights[lupe]*parameterDistribution(theta)*butterflies[lupe]/(c+butterflies[lupe]*parameterDistribution(theta));
              integral2 += gaussWeights[lupe]*parameterDistribution(theta)*butterflies[lupe]*fabs((1.0-butterflies[lupe]));
 #endif
          }
 #ifdef INITIAL_METHOD_ONE
+        // Make an estimate for the number of wasps based on the steady state equation.
          butterflies[number+1] = integral2*integral1;
 #else
+        // Make an estimate for the number of wasps based on the full PDE assuming the time derivative is zero.
          butterflies[number+1] = integral2/integral1;
 #endif
 
@@ -169,19 +259,22 @@ void Butterflies::initializeButterflies()
     }
 }
 
+// Method to set the initial condition to a Gaussian profile with a given
+// center and variance.
 void Butterflies::initializeButterfliesGaussian(double center,double variance)
 {
     int number = getNumber();
     if(number>0)
     {
+        // Allocate the space if the size of the state space is known.
         ArrayUtils <double> arrays;
         if(butterflies==nullptr)
              butterflies  = arrays.onetensor(getStateSize());
         if(prevTimeStep==nullptr)
              prevTimeStep = arrays.onetensor(getStateSize());
 
-        // First set the initial profile for the butterflies. It will be normalized
-        // later so its average value is something more reasonable.
+        // First set the initial profile for the butterflies. It is a
+        // simple Gaussian with the given center and variance.
         double butterflyIntegral = 0.0;
         for(int lupe=0;lupe<=number;++lupe)
          {
@@ -196,6 +289,8 @@ void Butterflies::initializeButterfliesGaussian(double center,double variance)
     }
 }
 
+// Method to write the relevant parameter values to
+// a given binary file.
 void Butterflies::writeParameters(std::fstream &resultsFile)
 {
     resultsFile.write(reinterpret_cast<char*>(&mu),sizeof(double));
@@ -205,6 +300,8 @@ void Butterflies::writeParameters(std::fstream &resultsFile)
     resultsFile.write(reinterpret_cast<char*>(&m),sizeof(double));
 }
 
+// Method to delete the state vector and the
+// vector used to keep track of the previous time step.
 void Butterflies::deleteButterflies()
 {
     ArrayUtils<double> arrays;
@@ -218,15 +315,18 @@ void Butterflies::deleteButterflies()
 
 }
 
+// Method to write the current state vector to a csv file.
+// The file should be opened as a standard text file.
 void Butterflies::writeCurrentApprox(double time, std::ofstream &resultsFile)
 {
     resultsFile << time;
     for(int outerLupe=0;outerLupe<=N;++outerLupe)
         resultsFile << "," << butterflies[outerLupe];
-    resultsFile << std::endl;
+    resultsFile << "," << butterflies[N+1] << std::endl; // write out the wasp density!
 
 }
 
+// Method to write the current state vector to a binary file.
 void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFile)
 {
     // First approximate the total butterfly population.
@@ -242,6 +342,7 @@ void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFil
     resultsFile.write(reinterpret_cast<char*>(butterflies),static_cast<long>(N+2)*static_cast<long>(sizeof(double)));
 }
 
+// Method to calculate the value of p(theta).
 double Butterflies::parameterDistribution(double theta)
 {
     return(m*theta+1.0);
