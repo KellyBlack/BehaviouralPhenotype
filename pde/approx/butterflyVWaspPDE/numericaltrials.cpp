@@ -11,6 +11,7 @@
 #define BINARYOUTPUTFILE "approximation"
 
 
+// Constructor for the numerical trials class.
 NumericalTrials::NumericalTrials()
 {
 

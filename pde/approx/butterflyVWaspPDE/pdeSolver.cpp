@@ -2,53 +2,67 @@
 
 #include "pdeSolver.h"
 
+// Constructor for the PDE Solver class
 PDESolver::PDESolver(int number, int numberState)
 {
-    std::cout << "PDE Solver start" << std::endl;
+    // Set the requisite number of variables to keep track
+    // of in the state of the PDE vector and the whole state
+    // space as well.
     setNumber(number);
     setStateSize(numberState);
+
+    // If the size of the state space is known allocate the
+    // necessary space.
     if((number>0)&&(numberState>0))
         createArrays();
 
 }
 
+// Destructor for the PDE Solver class.
 PDESolver::~PDESolver()
 {
-    std::cout << "PDE Solver end" << std::endl;
+    // Just delete the vectors and arrays that have been allocated.
     deleteArrays();
 }
 
+// Mutator for the number variable.
 void PDESolver::setNumber(int number)
 {
     N = number;
 }
 
+// Accessor for the number variable
 int PDESolver::getNumber()
 {
     return(N);
 }
 
+// Mutator for the state space size.
 void PDESolver::setStateSize(int number)
 {
     stateSize = number;
 }
 
+// Accessor for the state space size.
 int PDESolver::getStateSize()
 {
     return(stateSize);
 }
 
-
+// Mutator for the time step variable.
 void PDESolver::setDT(double value)
 {
     dt = value;
 }
 
+// Accessor for the time step variable.
 double PDESolver::getDT()
 {
     return(dt);
 }
 
+// Routine to allocate the space used for the vectors and
+// arrays associated with the class.
 void PDESolver::createArrays()
 {
     ArrayUtils<double> arrays;
@@ -75,6 +89,7 @@ void PDESolver::createArrays()
     order    = arraysInt.onetensor(stateSize);
 }
 
+// Method to delete all the vectors and arrays used by the class.
 void PDESolver::deleteArrays()
 {
     ArrayUtils<double> arrays;
@@ -144,6 +159,9 @@ void PDESolver::deleteArrays()
     }
 }
 
+// Method to initialize the values associated with the
+// numerical scheme. In particular the quadrature values
+// and the related stiffness and derivative matrices.
 void PDESolver::initializeLegendreParams()
 {
     if(getNumber()>0)
@@ -161,6 +179,8 @@ void PDESolver::initializeLegendreParams()
 }
 
 
+// Method to perform an LU decomposition on the current linear system,
+// and then solve the decomposed system.
 bool PDESolver::solveLinearizedSystem()
 {
     LU_Decomposition<double> solver;
@@ -172,15 +192,19 @@ bool PDESolver::solveLinearizedSystem()
     return(false);
 }
 
+// Method to approximate the l2 norm of the update vector.
 double PDESolver::normDelta()
 {
     double value(0.0);
     int lupe;
+    double *p = deltaX;
     for(lupe=0;lupe<stateSize;++lupe)
-        value += deltaX[lupe]*deltaX[lupe];
+        value += (*p)*(*p++);
     return(value);
 }
 
+// Method to perform a single time step of the numerical scheme.
+// Performs a Newton method to invert the nonlinear system.
 int PDESolver::singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool printInfo)
 {
     // Build the system and solve.
@@ -197,6 +221,7 @@ int PDESolver::singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool p
         canInvert = solveLinearizedSystem();
         if(canInvert)
         {
+            // Life is good. Perform the Newton step and update the current state vector.
             updateNewtonStep();
             if(printInfo)
                 std::cout << "  step: " << totalStepsPossible - maxNewtonSteps << ", ";
@@ -217,6 +242,9 @@ int PDESolver::singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool p
 
 }
 
+// Method to write the abscissa and weights associated with the
+// Gauss-Labotto quadrature to a given file. The file is in a
+// csv format and should be a text file.
 void PDESolver::writeAbscissa(std::ofstream &resultsFile)
 {
     for(int outerLupe=0;outerLupe<N;++outerLupe)
@@ -229,6 +257,9 @@ void PDESolver::writeAbscissa(std::ofstream &resultsFile)
 
 }
 
+// Method to write the polynomial degree, the size of the state, and the
+// abscissa and weights associated with the Gauss-Labotto quadrature to
+// a binary file.
 void PDESolver::writeBinaryHeader(std::fstream &resultsFile)
 {
     resultsFile.write(reinterpret_cast<char*>(&N),sizeof(int));

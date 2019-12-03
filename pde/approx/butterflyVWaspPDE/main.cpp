@@ -18,7 +18,7 @@ int main()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double mu = 0.01;
+    double mu = 0.2; //0.01;
     double c  = 0.7;
     double g  = 2.0;
     double d  = 1.0;
