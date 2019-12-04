@@ -185,6 +185,19 @@ void Butterflies::copyCurrentState(double *ptr)
         *dest++ = *source++;
 }
 
+// Method to approximate the total butterfly population by
+// integrating the current state.
+double Butterflies::totalButterflyPopulation()
+{
+    double integral = 0.0;
+    double *b = butterflies;
+    double *gw = gaussWeights;
+    for(int lupe=0;lupe<=N;++lupe)
+    {
+        integral += (*b++)*(*gw++);
+    }
+    return(integral);
+}
 
 // Method to allocate space for the state vector and also set the initial
 // conditions for the butterflies and the wasps.
@@ -340,11 +353,7 @@ void Butterflies::writeCurrentApprox(double time, std::ofstream &resultsFile)
 void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFile)
 {
     // First approximate the total butterfly population.
-    double integral = 0.0;
-    for(int lupe=0;lupe<=N;++lupe)
-    {
-        integral += butterflies[lupe]*gaussWeights[lupe];
-    }
+    double integral = totalButterflyPopulation();
 
     // Write the time, the total population, and then the full state vector.
     resultsFile.write(reinterpret_cast<char*>(&time),sizeof(double));

@@ -14,6 +14,7 @@ public:
     virtual void calculateRHS();
     virtual void copyCurrentStateToTemp();
     virtual void copyCurrentState(double *ptr);
+    double totalButterflyPopulation();
 
     void initializeButterflies();
     void initializeButterfliesGaussian(double center, double variance);
