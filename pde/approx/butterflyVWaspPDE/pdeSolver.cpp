@@ -198,8 +198,10 @@ double PDESolver::normDelta()
     double value(0.0);
     int lupe;
     double *p = deltaX;
-    for(lupe=0;lupe<stateSize;++lupe)
-        value += (*p)*(*p++);
+    for(lupe=0;lupe<stateSize;++lupe,++p)
+    {
+        value += (*p)*(*p);
+    }
     return(value);
 }
 
