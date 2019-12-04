@@ -12,7 +12,8 @@ public:
     virtual void buildJacobian();
     virtual void updateNewtonStep();
     virtual void calculateRHS();
-    void copyCurrentStateToTemp();
+    virtual void copyCurrentStateToTemp();
+    virtual void copyCurrentState(double *ptr);
 
     void initializeButterflies();
     void initializeButterfliesGaussian(double center, double variance);

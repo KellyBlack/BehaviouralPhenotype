@@ -30,6 +30,7 @@ public:
     virtual void updateNewtonStep() = 0;
     virtual void calculateRHS() = 0;
     virtual void copyCurrentStateToTemp() = 0;
+    virtual void copyCurrentState(double *ptr) = 0;
     bool solveLinearizedSystem();
     double normDelta();
     int singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool printInfo);

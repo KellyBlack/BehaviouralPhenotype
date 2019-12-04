@@ -175,6 +175,16 @@ void Butterflies::copyCurrentStateToTemp()
         *p++ = *b++;
 }
 
+// Method to copy the current state vector to a vector that
+// is passed in as the argument.
+void Butterflies::copyCurrentState(double *ptr)
+{
+    double *dest = ptr;
+    double *source = butterflies;
+    for(int lupe=0;lupe<=getStateSize();++lupe)
+        *dest++ = *source++;
+}
+
 
 // Method to allocate space for the state vector and also set the initial
 // conditions for the butterflies and the wasps.
