@@ -151,11 +151,12 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
 }
 
 int NumericalTrials::approximateSystemTrackRepeating(
-        double mu, double c, double g, double d, double m,
+        double mu, double c, double g, double d,
+        double mLow, double mHigh, int numberM,
         double dt, int maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
-        int skipPrint)
+        int skipPrint, int numProcesses)
 {
 
     // Create an ID and then create a message queue that will be associated with the ID
@@ -183,36 +184,40 @@ int NumericalTrials::approximateSystemTrackRepeating(
 
     std::vector<MessageInformation*> processes;
     unsigned long lupe;
-    for(lupe=0;lupe<8;++lupe)
+    double currentM = mLow;
+    unsigned long numberProcesses = 0;
+    for(lupe=0;(currentM<=mHigh) && (lupe<static_cast<unsigned long>(numProcesses));++lupe)
     {
         std::cout << "Starting process " << lupe << std::endl;
-        m = 0.01 + static_cast<double>(lupe)*0.05;
+        currentM = mLow + static_cast<double>(lupe)*(mHigh-mLow)/static_cast<double>(numberM);
         MessageInformation *newProcess = new MessageInformation;
         newProcess->which = lupe;
         newProcess->mu = mu;
         newProcess->c = c;
         newProcess->g = g;
         newProcess->d = d;
-        newProcess->m = m;
+        newProcess->m = currentM;
         newProcess->trial = new NumericalTrials;
         newProcess->process = new std::thread(
                         &NumericalTrials::approximateSystemQuietResponse,newProcess->trial,
-                        mu,c,g,d,m,dt,maxTimeLupe/10,
+                        mu,c,g,d,currentM,dt,maxTimeLupe,
                         legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,lupe
                         );
         processes.push_back(newProcess);
+        numberProcesses += 1;
     }
 
     MaxMinBuffer msgValue;
     std::vector<MessageInformation*>::iterator eachProcess;
     std::cout << "waiting on " << processes.size() << " processes." << std::endl;
-    for(lupe=0;lupe<processes.size();++lupe)
+    while(numberProcesses > 0)
     {
         std::cout << "waiting on response " << lupe << std::endl;
         msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
         std::cout << "Value: " << msgValue.which << " " << msgValue.m << " "
                   << msgValue.maxWasp << " " << msgValue.minWasp << " "
                   << msgValue.minButterfly << " " << msgValue.maxButterfly << std::endl;
+        numberProcesses -= 1;
 
         // need to find this thread and join it.
         for(eachProcess=processes.begin();(eachProcess!=processes.end());++eachProcess)
@@ -236,7 +241,29 @@ int NumericalTrials::approximateSystemTrackRepeating(
                 break;
             }
         }
-        std::cout << "heard response " << lupe << " (" << processes.size() << ")" << std::endl;
+        std::cout << "heard response " << (*eachProcess)->which << " (" << processes.size() << ")" << std::endl;
+
+        if(currentM < mHigh)
+        {
+            std::cout << "Starting process " << lupe << std::endl;
+            currentM = mLow + static_cast<double>(lupe++)*(mHigh-mLow)/static_cast<double>(numberM);
+            MessageInformation *newProcess = new MessageInformation;
+            newProcess->which = lupe;
+            newProcess->mu = mu;
+            newProcess->c = c;
+            newProcess->g = g;
+            newProcess->d = d;
+            newProcess->m = currentM;
+            newProcess->trial = new NumericalTrials;
+            newProcess->process = new std::thread(
+                            &NumericalTrials::approximateSystemQuietResponse,newProcess->trial,
+                            mu,c,g,d,currentM,dt,maxTimeLupe,
+                            legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,lupe
+                            );
+            processes.push_back(newProcess);
+            numberProcesses += 1;
+        }
+
     }
 
     std::cout << std::endl << std::endl << "All processes finished." << std::endl;
@@ -252,34 +279,6 @@ int NumericalTrials::approximateSystemTrackRepeating(
     }
 
 
-    /*
-    NumericalTrials t1;
-    std::thread p1(
-        &NumericalTrials::approximateSystemQuietResponse,&t1,mu,c,g,d,m,dt,maxTimeLupe/10,
-        legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,1
-                );
-
-    NumericalTrials t2;
-    std::thread p2(
-        &NumericalTrials::approximateSystemQuietResponse,&t2,mu,c,g,d,m+0.1,dt,maxTimeLupe/10,
-        legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,2
-                );
-
-    MaxMinBuffer msgValue;
-    msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
-
-    std::cout << "Value: " << msgValue.which << " " << msgValue.maxWasp << " " << msgValue.minWasp << " "
-              << msgValue.minButterfly << " " << msgValue.maxButterfly << std::endl;
-
-    msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
-
-    std::cout << "Value: " << msgValue.which << " " << msgValue.maxWasp << " " << msgValue.minWasp << " "
-              << msgValue.minButterfly << " " << msgValue.maxButterfly << std::endl;
-
-
-    p1.join();
-    p2.join();
-    */
 
     msgctl(msgID, IPC_RMID, nullptr);
     return(1);
