@@ -39,6 +39,26 @@ public:
             double maxDeltaNorm, int maxNewtonSteps,
             int skipPrint);
 
+    int approximateSystemQuietResponse(double mu, double c, double g, double d, double m,
+            double dt, int maxTimeLupe,
+            int legendrePolyDegree,
+            double maxDeltaNorm, int maxNewtonSteps,
+            int skipPrint, int msgID);
+
+protected:
+
+private:
+
+    struct MaxMinBuffer
+    {
+      long mtype;
+      double maxButterfly;
+      double minButterfly;
+      double maxWasp;
+      double minWasp;
+    };
+
+
 };
 
 #endif // NUMERICALTRIALS_H

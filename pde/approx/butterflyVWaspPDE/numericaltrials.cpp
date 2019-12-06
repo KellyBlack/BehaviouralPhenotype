@@ -4,6 +4,9 @@
 #include <string>
 #include <sstream>
 
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
 
 #include "numericaltrials.h"
 #include "util.h"
@@ -154,6 +157,30 @@ int NumericalTrials::approximateSystemTrackRepeating(
         double maxDeltaNorm, int maxNewtonSteps,
         int skipPrint)
 {
+
+    key_t msg_key = ftok("butterfly",1995);
+    int msgID = msgget(msg_key,0666|IPC_CREAT);
+
+    //std::vector<std::thread> processes;
+    NumericalTrials trial;
+    std::thread process(
+        &NumericalTrials::approximateSystemQuietResponse,&trial,mu,c,g,d,m,dt,maxTimeLupe,
+        legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID
+                );
+    MaxMinBuffer msgValue;
+    msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
+    process.join();
+    std::cout << "Value: " << msgValue.maxWasp << std::endl;
+    return(1);
+}
+
+int NumericalTrials::approximateSystemQuietResponse(
+        double mu, double c, double g, double d, double m,
+        double dt, int maxTimeLupe,
+        int legendrePolyDegree,
+        double maxDeltaNorm, int maxNewtonSteps,
+        int skipPrint,int msgID)
+{
     ArrayUtils<double> arrays;
     double *maxButterflyProfile = arrays.onetensor(legendrePolyDegree+2);
     double t        = 0.0;
@@ -267,10 +294,20 @@ int NumericalTrials::approximateSystemTrackRepeating(
 
     }
 
+    MaxMinBuffer values;
+    values.mtype = 2;
+    values.maxWasp = maxWaspDensity;
+    values.minWasp = minWaspDensity;
+    values.maxButterfly = maxButterfliesDensity;
+    values.minButterfly = minButterfliesDensity;
+    msgsnd(msgID,&values,sizeof(values),0);
+    std::cout << "DONE" << std::endl;
+
     // Clean up the allocated space
     delete theButterflies;
     arrays.delonetensor(maxButterflyProfile);
 
     return(1);
+
 }
 

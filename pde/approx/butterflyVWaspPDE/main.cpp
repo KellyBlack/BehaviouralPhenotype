@@ -41,7 +41,7 @@ int main()
     NumericalTrials trial;
     trial.approximateSystemTrackRepeating(
                 mu,c,g,d,0.2,
-                dt,10*NUMBER_TIME_LOOP,
+                dt,NUMBER_TIME_LOOP,
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
                 -SKIP_PRINT_UPDATE);
