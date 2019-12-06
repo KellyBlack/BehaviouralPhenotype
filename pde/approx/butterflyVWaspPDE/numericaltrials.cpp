@@ -214,9 +214,11 @@ int NumericalTrials::approximateSystemTrackRepeating(
     {
         std::cout << "waiting on response " << lupe << std::endl;
         msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
-        std::cout << "Value: " << msgValue.which << " " << msgValue.m << " "
-                  << msgValue.maxWasp << " " << msgValue.minWasp << " "
-                  << msgValue.minButterfly << " " << msgValue.maxButterfly << std::endl;
+        std::cout << msgValue.which << " "
+                  << msgValue.mu << "," << msgValue.c << "," << msgValue.g << ","
+                  << msgValue.d << "," << msgValue.m << "," << msgValue.endTime << ","
+                  << msgValue.maxWasp << "," << msgValue.minWasp << ","
+                  << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
         numberProcesses -= 1;
 
         // need to find this thread and join it.
@@ -267,17 +269,20 @@ int NumericalTrials::approximateSystemTrackRepeating(
     }
 
     std::cout << std::endl << std::endl << "All processes finished." << std::endl;
-    std::cout << "mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
+
+    std::fstream csvFile ("changingMResults.csv", std::ios::out);
+    csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     for(eachProcess=processes.begin();eachProcess!=processes.end();++eachProcess)
     {
         //eachProcess->join();
         //delete *eachTrial;
-        std::cout << "Value: " << (*eachProcess)->which << " "
-                  << (*eachProcess)->mu << "," << (*eachProcess)->c << "," << (*eachProcess)->g << ","
-                  << (*eachProcess)->d << "," << (*eachProcess)->m << "," << (*eachProcess)->time << ","
-                  << (*eachProcess)->maxWasp << "," << (*eachProcess)->minWasp << ","
-                  << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
+        csvFile << (*eachProcess)->which << ","
+                << (*eachProcess)->mu << "," << (*eachProcess)->c << "," << (*eachProcess)->g << ","
+                << (*eachProcess)->d << "," << (*eachProcess)->m << "," << (*eachProcess)->time << ","
+                << (*eachProcess)->maxWasp << "," << (*eachProcess)->minWasp << ","
+                << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
     }
+    csvFile.close();
 
 
 
@@ -320,6 +325,7 @@ int NumericalTrials::approximateSystemQuietResponse(
     double maxWaspDensity = prevWaspDensity;
     double minWaspDensity = maxWaspDensity;
     int countWaspIncreasing = 0;
+    int prevValueClose = 0;
 
 
     // Start the time loop, and calculation an approximation at
@@ -354,6 +360,11 @@ int NumericalTrials::approximateSystemQuietResponse(
             if(countButterflyIncreasing-->0)
             {
                 //std::cout << which << ": max butterfly " << prevButterflyDensity << "-" << maxButterfliesDensity << std::endl;
+                if(fabs(maxButterfliesDensity-prevButterflyDensity)<1E-3)
+                    prevValueClose += 1;
+                else
+                    prevValueClose = 0;
+
                 maxButterfliesDensity = prevButterflyDensity;
                 countButterflyIncreasing = 0;
             }
@@ -366,6 +377,11 @@ int NumericalTrials::approximateSystemQuietResponse(
             if(countButterflyIncreasing++ < 0)
             {
                 //std::cout << which << ": min butterfly " << prevButterflyDensity << "-" << minButterfliesDensity << std::endl;
+                if(fabs(minButterfliesDensity-prevButterflyDensity)<1E-3)
+                    prevValueClose += 1;
+                else
+                    prevValueClose = 0;
+
                 minButterfliesDensity = prevButterflyDensity;
                 countButterflyIncreasing = 0;
             }
@@ -385,6 +401,11 @@ int NumericalTrials::approximateSystemQuietResponse(
             if(countWaspIncreasing-->0)
             {
                 //std::cout << which << ": max wasp " << prevWaspDensity << "-" << maxWaspDensity << std::endl;
+                if(fabs(maxWaspDensity-prevWaspDensity)<1E-3)
+                    prevValueClose += 1;
+                else
+                    prevValueClose = 0;
+
                 maxWaspDensity = prevWaspDensity;
                 countWaspIncreasing = 0;
             }
@@ -397,12 +418,19 @@ int NumericalTrials::approximateSystemQuietResponse(
             if(countWaspIncreasing++ < 0)
             {
                 //std::cout << which << ": min wasp " << prevWaspDensity << "-" << minWaspDensity << std::endl;
+                if(fabs(minWaspDensity-prevWaspDensity)<1E-3)
+                    prevValueClose += 1;
+                else
+                    prevValueClose = 0;
+
                 minWaspDensity = prevWaspDensity;
                 countWaspIncreasing = 0;
             }
         }
         prevWaspDensity = currentWaspDensity;
 
+        if(prevValueClose>=4)
+            break;
     }
 
     MaxMinBuffer values;
