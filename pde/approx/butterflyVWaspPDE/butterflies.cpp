@@ -199,6 +199,12 @@ double Butterflies::totalButterflyPopulation()
     return(integral);
 }
 
+// Method to return the current wasp density
+double Butterflies::waspPopulation()
+{
+    return(butterflies[getStateSize()-1]);
+}
+
 // Method to allocate space for the state vector and also set the initial
 // conditions for the butterflies and the wasps.
 void Butterflies::initializeButterflies()

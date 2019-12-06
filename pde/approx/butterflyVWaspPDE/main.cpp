@@ -27,6 +27,8 @@ int main()
     std::cout << "Starting" << std::endl;
 
 
+//#define APPROXIMATE_MULTIPLE_M
+#ifdef APPROXIMATE_MULTIPLE_M
     NumericalTrials::multipleApproximationsByM(
             mu,c,g,d,
             0.2,1.3,0.2,
@@ -35,16 +37,15 @@ int main()
             MAX_DELTA_NORM,MAX_NEWTON_STEPS,
             SKIP_PRINT_UPDATE,SKIP_FILE_SAVE,
             NUMBER_THREADS);
-
-    /*
+#else
     NumericalTrials trial;
     trial.approximateSystemTrackRepeating(
                 mu,c,g,d,0.2,
-                dt,NUMBER_TIME_LOOP,
+                dt,10*NUMBER_TIME_LOOP,
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-                SKIP_PRINT_UPDATE);
-    */
+                -SKIP_PRINT_UPDATE);
+#endif
 
     std::cout << "Done" << std::endl;
 

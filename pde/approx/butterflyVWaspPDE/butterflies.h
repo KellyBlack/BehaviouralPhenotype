@@ -15,6 +15,7 @@ public:
     virtual void copyCurrentStateToTemp();
     virtual void copyCurrentState(double *ptr);
     double totalButterflyPopulation();
+    double waspPopulation();
 
     void initializeButterflies();
     void initializeButterfliesGaussian(double center, double variance);
