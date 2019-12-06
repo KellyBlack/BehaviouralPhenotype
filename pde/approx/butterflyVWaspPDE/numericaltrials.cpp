@@ -162,15 +162,34 @@ int NumericalTrials::approximateSystemTrackRepeating(
     int msgID = msgget(msg_key,0666|IPC_CREAT);
 
     //std::vector<std::thread> processes;
-    NumericalTrials trial;
-    std::thread process(
-        &NumericalTrials::approximateSystemQuietResponse,&trial,mu,c,g,d,m,dt,maxTimeLupe,
-        legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID
+    NumericalTrials t1;
+    std::thread p1(
+        &NumericalTrials::approximateSystemQuietResponse,&t1,mu,c,g,d,m,dt,maxTimeLupe/10,
+        legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,1
                 );
+
+    NumericalTrials t2;
+    std::thread p2(
+        &NumericalTrials::approximateSystemQuietResponse,&t2,mu,c,g,d,m+0.1,dt,maxTimeLupe/10,
+        legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,2
+                );
+
     MaxMinBuffer msgValue;
     msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
-    process.join();
-    std::cout << "Value: " << msgValue.maxWasp << std::endl;
+
+    std::cout << "Value: " << msgValue.which << " " << msgValue.maxWasp << " " << msgValue.minWasp << " "
+              << msgValue.minButterfly << " " << msgValue.maxButterfly << std::endl;
+
+    msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
+
+    std::cout << "Value: " << msgValue.which << " " << msgValue.maxWasp << " " << msgValue.minWasp << " "
+              << msgValue.minButterfly << " " << msgValue.maxButterfly << std::endl;
+
+
+    p1.join();
+    p2.join();
+
+    msgctl(msgID, IPC_RMID, nullptr);
     return(1);
 }
 
@@ -179,7 +198,7 @@ int NumericalTrials::approximateSystemQuietResponse(
         double dt, int maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
-        int skipPrint,int msgID)
+        int skipPrint,int msgID,int which)
 {
     ArrayUtils<double> arrays;
     double *maxButterflyProfile = arrays.onetensor(legendrePolyDegree+2);
@@ -300,6 +319,7 @@ int NumericalTrials::approximateSystemQuietResponse(
     values.minWasp = minWaspDensity;
     values.maxButterfly = maxButterfliesDensity;
     values.minButterfly = minButterfliesDensity;
+    values.which = which;
     msgsnd(msgID,&values,sizeof(values),0);
     std::cout << "DONE" << std::endl;
 

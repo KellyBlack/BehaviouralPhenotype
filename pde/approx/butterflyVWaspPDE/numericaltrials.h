@@ -43,7 +43,7 @@ public:
             double dt, int maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
-            int skipPrint, int msgID);
+            int skipPrint, int msgID, int which);
 
 protected:
 
@@ -52,6 +52,7 @@ private:
     struct MaxMinBuffer
     {
       long mtype;
+      int which;
       double maxButterfly;
       double minButterfly;
       double maxWasp;
