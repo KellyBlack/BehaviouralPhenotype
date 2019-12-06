@@ -53,6 +53,12 @@ private:
     {
       long mtype;
       unsigned long which;
+      double mu;
+      double c;
+      double g;
+      double d;
+      double m;
+      double endTime;
       double maxButterfly;
       double minButterfly;
       double maxWasp;

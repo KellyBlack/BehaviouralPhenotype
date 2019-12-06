@@ -183,7 +183,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
 
     std::vector<MessageInformation*> processes;
     unsigned long lupe;
-    for(lupe=0;lupe<2;++lupe)
+    for(lupe=0;lupe<8;++lupe)
     {
         std::cout << "Starting process " << lupe << std::endl;
         m = 0.01 + static_cast<double>(lupe)*0.05;
@@ -210,19 +210,30 @@ int NumericalTrials::approximateSystemTrackRepeating(
     {
         std::cout << "waiting on response " << lupe << std::endl;
         msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
-        std::cout << "Value: " << msgValue.which << " " << msgValue.maxWasp << " " << msgValue.minWasp << " "
+        std::cout << "Value: " << msgValue.which << " " << msgValue.m << " "
+                  << msgValue.maxWasp << " " << msgValue.minWasp << " "
                   << msgValue.minButterfly << " " << msgValue.maxButterfly << std::endl;
 
         // need to find this thread and join it.
-        bool foundIt(false);
-        for(eachProcess=processes.begin();!foundIt && (eachProcess!=processes.end());++eachProcess)
+        for(eachProcess=processes.begin();(eachProcess!=processes.end());++eachProcess)
         {
             if((*eachProcess)->which == msgValue.which)
             {
+                (*eachProcess)->mu   = msgValue.mu;
+                (*eachProcess)->c    = msgValue.c;
+                (*eachProcess)->g    = msgValue.g;
+                (*eachProcess)->d    = msgValue.d;
+                (*eachProcess)->m    = msgValue.m;
+                (*eachProcess)->time = msgValue.endTime;
+                (*eachProcess)->maxButterfly = msgValue.maxButterfly;
+                (*eachProcess)->minButterfly = msgValue.minButterfly;
+                (*eachProcess)->maxWasp      = msgValue.maxWasp;
+                (*eachProcess)->minWasp      = msgValue.minWasp;
+
                 std::cout << "Found the process " << (*eachProcess)->which << std::endl;
                 delete (*eachProcess)->trial;
                 (*eachProcess)->process->join();
-                foundIt = true;
+                break;
             }
         }
         std::cout << "heard response " << lupe << " (" << processes.size() << ")" << std::endl;
@@ -234,8 +245,10 @@ int NumericalTrials::approximateSystemTrackRepeating(
         //eachProcess->join();
         //delete *eachTrial;
         std::cout << "Value: " << (*eachProcess)->which << " "
-                  << (*eachProcess)->maxWasp << " " << (*eachProcess)->minWasp << " "
-                  << (*eachProcess)->minButterfly << " " << (*eachProcess)->maxButterfly << std::endl;
+                  << (*eachProcess)->mu << "," << (*eachProcess)->c << "," << (*eachProcess)->g << ","
+                  << (*eachProcess)->d << "," << (*eachProcess)->m << "," << (*eachProcess)->time << ","
+                  << (*eachProcess)->maxWasp << "," << (*eachProcess)->minWasp << ","
+                  << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
     }
 
 
@@ -285,7 +298,7 @@ int NumericalTrials::approximateSystemQuietResponse(
     int    timeLupe = 0;
 
 
-    std::cout << "Pre-processing" << std::endl;
+    //std::cout << "Pre-processing" << std::endl;
     int N = legendrePolyDegree;
     Butterflies *theButterflies = new Butterflies(N,N+2);
     theButterflies->initializeLegendreParams();
@@ -340,7 +353,7 @@ int NumericalTrials::approximateSystemQuietResponse(
             // increasing.
             if(countButterflyIncreasing-->0)
             {
-                std::cout << which << ": max butterfly " << prevButterflyDensity << "-" << maxButterfliesDensity << std::endl;
+                //std::cout << which << ": max butterfly " << prevButterflyDensity << "-" << maxButterfliesDensity << std::endl;
                 maxButterfliesDensity = prevButterflyDensity;
                 countButterflyIncreasing = 0;
             }
@@ -352,7 +365,7 @@ int NumericalTrials::approximateSystemQuietResponse(
             // decreasing.
             if(countButterflyIncreasing++ < 0)
             {
-                std::cout << which << ": min butterfly " << prevButterflyDensity << "-" << minButterfliesDensity << std::endl;
+                //std::cout << which << ": min butterfly " << prevButterflyDensity << "-" << minButterfliesDensity << std::endl;
                 minButterfliesDensity = prevButterflyDensity;
                 countButterflyIncreasing = 0;
             }
@@ -371,7 +384,7 @@ int NumericalTrials::approximateSystemQuietResponse(
             // increasing.
             if(countWaspIncreasing-->0)
             {
-                std::cout << which << ": max wasp " << prevWaspDensity << "-" << maxWaspDensity << std::endl;
+                //std::cout << which << ": max wasp " << prevWaspDensity << "-" << maxWaspDensity << std::endl;
                 maxWaspDensity = prevWaspDensity;
                 countWaspIncreasing = 0;
             }
@@ -383,7 +396,7 @@ int NumericalTrials::approximateSystemQuietResponse(
             // decreasing.
             if(countWaspIncreasing++ < 0)
             {
-                std::cout << which << ": min wasp " << prevWaspDensity << "-" << minWaspDensity << std::endl;
+                //std::cout << which << ": min wasp " << prevWaspDensity << "-" << minWaspDensity << std::endl;
                 minWaspDensity = prevWaspDensity;
                 countWaspIncreasing = 0;
             }
@@ -394,13 +407,19 @@ int NumericalTrials::approximateSystemQuietResponse(
 
     MaxMinBuffer values;
     values.mtype = 2;
+    values.mu   = mu;
+    values.c    = c;
+    values.g    = g;
+    values.d    = d;
+    values.m    = m;
+    values.endTime = t;
     values.maxWasp = maxWaspDensity;
     values.minWasp = minWaspDensity;
     values.maxButterfly = maxButterfliesDensity;
     values.minButterfly = minButterfliesDensity;
     values.which = which;
     msgsnd(msgID,&values,sizeof(values),0);
-    std::cout << "DONE " << which << std::endl;
+    //std::cout << "DONE " << which << std::endl;
 
     // Clean up the allocated space
     delete theButterflies;
