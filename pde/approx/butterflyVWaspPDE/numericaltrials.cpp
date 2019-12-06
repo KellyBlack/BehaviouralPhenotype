@@ -267,6 +267,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
     }
 
     std::cout << std::endl << std::endl << "All processes finished." << std::endl;
+    std::cout << "mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     for(eachProcess=processes.begin();eachProcess!=processes.end();++eachProcess)
     {
         //eachProcess->join();
