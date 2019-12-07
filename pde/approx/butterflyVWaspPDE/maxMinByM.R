@@ -10,7 +10,7 @@ title(main="Max and Min Of The Butterfly Density After A Long Time Span",
 axis(1)
 axis(2)
 currentColour <- 0
-muLevels  <- sort(unique(a$mu))
+muLevels  <- sort(unique(a$mu),decreasing=TRUE)
 colours   <- c()
 labels    <- c()
 plotTypes <- c()
@@ -30,9 +30,14 @@ for(mu in muLevels)
     maxButterfly <- a$maxButterfly[a$mu==mu]
     minButterfly <- a$minButterfly[a$mu==mu]
     m <- sort(m,index.return=TRUE)
-    points(m$x,maxButterfly[m$ix],type='p',pch=nextPCH,col=currentColour,cex=0.5) # lwd=2,
-    points(m$x,minButterfly[m$ix],type='p',pch=nextPCH,col=currentColour,cex=0.5) # lwd=2
+    points(m$x,maxButterfly[m$ix],type='p',pch=nextPCH,col=currentColour,cex=0.75) # lwd=2,
+    points(m$x,minButterfly[m$ix],type='p',pch=nextPCH,col=currentColour,cex=0.75) # lwd=2
 }
+
+## m <- a$m[a$mu==mu]
+## tim <- a$time[a$mu==mu]
+## points(m,tim,pch=3,col=3)
+
 
 #plot(a$m[a$mu==0.02],a$time[a$mu==0.02])
 #points(a$m[a$mu==0.04],a$time[a$mu==0.04],col=2)

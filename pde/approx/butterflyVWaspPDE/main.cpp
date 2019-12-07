@@ -40,7 +40,7 @@ int main()
 #else
     NumericalTrials trial;
     trial.approximateSystemTrackRepeating(
-                0.02,0.2,9,
+                0.02,0.04,9,
                 c,g,d,
                 0.05,1.2,110,
                 dt,NUMBER_TIME_LOOP,
