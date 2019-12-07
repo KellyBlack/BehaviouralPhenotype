@@ -1,28 +1,41 @@
-a <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/changingM-multipleMu.csv')
+#a <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/changingM-multipleMu.csv')
+a <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/changingMResults.csv')
 
 plot.new()
 plot.window(xlim=c(0,1.05*max(a$m)),
-            ylim=c(0,1.05*max(a$maxButterfly)))
+            ylim=c(0,1.06*max(a$maxButterfly)))
 title(main="Max and Min Of The Butterfly Density After A Long Time Span",
       xlab='m',
       ylab='Butterfly Density')
 axis(1)
 axis(2)
 currentColour <- 0
-muLevels <- sort(unique(a$mu))
-colours <- c()
-labels <- c()
+muLevels  <- sort(unique(a$mu))
+colours   <- c()
+labels    <- c()
+plotTypes <- c()
+pchTypes  <- c()
+nextPCH   <- 0
 for(mu in muLevels)
 {
+    nextPCH       <- nextPCH + 1
     currentColour <- currentColour + 1
-    labels <- c(labels,as.expression(bquote(mu == .(mu))))
-    ##labels <- c(labels,parse(text=paste0('mu',"=",mu)))
-    colours <- c(colours,currentColour)
-    points(a$m[a$mu==mu],a$maxButterfly[a$mu==mu],
-           type='l',col=currentColour,lwd=2)
-    points(a$m[a$mu==mu],a$minButterfly[a$mu==mu],
-           type='l',col=currentColour,lwd=2)
+    labels    <- c(labels,as.expression(bquote(mu == .(mu))))
+    ##labels  <- c(labels,parse(text=paste0('mu',"=",mu)))
+    colours   <- c(colours,currentColour)
+    plotTypes <- c(plotTypes,0)
+    pchTypes  <- c(pchTypes,nextPCH)
+
+    m <- a$m[a$mu==mu]
+    maxButterfly <- a$maxButterfly[a$mu==mu]
+    minButterfly <- a$minButterfly[a$mu==mu]
+    m <- sort(m,index.return=TRUE)
+    points(m$x,maxButterfly[m$ix],type='p',pch=nextPCH,col=currentColour,cex=0.5) # lwd=2,
+    points(m$x,minButterfly[m$ix],type='p',pch=nextPCH,col=currentColour,cex=0.5) # lwd=2
 }
+
+#plot(a$m[a$mu==0.02],a$time[a$mu==0.02])
+#points(a$m[a$mu==0.04],a$time[a$mu==0.04],col=2)
 
 
 
@@ -34,7 +47,7 @@ for(mu in muLevels)
 #     ylab='Butterfly Density',
 #     col=2,lwd=2)
 
-legend(0.1,1.15,labels,lty=1,col=colours,lwd=2)
+legend(0.1,1.15,labels,lty=plotTypes,pch=pchTypes,col=colours,lwd=2)
 #legend(0.2,1.1,
 #       c(expression(paste(mu,'=0.2')),
 #         expression(paste(mu,'=0.1')),

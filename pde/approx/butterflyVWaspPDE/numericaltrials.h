@@ -34,7 +34,8 @@ public:
             int skipFileSave);
 
     int approximateSystemTrackRepeating(
-            double mu, double c, double g, double d,
+            double muLow, double muHigh, int numberMu,
+            double c, double g, double d,
             double mLow, double mHigh, int numberM,
             double dt, int maxTimeLupe,
             int legendrePolyDegree,

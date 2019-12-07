@@ -151,7 +151,8 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
 }
 
 int NumericalTrials::approximateSystemTrackRepeating(
-        double mu, double c, double g, double d,
+        double muLow, double muHigh, int numberMu,
+        double c, double g, double d,
         double mLow, double mHigh, int numberM,
         double dt, int maxTimeLupe,
         int legendrePolyDegree,
@@ -162,6 +163,11 @@ int NumericalTrials::approximateSystemTrackRepeating(
     // Create an ID and then create a message queue that will be associated with the ID
     key_t msg_key = ftok("butterfly",1995);
     int msgID = msgget(msg_key,0666|IPC_CREAT);
+
+    // Open a file to write the results to.  Write the header for the file as well.
+    std::fstream csvFile ("changingMResults.csv", std::ios::out);
+    csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
+
 
     // Set up the vector that will be used to keep track of the processes and
     // returned information associated with each process.
@@ -183,16 +189,18 @@ int NumericalTrials::approximateSystemTrackRepeating(
     };
 
     std::vector<MessageInformation*> processes;
-    unsigned long lupe;
+    unsigned long mLupe;
     double currentM = mLow;
+    unsigned long diffusionLupe = 0;
+    double currentDiffusion = muLow;
     unsigned long numberProcesses = 0;
-    for(lupe=0;(currentM<=mHigh) && (lupe<static_cast<unsigned long>(numProcesses));++lupe)
+    for(mLupe=0;(currentM<=mHigh) && (mLupe<static_cast<unsigned long>(numProcesses));++mLupe)
     {
-        std::cout << "Starting process " << lupe << std::endl;
-        currentM = mLow + static_cast<double>(lupe)*(mHigh-mLow)/static_cast<double>(numberM);
+        std::cout << "Starting process " << mLupe << std::endl;
+        currentM = mLow + static_cast<double>(mLupe)*(mHigh-mLow)/static_cast<double>(numberM);
         MessageInformation *newProcess = new MessageInformation;
-        newProcess->which = lupe;
-        newProcess->mu = mu;
+        newProcess->which = mLupe;
+        newProcess->mu = currentDiffusion;
         newProcess->c = c;
         newProcess->g = g;
         newProcess->d = d;
@@ -200,8 +208,8 @@ int NumericalTrials::approximateSystemTrackRepeating(
         newProcess->trial = new NumericalTrials;
         newProcess->process = new std::thread(
                         &NumericalTrials::approximateSystemQuietResponse,newProcess->trial,
-                        mu,c,g,d,currentM,dt,maxTimeLupe,
-                        legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,lupe
+                        currentDiffusion,c,g,d,currentM,dt,maxTimeLupe,
+                        legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,mLupe
                         );
         processes.push_back(newProcess);
         numberProcesses += 1;
@@ -212,7 +220,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
     std::cout << "waiting on " << processes.size() << " processes." << std::endl;
     while(numberProcesses > 0)
     {
-        std::cout << "waiting on response " << lupe << std::endl;
+        std::cout << "waiting on response " << mLupe << std::endl;
         msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
         std::cout << msgValue.which << " "
                   << msgValue.mu << "," << msgValue.c << "," << msgValue.g << ","
@@ -237,6 +245,12 @@ int NumericalTrials::approximateSystemTrackRepeating(
                 (*eachProcess)->maxWasp      = msgValue.maxWasp;
                 (*eachProcess)->minWasp      = msgValue.minWasp;
 
+                csvFile << (*eachProcess)->which << ","
+                        << (*eachProcess)->mu << "," << (*eachProcess)->c << "," << (*eachProcess)->g << ","
+                        << (*eachProcess)->d << "," << (*eachProcess)->m << "," << (*eachProcess)->time << ","
+                        << (*eachProcess)->maxWasp << "," << (*eachProcess)->minWasp << ","
+                        << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
+
                 std::cout << "Found the process " << (*eachProcess)->which << std::endl;
                 delete (*eachProcess)->trial;
                 (*eachProcess)->process->join();
@@ -245,13 +259,20 @@ int NumericalTrials::approximateSystemTrackRepeating(
         }
         std::cout << "heard response " << (*eachProcess)->which << " (" << processes.size() << ")" << std::endl;
 
+        if((currentM>=mHigh)&&(currentDiffusion<muHigh))
+        {
+            mLupe = 0;
+            currentM = mLow;
+            currentDiffusion = muLow + static_cast<double>(++diffusionLupe)*(muHigh-muLow)/static_cast<unsigned long>(numberMu);
+        }
+
         if(currentM < mHigh)
         {
-            std::cout << "Starting process " << lupe << std::endl;
-            currentM = mLow + static_cast<double>(lupe++)*(mHigh-mLow)/static_cast<double>(numberM);
+            std::cout << "Starting process " << mLupe << "/" << diffusionLupe << std::endl;
+            currentM = mLow + static_cast<double>(mLupe++)*(mHigh-mLow)/static_cast<double>(numberM);
             MessageInformation *newProcess = new MessageInformation;
-            newProcess->which = lupe;
-            newProcess->mu = mu;
+            newProcess->which = mLupe+diffusionLupe*static_cast<unsigned long>(numberM+1);
+            newProcess->mu = currentDiffusion;
             newProcess->c = c;
             newProcess->g = g;
             newProcess->d = d;
@@ -259,8 +280,9 @@ int NumericalTrials::approximateSystemTrackRepeating(
             newProcess->trial = new NumericalTrials;
             newProcess->process = new std::thread(
                             &NumericalTrials::approximateSystemQuietResponse,newProcess->trial,
-                            mu,c,g,d,currentM,dt,maxTimeLupe,
-                            legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,lupe
+                            currentDiffusion,c,g,d,currentM,dt,maxTimeLupe,
+                            legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,
+                            newProcess->which
                             );
             processes.push_back(newProcess);
             numberProcesses += 1;
@@ -270,22 +292,19 @@ int NumericalTrials::approximateSystemTrackRepeating(
 
     std::cout << std::endl << std::endl << "All processes finished." << std::endl;
 
-    std::fstream csvFile ("changingMResults.csv", std::ios::out);
-    csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     for(eachProcess=processes.begin();eachProcess!=processes.end();++eachProcess)
     {
         //eachProcess->join();
         //delete *eachTrial;
-        csvFile << (*eachProcess)->which << ","
-                << (*eachProcess)->mu << "," << (*eachProcess)->c << "," << (*eachProcess)->g << ","
-                << (*eachProcess)->d << "," << (*eachProcess)->m << "," << (*eachProcess)->time << ","
-                << (*eachProcess)->maxWasp << "," << (*eachProcess)->minWasp << ","
-                << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
+        std::cout << (*eachProcess)->which << ","
+                  << (*eachProcess)->mu << "," << (*eachProcess)->c << "," << (*eachProcess)->g << ","
+                  << (*eachProcess)->d << "," << (*eachProcess)->m << "," << (*eachProcess)->time << ","
+                  << (*eachProcess)->maxWasp << "," << (*eachProcess)->minWasp << ","
+                  << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
     }
+
+
     csvFile.close();
-
-
-
     msgctl(msgID, IPC_RMID, nullptr);
     return(1);
 }
@@ -315,6 +334,7 @@ int NumericalTrials::approximateSystemQuietResponse(
     theButterflies->setDT(dt);
 
     theButterflies->initializeButterflies();
+    //theButterflies->initializeButterfliesGaussian(1.0,mu*0.5);
     theButterflies->copyCurrentState(maxButterflyProfile);
     double maxButterfliesDensity = theButterflies->totalButterflyPopulation();
     double prevButterflyDensity = maxButterfliesDensity;
@@ -360,7 +380,7 @@ int NumericalTrials::approximateSystemQuietResponse(
             if(countButterflyIncreasing-->0)
             {
                 //std::cout << which << ": max butterfly " << prevButterflyDensity << "-" << maxButterfliesDensity << std::endl;
-                if(fabs(maxButterfliesDensity-prevButterflyDensity)<1E-3)
+                if(fabs(maxButterfliesDensity-prevButterflyDensity)<1E-4)
                     prevValueClose += 1;
                 else
                     prevValueClose = 0;
@@ -377,7 +397,7 @@ int NumericalTrials::approximateSystemQuietResponse(
             if(countButterflyIncreasing++ < 0)
             {
                 //std::cout << which << ": min butterfly " << prevButterflyDensity << "-" << minButterfliesDensity << std::endl;
-                if(fabs(minButterfliesDensity-prevButterflyDensity)<1E-3)
+                if(fabs(minButterfliesDensity-prevButterflyDensity)<1E-4)
                     prevValueClose += 1;
                 else
                     prevValueClose = 0;
@@ -401,7 +421,7 @@ int NumericalTrials::approximateSystemQuietResponse(
             if(countWaspIncreasing-->0)
             {
                 //std::cout << which << ": max wasp " << prevWaspDensity << "-" << maxWaspDensity << std::endl;
-                if(fabs(maxWaspDensity-prevWaspDensity)<1E-3)
+                if(fabs(maxWaspDensity-prevWaspDensity)<1E-4)
                     prevValueClose += 1;
                 else
                     prevValueClose = 0;
@@ -418,7 +438,7 @@ int NumericalTrials::approximateSystemQuietResponse(
             if(countWaspIncreasing++ < 0)
             {
                 //std::cout << which << ": min wasp " << prevWaspDensity << "-" << minWaspDensity << std::endl;
-                if(fabs(minWaspDensity-prevWaspDensity)<1E-3)
+                if(fabs(minWaspDensity-prevWaspDensity)<1E-4)
                     prevValueClose += 1;
                 else
                     prevValueClose = 0;
