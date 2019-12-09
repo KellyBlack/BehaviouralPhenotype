@@ -31,7 +31,7 @@ int main()
 #ifdef APPROXIMATE_MULTIPLE_M
     NumericalTrials::multipleApproximationsByM(
             mu,c,g,d,
-            0.2,1.3,0.2,
+            0.5,1.4,0.02,
             dt,NUMBER_TIME_LOOP,
             LEGENDRE_POLY_DEGREE,
             MAX_DELTA_NORM,MAX_NEWTON_STEPS,
@@ -40,9 +40,9 @@ int main()
 #else
     NumericalTrials trial;
     trial.approximateSystemTrackRepeating(
-                0.02,0.04,9,
+                0.005,0.5,100,
                 c,g,d,
-                0.05,1.2,110,
+                0.05,1.5,5,
                 dt,NUMBER_TIME_LOOP,
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
