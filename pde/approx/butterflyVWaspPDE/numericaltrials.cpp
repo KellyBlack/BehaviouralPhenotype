@@ -197,7 +197,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
     for(mLupe=0;(currentM<=mHigh) && (mLupe<static_cast<unsigned long>(numProcesses));++mLupe)
     {
         std::cout << "Starting process " << mLupe << std::endl;
-        currentM = mLow + static_cast<double>(mLupe)*(mHigh-mLow)/static_cast<double>(numberM);
+        currentM = mLow + static_cast<double>(mLupe)*(mHigh-mLow)/static_cast<double>(numberM-1);
         MessageInformation *newProcess = new MessageInformation;
         newProcess->which = mLupe;
         newProcess->mu = currentDiffusion;
@@ -263,13 +263,13 @@ int NumericalTrials::approximateSystemTrackRepeating(
         {
             mLupe = 0;
             currentM = mLow;
-            currentDiffusion = muLow + static_cast<double>(++diffusionLupe)*(muHigh-muLow)/static_cast<unsigned long>(numberMu);
+            currentDiffusion = muLow + static_cast<double>(++diffusionLupe)*(muHigh-muLow)/static_cast<unsigned long>(numberMu-1);
         }
 
         if(currentM < mHigh)
         {
             std::cout << "Starting process " << mLupe << "/" << diffusionLupe << std::endl;
-            currentM = mLow + static_cast<double>(mLupe++)*(mHigh-mLow)/static_cast<double>(numberM);
+            currentM = mLow + static_cast<double>(mLupe++)*(mHigh-mLow)/static_cast<double>(numberM-1);
             MessageInformation *newProcess = new MessageInformation;
             newProcess->which = mLupe+diffusionLupe*static_cast<unsigned long>(numberM+1);
             newProcess->mu = currentDiffusion;
@@ -449,7 +449,7 @@ int NumericalTrials::approximateSystemQuietResponse(
         }
         prevWaspDensity = currentWaspDensity;
 
-        if(prevValueClose>=4)
+        if((prevValueClose>=4)||(maxButterfliesDensity>10.0))
             break;
     }
 

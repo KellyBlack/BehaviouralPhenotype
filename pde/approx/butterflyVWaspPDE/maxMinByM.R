@@ -52,7 +52,7 @@ for(mu in muLevels)
 #     ylab='Butterfly Density',
 #     col=2,lwd=2)
 
-legend(0.1,1.15,labels,lty=plotTypes,pch=pchTypes,col=colours,lwd=2)
+legend(0.1,0.05,labels,lty=plotTypes,pch=pchTypes,col=colours,lwd=2)
 #legend(0.2,1.1,
 #       c(expression(paste(mu,'=0.2')),
 #         expression(paste(mu,'=0.1')),
