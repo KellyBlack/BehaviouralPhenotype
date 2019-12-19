@@ -18,7 +18,7 @@ int main()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    //double mu = 0.03; //0.01;
+    double mu = 0.01;
     double c  = 8.5;
     double g  = 0.4;
     double d  = 0.01;
@@ -39,14 +39,26 @@ int main()
             NUMBER_THREADS);
 #else
     NumericalTrials trial;
-    trial.approximateSystemTrackRepeating(
-                0.01,1.0,3,
-                c,g,d,
-                0.05,12.5,120,
+
+    /*
+    trial.approximateSystemHysteresis(
+                mu,c,g,d,
+                0.01,15.5,120,
                 dt,NUMBER_TIME_LOOP,
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-                -SKIP_PRINT_UPDATE,NUMBER_THREADS);
+                -SKIP_PRINT_UPDATE,
+                false);
+    */
+    trial.approximateSystemTrackRepeating(
+                0.01,0.25,5,
+                c,g,d,
+                0.01,12.5,120,
+                dt,NUMBER_TIME_LOOP,
+                LEGENDRE_POLY_DEGREE,
+                MAX_DELTA_NORM,MAX_NEWTON_STEPS,
+                -SKIP_PRINT_UPDATE,NUMBER_THREADS,
+                false);
 #endif
 
     std::cout << "Done" << std::endl;

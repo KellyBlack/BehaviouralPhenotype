@@ -33,20 +33,36 @@ public:
             int skipPrint,
             int skipFileSave);
 
-    int approximateSystemTrackRepeating(
-            double muLow, double muHigh, int numberMu,
+    int approximateSystemTrackRepeating(double muLow, double muHigh, int numberMu,
             double c, double g, double d,
             double mLow, double mHigh, int numberM,
             double dt, int maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
-            int skipPrint, int numProcesses);
+            int skipPrint, int numProcesses, bool appendFile);
 
     int approximateSystemQuietResponse(double mu, double c, double g, double d, double m,
             double dt, int maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
             int skipPrint, int msgID,unsigned long which);
+
+    int approximateSystemHysteresis(double mu,
+            double c, double g, double d,
+            double mLow, double mHigh, int numberM,
+            double dt, int maxTimeLupe,
+            int legendrePolyDegree,
+            double maxDeltaNorm, int maxNewtonSteps,
+            int skipPrint,
+            bool appendFile);
+
+    int approximateSystemGivenInitial(Butterflies *theButterflies,
+            double &timeSpan, double dt, int maxTimeLupe,
+            int legendrePolyDegree,
+            double maxDeltaNorm, int maxNewtonSteps,
+            int skipPrint,
+            double &maxButterfly, double &minButterfly,
+            double &maxWasp, double &minWaspDensity);
 
 protected:
 

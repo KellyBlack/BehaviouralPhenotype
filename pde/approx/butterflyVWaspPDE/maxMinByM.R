@@ -10,7 +10,7 @@ title(main="Max and Min Of The Butterfly Density After A Long Time Span",
 axis(1)
 axis(2)
 currentColour <- 0
-muLevels  <- sort(unique(a$mu),decreasing=TRUE)
+muLevels  <- sort(unique(a$mu),decreasing=FALSE)
 colours   <- c()
 labels    <- c()
 plotTypes <- c()
@@ -52,7 +52,7 @@ for(mu in muLevels)
 #     ylab='Butterfly Density',
 #     col=2,lwd=2)
 
-legend(0.1,0.05,labels,lty=plotTypes,pch=pchTypes,col=colours,lwd=2)
+legend(0.1,0.35,labels,lty=plotTypes,pch=pchTypes,col=colours,lwd=2)
 #legend(0.2,1.1,
 #       c(expression(paste(mu,'=0.2')),
 #         expression(paste(mu,'=0.1')),
