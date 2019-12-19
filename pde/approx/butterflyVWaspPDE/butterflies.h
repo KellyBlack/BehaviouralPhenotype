@@ -18,6 +18,7 @@ public:
     double waspPopulation();
 
     void initializeButterflies();
+    void initializeButterflies(double *initial);
     void initializeButterfliesGaussian(double center, double variance);
     void deleteButterflies();
     virtual void writeParameters(std::fstream &resultsFile);

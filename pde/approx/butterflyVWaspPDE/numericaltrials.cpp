@@ -459,7 +459,7 @@ int NumericalTrials::approximateSystemQuietResponse(
         }
         prevWaspDensity = currentWaspDensity;
 
-        if((prevValueClose>0x8)||(maxButterfliesDensity>10.0))
+        if((prevValueClose>=0xf)||(maxButterfliesDensity>10.0))
             break;
     }
 
@@ -687,7 +687,7 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
         }
         prevWaspDensity = currentWaspDensity;
 
-        if((prevValueClose>0x8)||(maxButterfliesDensity>10.0))
+        if((prevValueClose>=0xf)||(maxButterfliesDensity>10.0))
             break;
     }
 

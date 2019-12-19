@@ -292,6 +292,33 @@ void Butterflies::initializeButterflies()
     }
 }
 
+// Method to allocate space for the state vector and also set the initial
+// conditions for the butterflies and the wasps given an initial value.
+void Butterflies::initializeButterflies(double *initial)
+{
+    int number = getNumber();
+    if(number>0)
+    {
+        // This object know how big it should be. Allocate the space
+        // if it has not already been done.
+        ArrayUtils <double> arrays;
+        if(butterflies==nullptr)
+             butterflies  = arrays.onetensor(getStateSize());
+        if(prevTimeStep==nullptr)
+             prevTimeStep = arrays.onetensor(getStateSize());
+
+        // First set the initial profile for the butterflies. It will be normalized
+        // later so its average value is something more reasonable.
+        for(int lupe=0;lupe<=number;++lupe)
+         {
+            butterflies[lupe] = initial[lupe];
+         }
+         butterflies[number+1] = initial[number+1];
+         copyCurrentStateToTemp();
+    }
+}
+
+
 // Method to set the initial condition to a Gaussian profile with a given
 // center and variance.
 void Butterflies::initializeButterfliesGaussian(double center,double variance)
