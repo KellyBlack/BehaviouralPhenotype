@@ -498,17 +498,16 @@ int NumericalTrials::approximateSystemHysteresis(
         bool appendFile)
 {
 
-
     // Open a file to write the results to.  Write the header for the file as well.
     std::fstream csvFile;
 
     if(appendFile)
     {
-        csvFile.open("changingMHysteresis.csv", std::ios::out | std::ios::app);
+        csvFile.open("changingMHysteresisReverse.csv", std::ios::out | std::ios::app);
     }
     else
     {
-        csvFile.open("changingMHysteresis.csv", std::ios::out);
+        csvFile.open("changingMHysteresisReverse.csv", std::ios::out);
         csvFile << "mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     }
 
@@ -530,12 +529,12 @@ int NumericalTrials::approximateSystemHysteresis(
     double minWaspDensity = 0.0;
     double timeSpan = 0.0;
 
-    unsigned long mLupe;
+    long mLupe;
     double currentM = mLow;
-    for(mLupe=0;(currentM<=mHigh);++mLupe)
+    for(mLupe=0;mLupe<=static_cast<long>(numberM);++mLupe)
     {
-        std::cout << "Starting approximation " << mLupe << std::endl;
         currentM = mLow + static_cast<double>(mLupe)*(mHigh-mLow)/static_cast<double>(numberM-1);
+        std::cout << "Starting approximation " << mLupe << ", " << currentM << std::endl;
         theButterflies->setM(currentM);
         approximateSystemGivenInitial(theButterflies,timeSpan,dt,maxTimeLupe,
                                       legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,
@@ -547,7 +546,7 @@ int NumericalTrials::approximateSystemHysteresis(
                 << theButterflies->getD() << "," << theButterflies->getM() << ","
                 << timeSpan << ","
                 << maxWaspDensity << "," << minWaspDensity << ","
-                << minWaspDensity << "," << maxWaspDensity << std::endl;
+                << minButterfliesDensity << "," << maxButterfliesDensity << std::endl;
 
     }
     std::cout << std::endl << std::endl << "All processes finished." << std::endl;

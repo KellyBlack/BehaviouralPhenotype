@@ -38,7 +38,7 @@ public:
     double getD() { return(d); }
 
     void setM(double value) { m = value; }
-    double getM() { return(d); }
+    double getM() { return(m); }
 
 
 protected:
