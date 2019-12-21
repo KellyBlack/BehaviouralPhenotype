@@ -200,7 +200,7 @@ double Butterflies::totalButterflyPopulation()
     {
         integral += (*b++)*(*gw++);
     }
-    return(integral);
+    return(integral*0.5);
 }
 
 // Method to return the current wasp density
