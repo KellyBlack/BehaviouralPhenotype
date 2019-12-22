@@ -104,7 +104,7 @@ protected:
       double minWasp;
     };
 
-    std::vector<MessageInformation*>::iterator findReturnedProcessParameters(
+    MessageInformation* findReturnedProcessParameters(
             MaxMinBuffer msgValue,
             std::vector<MessageInformation*> processes);
 

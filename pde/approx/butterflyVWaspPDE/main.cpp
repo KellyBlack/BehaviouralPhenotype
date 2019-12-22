@@ -4,7 +4,7 @@
 
 #define SKIP_PRINT_UPDATE 40000
 #define SKIP_FILE_SAVE 150
-#define NUMBER_TIME_LOOP 30000000
+#define NUMBER_TIME_LOOP 300000000
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
@@ -13,12 +13,12 @@
 int main()
 {
     // Set up the temporal variables.
-    double dt = 0.00001;
+    double dt = 0.000001;
 
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double mu = 0.5;
+    double mu = 0.01;
     double c  = 2.8;
     double g  = 0.6;
     double d  = 0.1;
@@ -52,7 +52,7 @@ int main()
 
     */
     trial.approximateSystemTrackRepeating(
-                0.01,0.15,4,
+                mu,4.0*mu,4,
                 c,g,d,
                 0.01,15.5,120,
                 dt,NUMBER_TIME_LOOP,

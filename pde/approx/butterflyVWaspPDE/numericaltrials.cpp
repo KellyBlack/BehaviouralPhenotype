@@ -148,7 +148,7 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
     return(1);
 }
 
-std::vector<NumericalTrials::MessageInformation*>::iterator NumericalTrials::findReturnedProcessParameters(
+NumericalTrials::MessageInformation* NumericalTrials::findReturnedProcessParameters(
         NumericalTrials::MaxMinBuffer msgValue,
         std::vector<NumericalTrials::MessageInformation*> processes)
 {
@@ -172,10 +172,13 @@ std::vector<NumericalTrials::MessageInformation*>::iterator NumericalTrials::fin
             (*eachProcess)->minButterfly = msgValue.minButterfly;
             (*eachProcess)->maxWasp      = msgValue.maxWasp;
             (*eachProcess)->minWasp      = msgValue.minWasp;
+            std::cout << (*eachProcess)->which << "-" << (*eachProcess)->process << std::endl;
+            return(*eachProcess);
         }
     }
 
-    return(eachProcess);
+    return(nullptr);
+
 }
 
 
@@ -212,13 +215,13 @@ int NumericalTrials::approximateSystemTrackRepeating(
     // Set up the vector used to keep track of all the information that the
     // remote processes create.
     MaxMinBuffer msgValue;
-    std::vector<NumericalTrials::MessageInformation*>::iterator eachProcess;
+    NumericalTrials::MessageInformation* processInformation;
     std::vector<NumericalTrials::MessageInformation*> processes;
 
     // Need to make sure there are no messages in the buffer left
     // over from previous runs that were prematurely terminated.
     // (I will not go into the details about the agony of learning this lesson.)
-    while(msgrcv(msgID,&msgValue,sizeof(msgValue),0,IPC_NOWAIT)>0)
+    while(msgrcv(msgID,&msgValue,sizeof(msgValue),2,IPC_NOWAIT)>0)
     {
         std::cout << "Previous message in the queue: " << msgValue.which << std::endl;
     }
@@ -251,14 +254,14 @@ int NumericalTrials::approximateSystemTrackRepeating(
                             legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,totalRuns
                             );
             processes.push_back(newProcess);
-            std::cout << "starting " << currentDiffusion << "/" << currentM << ": " << totalRuns << std::endl;
+            std::cout << "starting " << currentDiffusion << "/" << currentM << ": " << totalRuns << "  " << newProcess->process << std::endl;
 
             totalRuns += 1;
             if(++currentNumberProcesses>=static_cast<unsigned long>(numProcesses))
             {
                 // There are too many processes running. Need to wait for one to stop
                 // before starting a new process.
-                msgrcv(msgID,&msgValue,sizeof(msgValue),0,0);
+                msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
 
                 // One just ended. Figure out the values that were sent and record the information from the run.
                 std::cout << msgValue.which << "--"
@@ -267,35 +270,19 @@ int NumericalTrials::approximateSystemTrackRepeating(
                           << msgValue.maxWasp << "," << msgValue.minWasp << ","
                           << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
 
-                // need to find this thread and join it.
-                for(eachProcess=processes.begin();(eachProcess!=processes.end());++eachProcess)
+                processInformation = findReturnedProcessParameters(msgValue,processes);
+                if(processInformation!= nullptr)
                 {
-                    if((*eachProcess)->which == msgValue.which)
-                    {
-                        // This is the thread from which this process sprang forth.
-                        // record the values that were passed and clean up the mess.
-                        (*eachProcess)->mu   = msgValue.mu;
-                        (*eachProcess)->c    = msgValue.c;
-                        (*eachProcess)->g    = msgValue.g;
-                        (*eachProcess)->d    = msgValue.d;
-                        (*eachProcess)->m    = msgValue.m;
-                        (*eachProcess)->time = msgValue.endTime;
-                        (*eachProcess)->maxButterfly = msgValue.maxButterfly;
-                        (*eachProcess)->minButterfly = msgValue.minButterfly;
-                        (*eachProcess)->maxWasp      = msgValue.maxWasp;
-                        (*eachProcess)->minWasp      = msgValue.minWasp;
+                    std::cout << "Found it: " << msgValue.which << ": " << processInformation->process << std::endl;
+                    csvFile << processInformation->which << ","
+                            << processInformation->mu << "," << processInformation->c << "," << processInformation->g << ","
+                            << processInformation->d  << "," << processInformation->m << "," << processInformation->time << ","
+                            << processInformation->maxWasp << "," << processInformation->minWasp << ","
+                            << processInformation->minButterfly << "," << processInformation->maxButterfly << std::endl;
 
-                        csvFile << (*eachProcess)->which << ","
-                                << (*eachProcess)->mu << "," << (*eachProcess)->c << "," << (*eachProcess)->g << ","
-                                << (*eachProcess)->d << "," << (*eachProcess)->m << "," << (*eachProcess)->time << ","
-                                << (*eachProcess)->maxWasp << "," << (*eachProcess)->minWasp << ","
-                                << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
-
-                        delete (*eachProcess)->trial;
-                        (*eachProcess)->process->join();
-                        currentNumberProcesses -= 1;
-                        break;
-                    }
+                    delete processInformation->trial;
+                    processInformation->process->join();
+                    currentNumberProcesses -= 1;
                 }
 
             }
@@ -306,45 +293,29 @@ int NumericalTrials::approximateSystemTrackRepeating(
     while(currentNumberProcesses>0)
     {
         std::cout << "Need to wait: " << currentNumberProcesses << std::endl;
-        msgrcv(msgID,&msgValue,sizeof(msgValue),0,0);
+        msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
         std::cout << msgValue.which << " "
                   << msgValue.mu << "," << msgValue.c << "," << msgValue.g << ","
                   << msgValue.d << "," << msgValue.m << "," << msgValue.endTime << ","
                   << msgValue.maxWasp << "," << msgValue.minWasp << ","
                   << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
 
-        // need to find this thread and join it.
-        for(eachProcess=processes.begin();(eachProcess!=processes.end());++eachProcess)
+        processInformation = findReturnedProcessParameters(msgValue,processes);
+        if(processInformation != nullptr)
         {
-            if((*eachProcess)->which == msgValue.which)
-            {
-                // This is the thread from which this process sprang forth.
-                // record the values that were passed and clean up the mess.
-                (*eachProcess)->mu   = msgValue.mu;
-                (*eachProcess)->c    = msgValue.c;
-                (*eachProcess)->g    = msgValue.g;
-                (*eachProcess)->d    = msgValue.d;
-                (*eachProcess)->m    = msgValue.m;
-                (*eachProcess)->time = msgValue.endTime;
-                (*eachProcess)->maxButterfly = msgValue.maxButterfly;
-                (*eachProcess)->minButterfly = msgValue.minButterfly;
-                (*eachProcess)->maxWasp      = msgValue.maxWasp;
-                (*eachProcess)->minWasp      = msgValue.minWasp;
+            csvFile << processInformation->which << ","
+                    << processInformation->mu << "," << processInformation->c << "," << processInformation->g << ","
+                    << processInformation->d << ","  << processInformation->m << "," << processInformation->time << ","
+                    << processInformation->maxWasp << "," << processInformation->minWasp << ","
+                    << processInformation->minButterfly << "," << processInformation->maxButterfly << std::endl;
 
-                csvFile << (*eachProcess)->which << ","
-                        << (*eachProcess)->mu << "," << (*eachProcess)->c << "," << (*eachProcess)->g << ","
-                        << (*eachProcess)->d << "," << (*eachProcess)->m << "," << (*eachProcess)->time << ","
-                        << (*eachProcess)->maxWasp << "," << (*eachProcess)->minWasp << ","
-                        << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
-
-                delete (*eachProcess)->trial;
-                (*eachProcess)->process->join();
-                currentNumberProcesses -= 1;
-                break;
-            }
+            delete processInformation->trial;
+            processInformation->process->join();
+            currentNumberProcesses -= 1;
         }
     }
 
+    std::vector<NumericalTrials::MessageInformation*>::iterator eachProcess;
     for(eachProcess=processes.begin();eachProcess!=processes.end();++eachProcess)
     {
         std::cout << (*eachProcess)->which << ","
@@ -388,8 +359,8 @@ int NumericalTrials::approximateSystemQuietResponse(
     theButterflies->setM(m);
     theButterflies->setDT(dt);
 
-    theButterflies->initializeButterflies();
-    //theButterflies->initializeButterfliesGaussian(1.0,mu*0.5);
+    //theButterflies->initializeButterflies();
+    theButterflies->initializeButterfliesGaussian(1.0,mu*0.25);
     theButterflies->copyCurrentState(maxButterflyProfile);
     double maxButterfliesDensity = theButterflies->totalButterflyPopulation();
     double prevButterflyDensity = maxButterfliesDensity;
@@ -525,7 +496,7 @@ int NumericalTrials::approximateSystemQuietResponse(
     values.minWasp = minWaspDensity;
     values.maxButterfly = maxButterfliesDensity;
     values.minButterfly = minButterfliesDensity;
-    msgsnd(msgID,&values,sizeof(values),0);
+    msgsnd(msgID,&values,sizeof(values),2);
     //std::cout << "DONE " << which << std::endl;
 
     return(1);

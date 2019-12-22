@@ -339,11 +339,16 @@ void Butterflies::initializeButterfliesGaussian(double center,double variance)
         for(int lupe=0;lupe<=number;++lupe)
          {
             double theta = 0.5*(gaussAbscissa[lupe]+1.0);
-            butterflies[lupe]  = 0.5*exp(-(theta-center)*(theta-center)/variance);
+            butterflies[lupe]  = exp(-(theta-center)*(theta-center)/variance);
             butterflyIntegral += gaussWeights[lupe]*butterflies[lupe];
          }
 
-         double steady = d*c/(parameterDistribution(0.0)*(g-d));
+        double steady = d*c/(parameterDistribution(0.5)*(g-d))/(0.5*butterflyIntegral);
+        for(int lupe=0;lupe<=number;++lupe)
+         {
+            butterflies[lupe] *= steady;
+         }
+
          butterflies[number+1] = fabs(1.0-steady)*(c+steady*parameterDistribution(0.0));
          copyCurrentStateToTemp();
     }
