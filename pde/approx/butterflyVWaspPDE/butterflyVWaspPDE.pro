@@ -9,7 +9,8 @@ SOURCES += \
         main.cpp \
     pdeSolver.cpp \
     butterflies.cpp \
-    numericaltrials.cpp
+    numericaltrials.cpp \
+    rungakutta45.cpp
 
 HEADERS += \
     legendre.h \
@@ -17,4 +18,5 @@ HEADERS += \
     lu_decomp.h \
     pdeSolver.h \
     butterflies.h \
-    numericaltrials.h
+    numericaltrials.h \
+    rungakutta45.h
