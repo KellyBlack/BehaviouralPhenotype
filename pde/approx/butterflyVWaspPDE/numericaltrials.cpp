@@ -165,9 +165,8 @@ int NumericalTrials::approximateSystemTrackRepeating(
     key_t msg_key = ftok("butterfly",1995);
     int msgID = msgget(msg_key,0666|IPC_CREAT);
 
-    // Open a file to write the results to.  Write the header for the file as well.
+    // Open a file to write the results to.  Write the header for the file as well if this is a new file..
     std::fstream csvFile;
-
     if(appendFile)
     {
         csvFile.open("changingMResults.csv", std::ios::out | std::ios::app);
@@ -177,7 +176,6 @@ int NumericalTrials::approximateSystemTrackRepeating(
         csvFile.open("changingMResults.csv", std::ios::out);
         csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     }
-
 
     // Set up the vector that will be used to keep track of the processes and
     // returned information associated with each process.
@@ -198,52 +196,120 @@ int NumericalTrials::approximateSystemTrackRepeating(
         NumericalTrials *trial;
     };
 
-    std::vector<MessageInformation*> processes;
-    unsigned long mLupe;
     double currentM = mLow;
-    unsigned long diffusionLupe = 0;
     double currentDiffusion = muLow;
-    unsigned long numberProcesses = 0;
-    for(mLupe=0;(currentM<=mHigh) && (mLupe<static_cast<unsigned long>(numProcesses));++mLupe)
-    {
-        std::cout << "Starting process " << mLupe << std::endl;
-        currentM = mLow + static_cast<double>(mLupe)*(mHigh-mLow)/static_cast<double>(numberM-1);
-        MessageInformation *newProcess = new MessageInformation;
-        newProcess->which = mLupe;
-        newProcess->mu = currentDiffusion;
-        newProcess->c = c;
-        newProcess->g = g;
-        newProcess->d = d;
-        newProcess->m = currentM;
-        newProcess->trial = new NumericalTrials;
-        newProcess->process = new std::thread(
-                        &NumericalTrials::approximateSystemQuietResponse,newProcess->trial,
-                        currentDiffusion,c,g,d,currentM,dt,maxTimeLupe,
-                        legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,mLupe
-                        );
-        processes.push_back(newProcess);
-        numberProcesses += 1;
-    }
 
+    // Set up the vector used to keep track of all the information that the
+    // remote processes create.
     MaxMinBuffer msgValue;
     std::vector<MessageInformation*>::iterator eachProcess;
-    std::cout << "waiting on " << processes.size() << " processes." << std::endl;
-    while(numberProcesses > 0)
+    std::vector<MessageInformation*> processes;
+
+    // Need to make sure there are no messages in the buffer left
+    // over from previous runs that were prematurely terminated.
+    // (I will not go into the details about the agony of learning this lesson.)
+    while(msgrcv(msgID,&msgValue,sizeof(msgValue),0,IPC_NOWAIT)>0)
     {
-        std::cout << "waiting on response " << mLupe << std::endl;
-        msgrcv(msgID,&msgValue,sizeof(msgValue),2,0);
+        std::cout << "Previous message in the queue: " << msgValue.which << std::endl;
+    }
+
+    // Loop through all possible values of the diffusion and value of m.
+    unsigned long mLupe;
+    unsigned long diffusionLupe;
+    unsigned long currentNumberProcesses = 0;
+    unsigned long totalRuns = 0;
+    for(mLupe=0;mLupe<static_cast<unsigned long>(numberM);++mLupe)
+        for(diffusionLupe=0;diffusionLupe<static_cast<unsigned long>(numberMu);++diffusionLupe)
+        {
+            // Calculate the value of m and the diffusion coefficient.
+            currentM = mLow + static_cast<double>(mLupe)*(mHigh-mLow)/static_cast<double>(numberM-1);
+            currentDiffusion = muLow + static_cast<double>(diffusionLupe)*(muHigh-muLow)/static_cast<unsigned long>(numberMu-1);
+
+            // Set up the data structure that will keep track of the values of the coefficient for this numerical trial.
+            // Then start a new thread.
+            MessageInformation *newProcess = new MessageInformation;
+            newProcess->which = totalRuns;
+            newProcess->mu    = currentDiffusion;
+            newProcess->c     = c;
+            newProcess->g     = g;
+            newProcess->d     = d;
+            newProcess->m     = currentM;
+            newProcess->trial = new NumericalTrials;
+            newProcess->process = new std::thread(
+                            &NumericalTrials::approximateSystemQuietResponse,newProcess->trial,
+                            currentDiffusion,c,g,d,currentM,dt,maxTimeLupe,
+                            legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,totalRuns
+                            );
+            processes.push_back(newProcess);
+            std::cout << "starting " << currentDiffusion << "/" << currentM << ": " << totalRuns << std::endl;
+
+            totalRuns += 1;
+            if(++currentNumberProcesses>=static_cast<unsigned long>(numProcesses))
+            {
+                // There are too many processes running. Need to wait for one to stop
+                // before starting a new process.
+                msgrcv(msgID,&msgValue,sizeof(msgValue),0,0);
+
+                // One just ended. Figure out the values that were sent and record the information from the run.
+                std::cout << msgValue.which << "--"
+                          << msgValue.mu << "," << msgValue.c << "," << msgValue.g << ","
+                          << msgValue.d << "," << msgValue.m << "," << msgValue.endTime << ","
+                          << msgValue.maxWasp << "," << msgValue.minWasp << ","
+                          << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
+
+                // need to find this thread and join it.
+                for(eachProcess=processes.begin();(eachProcess!=processes.end());++eachProcess)
+                {
+                    if((*eachProcess)->which == msgValue.which)
+                    {
+                        // This is the thread from which this process sprang forth.
+                        // record the values that were passed and clean up the mess.
+                        (*eachProcess)->mu   = msgValue.mu;
+                        (*eachProcess)->c    = msgValue.c;
+                        (*eachProcess)->g    = msgValue.g;
+                        (*eachProcess)->d    = msgValue.d;
+                        (*eachProcess)->m    = msgValue.m;
+                        (*eachProcess)->time = msgValue.endTime;
+                        (*eachProcess)->maxButterfly = msgValue.maxButterfly;
+                        (*eachProcess)->minButterfly = msgValue.minButterfly;
+                        (*eachProcess)->maxWasp      = msgValue.maxWasp;
+                        (*eachProcess)->minWasp      = msgValue.minWasp;
+
+                        csvFile << (*eachProcess)->which << ","
+                                << (*eachProcess)->mu << "," << (*eachProcess)->c << "," << (*eachProcess)->g << ","
+                                << (*eachProcess)->d << "," << (*eachProcess)->m << "," << (*eachProcess)->time << ","
+                                << (*eachProcess)->maxWasp << "," << (*eachProcess)->minWasp << ","
+                                << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
+
+                        delete (*eachProcess)->trial;
+                        (*eachProcess)->process->join();
+                        currentNumberProcesses -= 1;
+                        break;
+                    }
+                }
+
+            }
+        }
+    std::cout << std::endl << std::endl << "All processes finished. " << currentNumberProcesses  << std::endl;
+
+    // All of the process have been started. Now wait for them all to end and record the results.
+    while(currentNumberProcesses>0)
+    {
+        std::cout << "Need to wait: " << currentNumberProcesses << std::endl;
+        msgrcv(msgID,&msgValue,sizeof(msgValue),0,0);
         std::cout << msgValue.which << " "
                   << msgValue.mu << "," << msgValue.c << "," << msgValue.g << ","
                   << msgValue.d << "," << msgValue.m << "," << msgValue.endTime << ","
                   << msgValue.maxWasp << "," << msgValue.minWasp << ","
                   << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
-        numberProcesses -= 1;
 
         // need to find this thread and join it.
         for(eachProcess=processes.begin();(eachProcess!=processes.end());++eachProcess)
         {
             if((*eachProcess)->which == msgValue.which)
             {
+                // This is the thread from which this process sprang forth.
+                // record the values that were passed and clean up the mess.
                 (*eachProcess)->mu   = msgValue.mu;
                 (*eachProcess)->c    = msgValue.c;
                 (*eachProcess)->g    = msgValue.g;
@@ -261,51 +327,16 @@ int NumericalTrials::approximateSystemTrackRepeating(
                         << (*eachProcess)->maxWasp << "," << (*eachProcess)->minWasp << ","
                         << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
 
-                std::cout << "Found the process " << (*eachProcess)->which << std::endl;
                 delete (*eachProcess)->trial;
                 (*eachProcess)->process->join();
+                currentNumberProcesses -= 1;
                 break;
             }
         }
-        std::cout << "heard response " << (*eachProcess)->which << " (" << processes.size() << ")" << std::endl;
-
-        if((currentM>=mHigh)&&(currentDiffusion<muHigh))
-        {
-            mLupe = 0;
-            currentM = mLow;
-            currentDiffusion = muLow + static_cast<double>(++diffusionLupe)*(muHigh-muLow)/static_cast<unsigned long>(numberMu-1);
-        }
-
-        if(currentM < mHigh)
-        {
-            std::cout << "Starting process " << mLupe << "/" << diffusionLupe << std::endl;
-            currentM = mLow + static_cast<double>(mLupe++)*(mHigh-mLow)/static_cast<double>(numberM-1);
-            MessageInformation *newProcess = new MessageInformation;
-            newProcess->which = mLupe+diffusionLupe*static_cast<unsigned long>(numberM+1);
-            newProcess->mu = currentDiffusion;
-            newProcess->c = c;
-            newProcess->g = g;
-            newProcess->d = d;
-            newProcess->m = currentM;
-            newProcess->trial = new NumericalTrials;
-            newProcess->process = new std::thread(
-                            &NumericalTrials::approximateSystemQuietResponse,newProcess->trial,
-                            currentDiffusion,c,g,d,currentM,dt,maxTimeLupe,
-                            legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,
-                            newProcess->which
-                            );
-            processes.push_back(newProcess);
-            numberProcesses += 1;
-        }
-
     }
-
-    std::cout << std::endl << std::endl << "All processes finished." << std::endl;
 
     for(eachProcess=processes.begin();eachProcess!=processes.end();++eachProcess)
     {
-        //eachProcess->join();
-        //delete *eachTrial;
         std::cout << (*eachProcess)->which << ","
                   << (*eachProcess)->mu << "," << (*eachProcess)->c << "," << (*eachProcess)->g << ","
                   << (*eachProcess)->d << "," << (*eachProcess)->m << "," << (*eachProcess)->time << ","
@@ -313,10 +344,14 @@ int NumericalTrials::approximateSystemTrackRepeating(
                   << (*eachProcess)->minButterfly << "," << (*eachProcess)->maxButterfly << std::endl;
     }
 
-
+    // Clean up all of the information and close the communication channel.
+    processes.clear();
     csvFile.close();
     msgctl(msgID, IPC_RMID, nullptr);
+
+    // Our work here is done. Live long and kick butt.
     return(1);
+
 }
 
 int NumericalTrials::approximateSystemQuietResponse(
@@ -332,7 +367,7 @@ int NumericalTrials::approximateSystemQuietResponse(
     int    timeLupe = 0;
 
 
-    //std::cout << "Pre-processing" << std::endl;
+    //std::cout << "Pre-processing: " << which << std::endl;
     int N = legendrePolyDegree;
     Butterflies *theButterflies = new Butterflies(N,N+2);
     theButterflies->initializeLegendreParams();
@@ -463,7 +498,12 @@ int NumericalTrials::approximateSystemQuietResponse(
             break;
     }
 
+    // Clean up the allocated space
+    delete theButterflies;
+    arrays.delonetensor(maxButterflyProfile);
+
     MaxMinBuffer values;
+    values.which = which;
     values.mtype = 2;
     values.mu   = mu;
     values.c    = c;
@@ -475,13 +515,8 @@ int NumericalTrials::approximateSystemQuietResponse(
     values.minWasp = minWaspDensity;
     values.maxButterfly = maxButterfliesDensity;
     values.minButterfly = minButterfliesDensity;
-    values.which = which;
     msgsnd(msgID,&values,sizeof(values),0);
     //std::cout << "DONE " << which << std::endl;
-
-    // Clean up the allocated space
-    delete theButterflies;
-    arrays.delonetensor(maxButterflyProfile);
 
     return(1);
 

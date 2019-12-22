@@ -27,7 +27,7 @@ int main()
     std::cout << "Starting" << std::endl;
 
 
-#define APPROXIMATE_MULTIPLE_M
+//#define APPROXIMATE_MULTIPLE_M
 #ifdef APPROXIMATE_MULTIPLE_M
     NumericalTrials::multipleApproximationsByM(
             mu,c,g,d,
