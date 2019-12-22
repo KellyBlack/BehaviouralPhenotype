@@ -1,7 +1,10 @@
 #ifndef NUMERICALTRIALS_H
 #define NUMERICALTRIALS_H
 
+#include <vector>
 #include <string>
+#include <thread>
+
 
 #include "util.h"
 #include "legendre.h"
@@ -66,7 +69,24 @@ public:
 
 protected:
 
-private:
+    // Set up the data structure that will be used to keep track of the processes
+    // and returned information associated with each process.
+    struct MessageInformation
+    {
+        unsigned long which;
+        double mu;
+        double c;
+        double g;
+        double d;
+        double m;
+        double time;
+        double maxButterfly;
+        double minButterfly;
+        double maxWasp;
+        double minWasp;
+        std::thread *process;
+        NumericalTrials *trial;
+    };
 
     struct MaxMinBuffer
     {
@@ -83,6 +103,13 @@ private:
       double maxWasp;
       double minWasp;
     };
+
+    std::vector<MessageInformation*>::iterator findReturnedProcessParameters(
+            MaxMinBuffer msgValue,
+            std::vector<MessageInformation*> processes);
+
+private:
+
 
 
 };

@@ -1,6 +1,4 @@
 #include <fstream>
-#include <vector>
-#include <thread>
 #include <string>
 #include <sstream>
 
@@ -150,6 +148,37 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
     return(1);
 }
 
+std::vector<NumericalTrials::MessageInformation*>::iterator NumericalTrials::findReturnedProcessParameters(
+        NumericalTrials::MaxMinBuffer msgValue,
+        std::vector<NumericalTrials::MessageInformation*> processes)
+{
+
+    std::vector<NumericalTrials::MessageInformation*>::iterator eachProcess;
+
+    // need to find this thread and join it.
+    for(eachProcess=processes.begin();(eachProcess!=processes.end());++eachProcess)
+    {
+        if((*eachProcess)->which == msgValue.which)
+        {
+            // This is the thread from which this process sprang forth.
+            // record the values that were passed and clean up the mess.
+            (*eachProcess)->mu   = msgValue.mu;
+            (*eachProcess)->c    = msgValue.c;
+            (*eachProcess)->g    = msgValue.g;
+            (*eachProcess)->d    = msgValue.d;
+            (*eachProcess)->m    = msgValue.m;
+            (*eachProcess)->time = msgValue.endTime;
+            (*eachProcess)->maxButterfly = msgValue.maxButterfly;
+            (*eachProcess)->minButterfly = msgValue.minButterfly;
+            (*eachProcess)->maxWasp      = msgValue.maxWasp;
+            (*eachProcess)->minWasp      = msgValue.minWasp;
+        }
+    }
+
+    return(eachProcess);
+}
+
+
 int NumericalTrials::approximateSystemTrackRepeating(
         double muLow, double muHigh, int numberMu,
         double c, double g, double d,
@@ -177,33 +206,14 @@ int NumericalTrials::approximateSystemTrackRepeating(
         csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     }
 
-    // Set up the vector that will be used to keep track of the processes and
-    // returned information associated with each process.
-    struct MessageInformation
-    {
-        unsigned long which;
-        double mu;
-        double c;
-        double g;
-        double d;
-        double m;
-        double time;
-        double maxButterfly;
-        double minButterfly;
-        double maxWasp;
-        double minWasp;
-        std::thread *process;
-        NumericalTrials *trial;
-    };
-
     double currentM = mLow;
     double currentDiffusion = muLow;
 
     // Set up the vector used to keep track of all the information that the
     // remote processes create.
     MaxMinBuffer msgValue;
-    std::vector<MessageInformation*>::iterator eachProcess;
-    std::vector<MessageInformation*> processes;
+    std::vector<NumericalTrials::MessageInformation*>::iterator eachProcess;
+    std::vector<NumericalTrials::MessageInformation*> processes;
 
     // Need to make sure there are no messages in the buffer left
     // over from previous runs that were prematurely terminated.
@@ -227,7 +237,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
 
             // Set up the data structure that will keep track of the values of the coefficient for this numerical trial.
             // Then start a new thread.
-            MessageInformation *newProcess = new MessageInformation;
+            NumericalTrials::MessageInformation *newProcess = new NumericalTrials::MessageInformation;
             newProcess->which = totalRuns;
             newProcess->mu    = currentDiffusion;
             newProcess->c     = c;
