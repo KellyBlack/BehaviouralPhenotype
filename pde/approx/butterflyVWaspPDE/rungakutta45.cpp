@@ -24,13 +24,61 @@ RungaKutta45::RungaKutta45(double initialTimeStep, double *initialCondition)
 
 }
 
+long RungaKutta45::approximationByM(
+                  double cValue, double gValue, double dValue, double thetaValue,
+                  double lowM, double highM,long numberM,
+                  double startTime, double endTime, double initialDt, double minimumDT,
+                  double *initialCond, double tolerance,
+                  std::string filename, bool appendFile)
+{
+
+    // Open a file to write the results to.
+    // Write the header for the file as well if this is a new file..
+    std::fstream csvFile;
+    if(appendFile)
+    {
+        csvFile.open(filename, std::ios::out | std::ios::app);
+    }
+    else
+    {
+        csvFile.open(filename, std::ios::out);
+        csvFile << "which,c,g,d,m,theta,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
+        //csvFile << "time,butterfly,wasp" << std::endl;
+    }
+
+    long lupe;
+    for(lupe=0;lupe<numberM;++lupe)
+    {
+        double m = lowM + static_cast<double>(lupe)*(highM-lowM)/static_cast<double>(numberM-1);
+
+        approximation(lupe,
+                      cValue,gValue,dValue,m,thetaValue,
+                      startTime,endTime,initialDt,minimumDT,
+                      initialCond,tolerance);
+
+        /*
+        csvFile << lupe << ","
+                << c << "," << g << ","
+                << d << ","  << m << "," << theta << "," << currentTime << ","
+                << maxWaspDensity << "," << minWaspDensity << ","
+                << minButterfliesDensity << "," << maxButterfliesDensity << std::endl;
+        */
+    }
+
+    // Life is good. End it now.
+    csvFile.close();
+
+
+    return(lupe);
+
+}
+
 // Method to make a full approximation given a set of parameters.
 // Also includes the initial condition and time span.
-int RungaKutta45::approximation(int which,
+long RungaKutta45::approximation(long which,
                                 double cValue, double gValue, double dValue, double mValue, double thetaValue,
                                 double startTime, double endTime, double initialDt, double minimumDT,
-                                double *initialCond, double tolerance,
-                                std::string filename, bool appendFile)
+                                double *initialCond, double tolerance)
 {
     const long MAX_CHECK_CONSTANT = 4000;
     // First set the values of the parameters.
@@ -63,32 +111,18 @@ int RungaKutta45::approximation(int which,
     double prevWaspCheck = 0.0;
     int prevValueClose = 0;
 
-
-    // Open a file to write the results to.
-    // Write the header for the file as well if this is a new file..
-    std::fstream csvFile;
-    if(appendFile)
-    {
-        csvFile.open(filename, std::ios::out | std::ios::app);
-    }
-    else
-    {
-        csvFile.open(filename, std::ios::out);
-        csvFile << "which,c,g,d,m,theta,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
-        //csvFile << "time,butterfly,wasp" << std::endl;
-    }
-
-
     // Step through for the approximation. Stop when we hit the final time.
-    unsigned long numberSteps = 0;
+    //unsigned long numberSteps = 0;
     while(currentTime<endTime)
     {
         singleStep(tolerance);
+        /*
         if((numberSteps++)%2000==0)
         {
             std::cout << currentTime << "," << state[0] << "," << state[1] << std::endl;
             //csvFile << currentTime << "," << state[0] << "," << state[1] << std::endl;
         }
+        */
 
         double currentButterflyDensity = state[0];
         double currentWaspDensity      = state[1];
@@ -203,15 +237,6 @@ int RungaKutta45::approximation(int which,
 
     }
 
-    csvFile << which << ","
-            << c << "," << g << ","
-            << d << ","  << m << "," << theta << "," << currentTime << ","
-            << maxWaspDensity << "," << minWaspDensity << ","
-            << minButterfliesDensity << "," << maxButterfliesDensity << std::endl;
-
-
-    // Life is good. End it now.
-    csvFile.close();
     return(1);
 }
 

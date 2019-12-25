@@ -19,11 +19,11 @@ int main()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double mu = 0.01;
+    //double mu = 0.01;
     double c  = 2.8;
     double g  = 0.6;
     double d  = 0.1;
-    double m  = 0.2;
+    //double m  = 0.2;
 
     std::cout << "Starting" << std::endl;
 
@@ -36,10 +36,11 @@ int main()
 
     initialCond[0] = 1.0;
     initialCond[1] = 1.0;
-    odeApprox.approximation(0,c,g,d,m,theta,
-                            0.0,500.0,1.0E-3,1.0E-5,
-                            initialCond,1.0E-5,
-                            "rk45.csv",false);
+    odeApprox.approximationByM(c,g,d,theta,
+                               1.0,10.0,2,
+                               0.0,500.0,dt,1.0E-5,
+                               initialCond,1.0E-5,
+                               "rk45.csv",false);
 
 #else
 //#define APPROXIMATE_MULTIPLE_M
