@@ -26,11 +26,13 @@ RungaKutta45::RungaKutta45(double initialTimeStep, double *initialCondition)
 
 // Method to make a full approximation given a set of parameters.
 // Also includes the initial condition and time span.
-int RungaKutta45::approximation(double cValue, double gValue, double dValue, double mValue, double thetaValue,
+int RungaKutta45::approximation(int which,
+                                double cValue, double gValue, double dValue, double mValue, double thetaValue,
                                 double startTime, double endTime, double initialDt, double minimumDT,
                                 double *initialCond, double tolerance,
                                 std::string filename, bool appendFile)
 {
+    const long MAX_CHECK_CONSTANT = 4000;
     // First set the values of the parameters.
     setC(cValue);
     setG(gValue);
@@ -45,6 +47,23 @@ int RungaKutta45::approximation(double cValue, double gValue, double dValue, dou
     state[0] = initialCond[0];
     state[1] = initialCond[1];
 
+    // Set up the variables used to determine the max and min of a cycle.
+    double maxButterfliesDensity = state[0];
+    double prevButterflyDensity = maxButterfliesDensity;
+    double minButterfliesDensity = maxButterfliesDensity;
+    int countButterflyIncreasing = 0;
+
+    double prevWaspDensity = state[1];
+    double maxWaspDensity = prevWaspDensity;
+    double minWaspDensity = maxWaspDensity;
+    int countWaspIncreasing = 0;
+    int prevCycleClose = 0;
+
+    double prevButterflyCheck = 0.0;
+    double prevWaspCheck = 0.0;
+    int prevValueClose = 0;
+
+
     // Open a file to write the results to.
     // Write the header for the file as well if this is a new file..
     std::fstream csvFile;
@@ -55,8 +74,8 @@ int RungaKutta45::approximation(double cValue, double gValue, double dValue, dou
     else
     {
         csvFile.open(filename, std::ios::out);
-        //csvFile << "which,mu,c,g,d,m,theta,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
-        csvFile << "time,butterfly,wasp" << std::endl;
+        csvFile << "which,c,g,d,m,theta,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
+        //csvFile << "time,butterfly,wasp" << std::endl;
     }
 
 
@@ -65,12 +84,131 @@ int RungaKutta45::approximation(double cValue, double gValue, double dValue, dou
     while(currentTime<endTime)
     {
         singleStep(tolerance);
-        if((numberSteps++)%400==0)
+        if((numberSteps++)%2000==0)
         {
             std::cout << currentTime << "," << state[0] << "," << state[1] << std::endl;
-            csvFile << currentTime << "," << state[0] << "," << state[1] << std::endl;
+            //csvFile << currentTime << "," << state[0] << "," << state[1] << std::endl;
         }
+
+        double currentButterflyDensity = state[0];
+        double currentWaspDensity      = state[1];
+
+        if((fabs(currentWaspDensity-prevWaspDensity)<1.0E-7)&&(fabs(currentButterflyDensity-prevButterflyDensity)<1.0E-7))
+        {
+            if(((fabs(prevWaspCheck-currentWaspDensity)>1.0E-7)||(fabs(prevButterflyCheck-currentButterflyDensity)>1.0E-7)))
+            {
+                prevValueClose = 0;
+                prevWaspCheck = currentWaspDensity;
+                prevButterflyCheck = currentButterflyDensity;
+            }
+            else
+            {
+                prevValueClose += 1;
+            }
+
+        }
+        else
+        {
+            prevValueClose = 0;
+            //prevWaspCheck = currentWaspDensity;
+            //prevButterflyCheck = currentButterflyDensity;
+        }
+
+        if(currentButterflyDensity<prevButterflyDensity)
+        {
+            // The butterfly population is decreasing. If countIncreasing is
+            // pos. that means that the butterfly count had a long trend of
+            // increasing.
+            if(countButterflyIncreasing-->0)
+            {
+                //std::cout << which << ": max butterfly " << prevButterflyDensity << "-" << maxButterfliesDensity << std::endl;
+                if(fabs(maxButterfliesDensity-prevButterflyDensity)<1E-4)
+                    prevCycleClose = (prevCycleClose | 0x1);
+                else
+                    prevCycleClose = 0;
+
+                maxButterfliesDensity = prevButterflyDensity;
+                countButterflyIncreasing = 0;
+            }
+        }
+        else
+        {
+            // The butterfly population is increasing. If countIncreasing is
+            // neg. that means that the butterfly count had a long trend of
+            // decreasing.
+            if(countButterflyIncreasing++ < 0)
+            {
+                //std::cout << which << ": min butterfly " << prevButterflyDensity << "-" << minButterfliesDensity << std::endl;
+                if(fabs(minButterfliesDensity-prevButterflyDensity)<1E-4)
+                    prevCycleClose = (prevCycleClose | 0x2);
+                else
+                    prevCycleClose = 0;
+
+                minButterfliesDensity = prevButterflyDensity;
+                countButterflyIncreasing = 0;
+            }
+
+
+
+        }
+        prevButterflyDensity = currentButterflyDensity;
+
+
+        if(currentWaspDensity<prevWaspDensity)
+        {
+            // The wasp population is decreasing. If countIncreasing is
+            // pos. that means that the wasp count had a long trend of
+            // increasing.
+            if(countWaspIncreasing-->0)
+            {
+                //std::cout << which << ": max wasp " << prevWaspDensity << "-" << maxWaspDensity << std::endl;
+                if(fabs(maxWaspDensity-prevWaspDensity)<1E-4)
+                    prevCycleClose = (prevCycleClose | 0x4);
+                else
+                    prevCycleClose = 0;
+
+                maxWaspDensity = prevWaspDensity;
+                countWaspIncreasing = 0;
+            }
+        }
+        else
+        {
+            // The wasp population is increasing. If countIncreasing is
+            // neg. that means that the wasp count had a long trend of
+            // decreasing.
+            if(countWaspIncreasing++ < 0)
+            {
+                //std::cout << which << ": min wasp " << prevWaspDensity << "-" << minWaspDensity << std::endl;
+                if(fabs(minWaspDensity-prevWaspDensity)<1E-4)
+                    prevCycleClose = (prevCycleClose | 0x8);
+                else
+                    prevCycleClose = 0;
+
+                minWaspDensity = prevWaspDensity;
+                countWaspIncreasing = 0;
+            }
+        }
+        prevWaspDensity = currentWaspDensity;
+
+        if((prevCycleClose>=0xf)||(maxButterfliesDensity>10.0))
+            break;
+        else if (prevValueClose>MAX_CHECK_CONSTANT)
+        {
+            maxButterfliesDensity = currentButterflyDensity;
+            minButterfliesDensity = currentButterflyDensity;
+            maxWaspDensity = currentWaspDensity;
+            minWaspDensity = currentWaspDensity;
+            break;
+        }
+
     }
+
+    csvFile << which << ","
+            << c << "," << g << ","
+            << d << ","  << m << "," << theta << "," << currentTime << ","
+            << maxWaspDensity << "," << minWaspDensity << ","
+            << minButterfliesDensity << "," << maxButterfliesDensity << std::endl;
+
 
     // Life is good. End it now.
     csvFile.close();

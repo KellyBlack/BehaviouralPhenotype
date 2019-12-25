@@ -7,8 +7,9 @@ class RungaKutta45
 {
 public:
     explicit RungaKutta45(double initialTimeStep=1.0E-3,double *initialCondition=nullptr);
-    int approximation(double cValue, double gValue, double dValue, double mValue, double thetaValue,
-                      double startTime, double endTime, double initialDt,double minimumDT,
+    int approximation(int which,
+                      double cValue, double gValue, double dValue, double mValue, double thetaValue,
+                      double startTime, double endTime, double initialDt, double minimumDT,
                       double *initialCond, double tolerance,
                       std::string filename, bool appendFile);
 
