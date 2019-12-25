@@ -343,13 +343,41 @@ void Butterflies::initializeButterfliesGaussian(double center,double variance)
             butterflyIntegral += gaussWeights[lupe]*butterflies[lupe];
          }
 
-        double steady = d*c/(parameterDistribution(0.5)*(g-d))/(0.5*butterflyIntegral);
+        double steady = d*c/(parameterDistribution(0.5)*(g-d));
+        butterflies[number+1] = fabs(1.0-steady)*(c+steady*parameterDistribution(0.0));
+        steady /= (0.5*butterflyIntegral);
+        /*
         for(int lupe=0;lupe<=number;++lupe)
          {
             butterflies[lupe] *= steady;
          }
+         */
+         copyCurrentStateToTemp();
+    }
+}
 
-         butterflies[number+1] = fabs(1.0-steady)*(c+steady*parameterDistribution(0.0));
+// Method to set the initial condition to a constant with the
+// steady state at the given value of theta.
+void Butterflies::initializeButterfliesConstant(double theta)
+{
+    int number = getNumber();
+    if(number>0)
+    {
+        // Allocate the space if the size of the state space is known.
+        ArrayUtils <double> arrays;
+        if(butterflies==nullptr)
+             butterflies  = arrays.onetensor(getStateSize());
+        if(prevTimeStep==nullptr)
+             prevTimeStep = arrays.onetensor(getStateSize());
+
+        // First set the initial profile for the butterflies. It is a
+        // constant at the given value of theta.
+        double steady = d*c/(parameterDistribution(theta)*(g-d));
+        for(int lupe=0;lupe<=number;++lupe)
+         {
+            butterflies[lupe]  = steady;
+         }
+        butterflies[number+1] = fabs(1.0-steady)*(c+steady*parameterDistribution(theta));
          copyCurrentStateToTemp();
     }
 }

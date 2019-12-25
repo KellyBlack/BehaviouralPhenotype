@@ -19,13 +19,12 @@ NumericalTrials::NumericalTrials()
 
 }
 
-void NumericalTrials::multipleApproximationsByM(
-        double mu, double c, double g, double d,
+void NumericalTrials::multipleApproximationsByM(double mu, double c, double g, double d,
         double lowM, double highM, double stepM,
-        double dt, int maxTimeLupe,
+        double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
-        int skipPrint,int skipFileSave,
+        int skipPrint, int skipFileSave,
         int numberThreads)
 {
 
@@ -83,14 +82,14 @@ void NumericalTrials::multipleApproximationsByM(
 }
 
 int NumericalTrials::approximateSystem(double mu, double c, double g, double d, double m,
-        double dt, int maxTimeLupe,
+        double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
         std::string filename,
         int skipPrint, int skipFileSave)
 {
     double t        = 0.0;
-    int    timeLupe = 0;
+    unsigned long timeLupe = 0;
 
     // Variables used to save the results of calculations into a
     // data file.
@@ -107,7 +106,8 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
     theButterflies->setM(m);
     theButterflies->setDT(dt);
 
-    theButterflies->initializeButterfliesGaussian(0.0,mu);
+    //theButterflies->initializeButterfliesGaussian(1.0,mu);
+    theButterflies->initializeButterfliesConstant(1.0);
     theButterflies->writeParameters(binFile);
     theButterflies->writeBinaryHeader(binFile);
 
@@ -117,7 +117,7 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
     {
         t = static_cast<double>(timeLupe)*dt;
 
-        if(timeLupe%(skipPrint)==0)
+        if(timeLupe%(static_cast<unsigned long>(skipPrint))==0)
         {
             std::cout << "Calculating an approximation: "
                          << std::fixed
@@ -127,14 +127,14 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
         }
 
         if(
-           theButterflies->singleTimeStep(maxDeltaNorm,maxNewtonSteps,timeLupe%(skipPrint)==0)
+           theButterflies->singleTimeStep(maxDeltaNorm,maxNewtonSteps,timeLupe%(static_cast<unsigned long>(skipPrint))==0)
                 < 0)
         {
             std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
             return(0);
         }
 
-        if(timeLupe%skipFileSave==0)
+        if(timeLupe%static_cast<unsigned long>(skipFileSave)==0)
         {
             theButterflies->writeBinaryCurrentApprox(t,binFile);
         }
@@ -172,7 +172,6 @@ NumericalTrials::MessageInformation* NumericalTrials::findReturnedProcessParamet
             (*eachProcess)->minButterfly = msgValue.minButterfly;
             (*eachProcess)->maxWasp      = msgValue.maxWasp;
             (*eachProcess)->minWasp      = msgValue.minWasp;
-            std::cout << (*eachProcess)->which << "-" << (*eachProcess)->process << std::endl;
             return(*eachProcess);
         }
     }
@@ -186,7 +185,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
         double muLow, double muHigh, int numberMu,
         double c, double g, double d,
         double mLow, double mHigh, int numberM,
-        double dt, int maxTimeLupe,
+        double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
         int skipPrint, int numProcesses,
@@ -201,11 +200,11 @@ int NumericalTrials::approximateSystemTrackRepeating(
     std::fstream csvFile;
     if(appendFile)
     {
-        csvFile.open("changingMResults.csv", std::ios::out | std::ios::app);
+        csvFile.open("changingMResults_1.csv", std::ios::out | std::ios::app);
     }
     else
     {
-        csvFile.open("changingMResults.csv", std::ios::out);
+        csvFile.open("changingMResults_1.csv", std::ios::out);
         csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     }
 
@@ -229,7 +228,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
     // Loop through all possible values of the diffusion and value of m.
     unsigned long mLupe;
     unsigned long diffusionLupe;
-    unsigned long currentNumberProcesses = 0;
+    long currentNumberProcesses = 0;
     unsigned long totalRuns = 0;
     for(mLupe=0;mLupe<static_cast<unsigned long>(numberM);++mLupe)
         for(diffusionLupe=0;diffusionLupe<static_cast<unsigned long>(numberMu);++diffusionLupe)
@@ -257,7 +256,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
             std::cout << "starting " << currentDiffusion << "/" << currentM << ": " << totalRuns << "  " << newProcess->process << std::endl;
 
             totalRuns += 1;
-            if(++currentNumberProcesses>=static_cast<unsigned long>(numProcesses))
+            if(++currentNumberProcesses>=static_cast<long>(numProcesses))
             {
                 // There are too many processes running. Need to wait for one to stop
                 // before starting a new process.
@@ -273,7 +272,6 @@ int NumericalTrials::approximateSystemTrackRepeating(
                 processInformation = findReturnedProcessParameters(msgValue,processes);
                 if(processInformation!= nullptr)
                 {
-                    std::cout << "Found it: " << msgValue.which << ": " << processInformation->process << std::endl;
                     csvFile << processInformation->which << ","
                             << processInformation->mu << "," << processInformation->c << "," << processInformation->g << ","
                             << processInformation->d  << "," << processInformation->m << "," << processInformation->time << ","
@@ -335,17 +333,17 @@ int NumericalTrials::approximateSystemTrackRepeating(
 
 }
 
-int NumericalTrials::approximateSystemQuietResponse(
-        double mu, double c, double g, double d, double m,
-        double dt, int maxTimeLupe,
+int NumericalTrials::approximateSystemQuietResponse(double mu, double c, double g, double d, double m,
+        double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
-        int skipPrint,int msgID,unsigned long which)
+        int skipPrint, int msgID, unsigned long which)
 {
+    const long MAX_CHECK_CONSTANT = 2000;
     ArrayUtils<double> arrays;
     double *maxButterflyProfile = arrays.onetensor(legendrePolyDegree+2);
     double t        = 0.0;
-    int    timeLupe = 0;
+    unsigned long timeLupe = 0;
 
 
     //std::cout << "Pre-processing: " << which << std::endl;
@@ -360,7 +358,8 @@ int NumericalTrials::approximateSystemQuietResponse(
     theButterflies->setDT(dt);
 
     //theButterflies->initializeButterflies();
-    theButterflies->initializeButterfliesGaussian(1.0,mu*0.25);
+    //theButterflies->initializeButterfliesGaussian(1.0,mu*0.25);
+    theButterflies->initializeButterfliesConstant(1.0);
     theButterflies->copyCurrentState(maxButterflyProfile);
     double maxButterfliesDensity = theButterflies->totalButterflyPopulation();
     double prevButterflyDensity = maxButterfliesDensity;
@@ -371,6 +370,10 @@ int NumericalTrials::approximateSystemQuietResponse(
     double maxWaspDensity = prevWaspDensity;
     double minWaspDensity = maxWaspDensity;
     int countWaspIncreasing = 0;
+    int prevCycleClose = 0;
+
+    double prevButterflyCheck = 0.0;
+    double prevWaspCheck = 0.0;
     int prevValueClose = 0;
 
 
@@ -380,7 +383,7 @@ int NumericalTrials::approximateSystemQuietResponse(
     {
         t = static_cast<double>(timeLupe)*dt;
 
-        if((skipPrint>0) && (timeLupe%(skipPrint)==0))
+        if((skipPrint>0) && (timeLupe%(static_cast<unsigned long>(skipPrint))==0))
         {
             std::cout << "Calculating an approximation: "
                          << std::fixed
@@ -390,7 +393,7 @@ int NumericalTrials::approximateSystemQuietResponse(
         }
 
         if(
-           theButterflies->singleTimeStep(maxDeltaNorm,maxNewtonSteps,(skipPrint>0)&&(timeLupe%(skipPrint)==0))
+           theButterflies->singleTimeStep(maxDeltaNorm,maxNewtonSteps,(skipPrint>0)&&(timeLupe%(static_cast<unsigned long>(skipPrint))==0))
                 < 0)
         {
             std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
@@ -398,6 +401,29 @@ int NumericalTrials::approximateSystemQuietResponse(
         }
 
         double currentButterflyDensity = theButterflies->totalButterflyPopulation();
+        double currentWaspDensity = theButterflies->waspPopulation();
+
+        if((fabs(currentWaspDensity-prevWaspDensity)<1.0E-7)&&(fabs(currentButterflyDensity-prevButterflyDensity)<1.0E-7))
+        {
+            if(((fabs(prevWaspCheck-currentWaspDensity)>1.0E-7)||(fabs(prevButterflyCheck-currentButterflyDensity)>1.0E-7)))
+            {
+                prevValueClose = 0;
+                prevWaspCheck = currentWaspDensity;
+                prevButterflyCheck = currentButterflyDensity;
+            }
+            else
+            {
+                prevValueClose += 1;
+            }
+
+        }
+        else
+        {
+            prevValueClose = 0;
+            //prevWaspCheck = currentWaspDensity;
+            //prevButterflyCheck = currentButterflyDensity;
+        }
+
         if(currentButterflyDensity<prevButterflyDensity)
         {
             // The butterfly population is decreasing. If countIncreasing is
@@ -407,9 +433,9 @@ int NumericalTrials::approximateSystemQuietResponse(
             {
                 //std::cout << which << ": max butterfly " << prevButterflyDensity << "-" << maxButterfliesDensity << std::endl;
                 if(fabs(maxButterfliesDensity-prevButterflyDensity)<1E-4)
-                    prevValueClose = (prevValueClose | 0x1);
+                    prevCycleClose = (prevCycleClose | 0x1);
                 else
-                    prevValueClose = 0;
+                    prevCycleClose = 0;
 
                 maxButterfliesDensity = prevButterflyDensity;
                 countButterflyIncreasing = 0;
@@ -424,9 +450,9 @@ int NumericalTrials::approximateSystemQuietResponse(
             {
                 //std::cout << which << ": min butterfly " << prevButterflyDensity << "-" << minButterfliesDensity << std::endl;
                 if(fabs(minButterfliesDensity-prevButterflyDensity)<1E-4)
-                    prevValueClose = (prevValueClose | 0x2);
+                    prevCycleClose = (prevCycleClose | 0x2);
                 else
-                    prevValueClose = 0;
+                    prevCycleClose = 0;
 
                 minButterfliesDensity = prevButterflyDensity;
                 countButterflyIncreasing = 0;
@@ -438,7 +464,6 @@ int NumericalTrials::approximateSystemQuietResponse(
         prevButterflyDensity = currentButterflyDensity;
 
 
-        double currentWaspDensity = theButterflies->waspPopulation();
         if(currentWaspDensity<prevWaspDensity)
         {
             // The wasp population is decreasing. If countIncreasing is
@@ -448,9 +473,9 @@ int NumericalTrials::approximateSystemQuietResponse(
             {
                 //std::cout << which << ": max wasp " << prevWaspDensity << "-" << maxWaspDensity << std::endl;
                 if(fabs(maxWaspDensity-prevWaspDensity)<1E-4)
-                    prevValueClose = (prevValueClose | 0x4);
+                    prevCycleClose = (prevCycleClose | 0x4);
                 else
-                    prevValueClose = 0;
+                    prevCycleClose = 0;
 
                 maxWaspDensity = prevWaspDensity;
                 countWaspIncreasing = 0;
@@ -465,9 +490,9 @@ int NumericalTrials::approximateSystemQuietResponse(
             {
                 //std::cout << which << ": min wasp " << prevWaspDensity << "-" << minWaspDensity << std::endl;
                 if(fabs(minWaspDensity-prevWaspDensity)<1E-4)
-                    prevValueClose = (prevValueClose | 0x8);
+                    prevCycleClose = (prevCycleClose | 0x8);
                 else
-                    prevValueClose = 0;
+                    prevCycleClose = 0;
 
                 minWaspDensity = prevWaspDensity;
                 countWaspIncreasing = 0;
@@ -475,8 +500,16 @@ int NumericalTrials::approximateSystemQuietResponse(
         }
         prevWaspDensity = currentWaspDensity;
 
-        if((prevValueClose>=0xf)||(maxButterfliesDensity>10.0))
+        if((prevCycleClose>=0xf)||(maxButterfliesDensity>10.0))
             break;
+        else if (prevValueClose>MAX_CHECK_CONSTANT)
+        {
+            maxButterfliesDensity = currentButterflyDensity;
+            minButterfliesDensity = currentButterflyDensity;
+            maxWaspDensity = currentWaspDensity;
+            minWaspDensity = currentWaspDensity;
+            break;
+        }
     }
 
     // Clean up the allocated space
@@ -503,11 +536,10 @@ int NumericalTrials::approximateSystemQuietResponse(
 
 }
 
-int NumericalTrials::approximateSystemHysteresis(
-        double mu,
+int NumericalTrials::approximateSystemHysteresis(double mu,
         double c, double g, double d,
         double mLow, double mHigh, int numberM,
-        double dt, int maxTimeLupe,
+        double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
         int skipPrint,
@@ -535,9 +567,9 @@ int NumericalTrials::approximateSystemHysteresis(
     theButterflies->setD(d);
     theButterflies->setDT(dt);
 
-    theButterflies->initializeButterflies();
+    //theButterflies->initializeButterflies();
     //theButterflies->initializeButterfliesGaussian(1.0,mu*0.5);
-
+    theButterflies->initializeButterfliesConstant(1.0);
 
     double maxButterfliesDensity = 0.0;
     double minButterfliesDensity = 0.0;
@@ -547,7 +579,7 @@ int NumericalTrials::approximateSystemHysteresis(
 
     long mLupe;
     double currentM = mLow;
-    for(mLupe=0;mLupe<=static_cast<long>(numberM);++mLupe)
+    for(mLupe=static_cast<long>(numberM);mLupe>=0;--mLupe)
     {
         currentM = mLow + static_cast<double>(mLupe)*(mHigh-mLow)/static_cast<double>(numberM-1);
         std::cout << "Starting approximation " << mLupe << ", " << currentM << std::endl;
@@ -574,16 +606,17 @@ int NumericalTrials::approximateSystemHysteresis(
 }
 
 int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
-        double &timeSpan,double dt, int maxTimeLupe,
+        double &timeSpan, double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
         int skipPrint,
         double &maxButterfliesDensity, double &minButterfliesDensity,
         double &maxWaspDensity, double &minWaspDensity)
 {
+    const long MAX_CHECK_CONSTANT = 2000;
     ArrayUtils<double> arrays;
     double *maxButterflyProfile = arrays.onetensor(legendrePolyDegree+2);
-    int    timeLupe = 0;
+    unsigned long timeLupe = 0;
     timeSpan        = 0.0;
 
 
@@ -598,6 +631,10 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
     maxWaspDensity = prevWaspDensity;
     minWaspDensity = maxWaspDensity;
     int countWaspIncreasing = 0;
+    int prevCycleClose = 0;
+
+    double prevButterflyCheck = 0.0;
+    double prevWaspCheck = 0.0;
     int prevValueClose = 0;
 
 
@@ -607,7 +644,7 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
     {
         timeSpan = static_cast<double>(timeLupe)*dt;
 
-        if((skipPrint>0) && (timeLupe%(skipPrint)==0))
+        if((skipPrint>0) && (timeLupe%(static_cast<unsigned long>(skipPrint))==0))
         {
             std::cout << "Calculating an approximation: "
                          << std::fixed
@@ -617,7 +654,7 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
         }
 
         if(
-           theButterflies->singleTimeStep(maxDeltaNorm,maxNewtonSteps,(skipPrint>0)&&(timeLupe%(skipPrint)==0))
+           theButterflies->singleTimeStep(maxDeltaNorm,maxNewtonSteps,(skipPrint>0)&&(timeLupe%(static_cast<unsigned long>(skipPrint))==0))
                 < 0)
         {
             std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
@@ -625,6 +662,30 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
         }
 
         double currentButterflyDensity = theButterflies->totalButterflyPopulation();
+        double currentWaspDensity = theButterflies->waspPopulation();
+
+        if((fabs(currentWaspDensity-prevWaspDensity)<1.0E-7)&&(fabs(currentButterflyDensity-prevButterflyDensity)<1.0E-7))
+        {
+            if(((fabs(prevWaspCheck-currentWaspDensity)>1.0E-7)||(fabs(prevButterflyCheck-currentButterflyDensity)>1.0E-7)))
+            {
+                prevValueClose = 0;
+                prevWaspCheck = currentWaspDensity;
+                prevButterflyCheck = currentButterflyDensity;
+            }
+            else
+            {
+                prevValueClose += 1;
+            }
+
+        }
+        else
+        {
+            prevValueClose = 0;
+            //prevWaspCheck = currentWaspDensity;
+            //prevButterflyCheck = currentButterflyDensity;
+        }
+
+
         if(currentButterflyDensity<prevButterflyDensity)
         {
             // The butterfly population is decreasing. If countIncreasing is
@@ -633,10 +694,10 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
             if(countButterflyIncreasing-->0)
             {
                 //std::cout << which << ": max butterfly " << prevButterflyDensity << "-" << maxButterfliesDensity << std::endl;
-                if(fabs(maxButterfliesDensity-prevButterflyDensity)<1E-4)
-                    prevValueClose = (prevValueClose | 0x1);
+                if((prevCycleClose>0x4)&&(fabs(maxButterfliesDensity-prevButterflyDensity)<1E-4))
+                    prevCycleClose = (prevCycleClose | 0x8);
                 else
-                    prevValueClose = 0;
+                    prevCycleClose = 0;
 
                 maxButterfliesDensity = prevButterflyDensity;
                 countButterflyIncreasing = 0;
@@ -651,9 +712,9 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
             {
                 //std::cout << which << ": min butterfly " << prevButterflyDensity << "-" << minButterfliesDensity << std::endl;
                 if(fabs(minButterfliesDensity-prevButterflyDensity)<1E-4)
-                    prevValueClose = (prevValueClose | 0x2);
+                    prevCycleClose = (prevCycleClose | 0x4);
                 else
-                    prevValueClose = 0;
+                    prevCycleClose = 0;
 
                 minButterfliesDensity = prevButterflyDensity;
                 countButterflyIncreasing = 0;
@@ -665,7 +726,6 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
         prevButterflyDensity = currentButterflyDensity;
 
 
-        double currentWaspDensity = theButterflies->waspPopulation();
         if(currentWaspDensity<prevWaspDensity)
         {
             // The wasp population is decreasing. If countIncreasing is
@@ -675,9 +735,9 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
             {
                 //std::cout << which << ": max wasp " << prevWaspDensity << "-" << maxWaspDensity << std::endl;
                 if(fabs(maxWaspDensity-prevWaspDensity)<1E-4)
-                    prevValueClose = (prevValueClose | 0x4);
+                    prevCycleClose = (prevCycleClose | 0x2);
                 else
-                    prevValueClose = 0;
+                    prevCycleClose = 0;
 
                 maxWaspDensity = prevWaspDensity;
                 countWaspIncreasing = 0;
@@ -692,9 +752,9 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
             {
                 //std::cout << which << ": min wasp " << prevWaspDensity << "-" << minWaspDensity << std::endl;
                 if(fabs(minWaspDensity-prevWaspDensity)<1E-4)
-                    prevValueClose = (prevValueClose | 0x8);
+                    prevCycleClose = (prevCycleClose | 0x1);
                 else
-                    prevValueClose = 0;
+                    prevCycleClose = 0;
 
                 minWaspDensity = prevWaspDensity;
                 countWaspIncreasing = 0;
@@ -702,8 +762,17 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
         }
         prevWaspDensity = currentWaspDensity;
 
-        if((prevValueClose>=0xf)||(maxButterfliesDensity>10.0))
+        if((prevCycleClose>=0xf)||(maxButterfliesDensity>10.0))
             break;
+        else if (prevValueClose>MAX_CHECK_CONSTANT)
+        {
+            maxButterfliesDensity = currentButterflyDensity;
+            minButterfliesDensity = currentButterflyDensity;
+            maxWaspDensity = currentWaspDensity;
+            minWaspDensity = currentWaspDensity;
+            break;
+        }
+
     }
 
     arrays.delonetensor(maxButterflyProfile);

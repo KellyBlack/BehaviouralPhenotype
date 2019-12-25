@@ -4,16 +4,16 @@
 
 #define SKIP_PRINT_UPDATE 40000
 #define SKIP_FILE_SAVE 150
-#define NUMBER_TIME_LOOP 300000000
+#define NUMBER_TIME_LOOP 3000000 // 000
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
-#define NUMBER_THREADS 15
+#define NUMBER_THREADS 4
 
 int main()
 {
     // Set up the temporal variables.
-    double dt = 0.000001;
+    double dt = 0.00001;
 
     //NumericalTrials *trials = new NumericalTrials();
 
@@ -31,7 +31,9 @@ int main()
 #ifdef APPROXIMATE_MULTIPLE_M
     NumericalTrials::multipleApproximationsByM(
             mu,c,g,d,
-            1.0,15.0,1.0,
+            //0.01,1.0,0.1,
+            //10.5,12.0,0.5,
+            13.0,15.0,0.5,
             dt,NUMBER_TIME_LOOP,
             LEGENDRE_POLY_DEGREE,
             MAX_DELTA_NORM,MAX_NEWTON_STEPS,
@@ -40,27 +42,28 @@ int main()
 #else
     NumericalTrials trial;
 
-    /*
     trial.approximateSystemHysteresis(
                 mu,c,g,d,
-                0.01,15.5,120,
+                //0.01,15.5,120,
+                1.5,10.5,80,
                 dt,NUMBER_TIME_LOOP,
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
                 -SKIP_PRINT_UPDATE,
-                false);
+                true);
 
-    */
+    /*
     trial.approximateSystemTrackRepeating(
                 mu,4.0*mu,4,
                 c,g,d,
-                0.01,15.5,120,
+                //7.01,15.5,120,
+                5.01,7.0,30,
                 dt,NUMBER_TIME_LOOP,
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
                 -SKIP_PRINT_UPDATE,NUMBER_THREADS,
-                false);
-
+                true);
+     */
 #endif
 
     std::cout << "Done" << std::endl;

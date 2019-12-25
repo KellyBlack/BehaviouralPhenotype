@@ -20,7 +20,7 @@ public:
     static void multipleApproximationsByM(
             double mu, double c, double g, double d,
             double lowM, double highM, double stepM,
-            double dt, int maxTimeLupe,
+            double dt, unsigned long maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
             int skipPrint,
@@ -29,7 +29,7 @@ public:
 
     int approximateSystem(
             double mu, double c, double g, double d, double m,
-            double dt, int maxTimeLupe,
+            double dt,unsigned long maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
             std::string filename,
@@ -39,13 +39,13 @@ public:
     int approximateSystemTrackRepeating(double muLow, double muHigh, int numberMu,
             double c, double g, double d,
             double mLow, double mHigh, int numberM,
-            double dt, int maxTimeLupe,
+            double dt,unsigned long maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
             int skipPrint, int numProcesses, bool appendFile);
 
     int approximateSystemQuietResponse(double mu, double c, double g, double d, double m,
-            double dt, int maxTimeLupe,
+            double dt,unsigned long maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
             int skipPrint, int msgID,unsigned long which);
@@ -53,14 +53,14 @@ public:
     int approximateSystemHysteresis(double mu,
             double c, double g, double d,
             double mLow, double mHigh, int numberM,
-            double dt, int maxTimeLupe,
+            double dt,unsigned long maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
             int skipPrint,
             bool appendFile);
 
     int approximateSystemGivenInitial(Butterflies *theButterflies,
-            double &timeSpan, double dt, int maxTimeLupe,
+            double &timeSpan, double dt,unsigned long maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
             int skipPrint,
