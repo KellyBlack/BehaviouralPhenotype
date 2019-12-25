@@ -8,7 +8,7 @@ class RungaKutta45
 public:
     explicit RungaKutta45(double initialTimeStep=1.0E-3,double *initialCondition=nullptr);
     int approximation(double cValue, double gValue, double dValue, double mValue, double thetaValue,
-                      double startTime, double endTime, double initialDt,
+                      double startTime, double endTime, double initialDt,double minimumDT,
                       double *initialCond, double tolerance,
                       std::string filename, bool appendFile);
 
@@ -33,6 +33,9 @@ public:
     void setCurrentTime(double value) { currentTime = value; }
     double getCurrentTime() { return(currentTime); }
 
+    void setMinimumDT(double value) { minimumDT = value; }
+    double getMinimumDT() { return(minimumDT); }
+
 protected:
 
     void rateFunction(double theTime,double *x,double *rate);
@@ -49,6 +52,7 @@ private:
     double d = 0.0;
     double m = 0.0;
     double theta = 0.0;
+    double minimumDT = 1.0E-5;
 };
 
 #endif // RUNGAKUTTA45_H
