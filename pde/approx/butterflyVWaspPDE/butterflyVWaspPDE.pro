@@ -6,6 +6,7 @@ LIBS += -lpthread
 QMAKE_CXXFLAGS += -O3
 
 SOURCES += \
+    approximationbase.cpp \
         main.cpp \
     pdeSolver.cpp \
     butterflies.cpp \
@@ -13,6 +14,7 @@ SOURCES += \
     rungakutta45.cpp
 
 HEADERS += \
+    approximationbase.h \
     legendre.h \
     util.h \
     lu_decomp.h \
