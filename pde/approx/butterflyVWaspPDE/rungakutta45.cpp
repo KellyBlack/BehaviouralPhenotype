@@ -2,6 +2,11 @@
 #include <iostream>
 #include <sstream>
 #include <math.h>
+#include <vector>
+
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
 
 #include "rungakutta45.h"
 
@@ -28,9 +33,13 @@ long RungaKutta45::approximationByM(
                   double cValue, double gValue, double dValue, double thetaValue,
                   double lowM, double highM,long numberM,
                   double startTime, double endTime, double initialDt, double minimumDT,
-                  double *initialCond, double tolerance,
+                  double *initialCond,double tolerance,
                   std::string filename, bool appendFile)
 {
+
+    // Create an ID and then create a message queue that will be associated with the ID
+    key_t msg_key = ftok("butterfly",1995);
+    int msgID = msgget(msg_key,0666|IPC_CREAT);
 
     // Open a file to write the results to.
     // Write the header for the file as well if this is a new file..
@@ -46,26 +55,67 @@ long RungaKutta45::approximationByM(
         //csvFile << "time,butterfly,wasp" << std::endl;
     }
 
+    RungaKutta45::MaxMinBuffer msgValue;
+    //RungaKutta45::MessageInformation* processInformation;
+    std::vector<RungaKutta45::MessageInformation*> processes;
+
+    // Need to make sure there are no messages in the buffer left
+    // over from previous runs that were prematurely terminated.
+    // (I will not go into the details about the agony of learning this lesson.)
+    while(msgrcv(msgID,&msgValue,sizeof(msgValue),0x4,IPC_NOWAIT)>0)
+    {
+        std::cout << "Previous message in the queue: " << msgValue.which << std::endl;
+    }
+
     long lupe;
     for(lupe=0;lupe<numberM;++lupe)
     {
         double m = lowM + static_cast<double>(lupe)*(highM-lowM)/static_cast<double>(numberM-1);
 
+        // Set up the data structure that will keep track of the values of the coefficient for this numerical trial.
+        // Then start a new thread.
+        RungaKutta45::MessageInformation *newProcess = new RungaKutta45::MessageInformation;
+        newProcess->which = lupe;
+        newProcess->theta = thetaValue;
+        newProcess->c     = cValue;
+        newProcess->g     = gValue;
+        newProcess->d     = dValue;
+        newProcess->m     = m;
+        newProcess->trial = new RungaKutta45;
+        newProcess->process =
+                new std::thread(&RungaKutta45::approximation,newProcess->trial,
+                                lupe,cValue,gValue,dValue,m,thetaValue,
+                                startTime,endTime,initialDt,minimumDT,
+                                initialCond,tolerance,msgID);
+        processes.push_back(newProcess);
+        std::cout << "starting " << lupe << "/" << m << ": " << newProcess->process << std::endl;
+
+        /*
         approximation(lupe,
                       cValue,gValue,dValue,m,thetaValue,
                       startTime,endTime,initialDt,minimumDT,
                       initialCond,tolerance);
-
-        /*
-        csvFile << lupe << ","
-                << c << "," << g << ","
-                << d << ","  << m << "," << theta << "," << currentTime << ","
-                << maxWaspDensity << "," << minWaspDensity << ","
-                << minButterfliesDensity << "," << maxButterfliesDensity << std::endl;
         */
+
+        newProcess->process->join();
+        msgrcv(msgID,&msgValue,sizeof(msgValue),0x4,0);
+
+        csvFile << msgValue.which << ","
+                << msgValue.c << "," << msgValue.g << ","
+                << msgValue.d << ","  << msgValue.m << "," << msgValue.theta << "," << msgValue.endTime << ","
+                << msgValue.maxWasp << "," << msgValue.minWasp << ","
+                << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
+
+        std::cout << msgValue.which << ","
+                << msgValue.c << "," << msgValue.g << ","
+                << msgValue.d << ","  << msgValue.m << "," << msgValue.theta << "," << msgValue.endTime << ","
+                << msgValue.maxWasp << "," << msgValue.minWasp << ","
+                << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
+
     }
 
     // Life is good. End it now.
+    msgctl(msgID, IPC_RMID, nullptr);
     csvFile.close();
 
 
@@ -76,9 +126,10 @@ long RungaKutta45::approximationByM(
 // Method to make a full approximation given a set of parameters.
 // Also includes the initial condition and time span.
 long RungaKutta45::approximation(long which,
-                                double cValue, double gValue, double dValue, double mValue, double thetaValue,
-                                double startTime, double endTime, double initialDt, double minimumDT,
-                                double *initialCond, double tolerance)
+                                 double cValue, double gValue, double dValue, double mValue, double thetaValue,
+                                 double startTime, double endTime, double initialDt, double minimumDT,
+                                 double *initialCond,double tolerance,
+                                 int msgID)
 {
     const long MAX_CHECK_CONSTANT = 4000;
     // First set the values of the parameters.
@@ -236,6 +287,23 @@ long RungaKutta45::approximation(long which,
         }
 
     }
+
+    RungaKutta45::MaxMinBuffer values;
+    values.which = which;
+    values.mtype = 0x4;
+    values.theta = theta;
+    values.c     = c;
+    values.g     = g;
+    values.d     = d;
+    values.m     = m;
+    values.endTime = currentTime;
+    values.maxWasp = maxWaspDensity;
+    values.minWasp = minWaspDensity;
+    values.maxButterfly = maxButterfliesDensity;
+    values.minButterfly = minButterfliesDensity;
+    msgsnd(msgID,&values,sizeof(values),2);
+    //std::cout << "DONE " << which << std::endl;
+
 
     return(1);
 }

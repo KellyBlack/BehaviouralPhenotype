@@ -37,7 +37,7 @@ int main()
     initialCond[0] = 1.0;
     initialCond[1] = 1.0;
     odeApprox.approximationByM(c,g,d,theta,
-                               1.0,10.0,2,
+                               1.0,10.0,20,
                                0.0,500.0,dt,1.0E-5,
                                initialCond,1.0E-5,
                                "rk45.csv",false);
