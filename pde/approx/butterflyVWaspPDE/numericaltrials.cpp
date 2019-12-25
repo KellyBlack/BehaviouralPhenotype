@@ -14,12 +14,14 @@
 
 
 // Constructor for the numerical trials class.
-NumericalTrials::NumericalTrials()
+NumericalTrials::NumericalTrials() :
+    ApproximationBase::ApproximationBase()
 {
 
 }
 
-void NumericalTrials::multipleApproximationsByM(double mu, double c, double g, double d,
+void NumericalTrials::multipleApproximationsByM(
+        double mu, double c, double g, double d,
         double lowM, double highM, double stepM,
         double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
@@ -81,7 +83,8 @@ void NumericalTrials::multipleApproximationsByM(double mu, double c, double g, d
 
 }
 
-int NumericalTrials::approximateSystem(double mu, double c, double g, double d, double m,
+int NumericalTrials::approximateSystem(
+        double mu, double c, double g, double d, double m,
         double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
@@ -148,38 +151,6 @@ int NumericalTrials::approximateSystem(double mu, double c, double g, double d, 
     return(1);
 }
 
-NumericalTrials::MessageInformation* NumericalTrials::findReturnedProcessParameters(
-        NumericalTrials::MaxMinBuffer msgValue,
-        std::vector<NumericalTrials::MessageInformation*> processes)
-{
-
-    std::vector<NumericalTrials::MessageInformation*>::iterator eachProcess;
-
-    // need to find this thread and join it.
-    for(eachProcess=processes.begin();(eachProcess!=processes.end());++eachProcess)
-    {
-        if((*eachProcess)->which == msgValue.which)
-        {
-            // This is the thread from which this process sprang forth.
-            // record the values that were passed and clean up the mess.
-            (*eachProcess)->mu   = msgValue.mu;
-            (*eachProcess)->c    = msgValue.c;
-            (*eachProcess)->g    = msgValue.g;
-            (*eachProcess)->d    = msgValue.d;
-            (*eachProcess)->m    = msgValue.m;
-            (*eachProcess)->time = msgValue.endTime;
-            (*eachProcess)->maxButterfly = msgValue.maxButterfly;
-            (*eachProcess)->minButterfly = msgValue.minButterfly;
-            (*eachProcess)->maxWasp      = msgValue.maxWasp;
-            (*eachProcess)->minWasp      = msgValue.minWasp;
-            return(*eachProcess);
-        }
-    }
-
-    return(nullptr);
-
-}
-
 
 int NumericalTrials::approximateSystemTrackRepeating(
         double muLow, double muHigh, int numberMu,
@@ -200,11 +171,11 @@ int NumericalTrials::approximateSystemTrackRepeating(
     std::fstream csvFile;
     if(appendFile)
     {
-        csvFile.open("changingMResults_1.csv", std::ios::out | std::ios::app);
+        csvFile.open("/tmp/changingMResults_1.csv", std::ios::out | std::ios::app);
     }
     else
     {
-        csvFile.open("changingMResults_1.csv", std::ios::out);
+        csvFile.open("/tmp/changingMResults_1.csv", std::ios::out);
         csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     }
 
@@ -229,7 +200,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
     unsigned long mLupe;
     unsigned long diffusionLupe;
     long currentNumberProcesses = 0;
-    unsigned long totalRuns = 0;
+    long totalRuns = 0;
     for(mLupe=0;mLupe<static_cast<unsigned long>(numberM);++mLupe)
         for(diffusionLupe=0;diffusionLupe<static_cast<unsigned long>(numberMu);++diffusionLupe)
         {
@@ -239,6 +210,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
 
             // Set up the data structure that will keep track of the values of the coefficient for this numerical trial.
             // Then start a new thread.
+            NumericalTrials *newTrial = new NumericalTrials();
             NumericalTrials::MessageInformation *newProcess = new NumericalTrials::MessageInformation;
             newProcess->which = totalRuns;
             newProcess->mu    = currentDiffusion;
@@ -246,9 +218,9 @@ int NumericalTrials::approximateSystemTrackRepeating(
             newProcess->g     = g;
             newProcess->d     = d;
             newProcess->m     = currentM;
-            newProcess->trial = new NumericalTrials;
+            newProcess->trial = static_cast<ApproximationBase*>(newTrial);
             newProcess->process = new std::thread(
-                            &NumericalTrials::approximateSystemQuietResponse,newProcess->trial,
+                            &NumericalTrials::approximateSystemQuietResponse,newTrial,
                             currentDiffusion,c,g,d,currentM,dt,maxTimeLupe,
                             legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,totalRuns
                             );
@@ -333,11 +305,12 @@ int NumericalTrials::approximateSystemTrackRepeating(
 
 }
 
-int NumericalTrials::approximateSystemQuietResponse(double mu, double c, double g, double d, double m,
+int NumericalTrials::approximateSystemQuietResponse(
+        double mu, double c, double g, double d, double m,
         double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
-        int skipPrint, int msgID, unsigned long which)
+        int skipPrint, int msgID,long which)
 {
     const long MAX_CHECK_CONSTANT = 2000;
     ArrayUtils<double> arrays;

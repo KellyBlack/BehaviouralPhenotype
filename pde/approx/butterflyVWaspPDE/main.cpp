@@ -19,15 +19,15 @@ int main()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    //double mu = 0.01;
+    double mu = 0.01;
     double c  = 2.8;
     double g  = 0.6;
     double d  = 0.1;
-    //double m  = 0.2;
+    double m  = 0.2;
 
     std::cout << "Starting" << std::endl;
 
-#define ODE_APPROXIMATION
+//#define ODE_APPROXIMATION
 #ifdef ODE_APPROXIMATION
 
     double theta = 1.0;
@@ -37,25 +37,30 @@ int main()
     initialCond[0] = 1.0;
     initialCond[1] = 1.0;
     odeApprox.approximationByM(c,g,d,theta,
-                               1.0,10.0,20,
+                               1.0,10.0,10,
                                0.0,500.0,dt,1.0E-5,
                                initialCond,1.0E-5,
-                               "rk45.csv",false);
+                               "rk45.csv",false,NUMBER_THREADS);
 
-#else
+#endif
+
 //#define APPROXIMATE_MULTIPLE_M
 #ifdef APPROXIMATE_MULTIPLE_M
     NumericalTrials::multipleApproximationsByM(
             mu,c,g,d,
             //0.01,1.0,0.1,
             //10.5,12.0,0.5,
-            13.0,15.0,0.5,
+            13.0,15.0,2.5,
             dt,NUMBER_TIME_LOOP,
             LEGENDRE_POLY_DEGREE,
             MAX_DELTA_NORM,MAX_NEWTON_STEPS,
             SKIP_PRINT_UPDATE,SKIP_FILE_SAVE,
             NUMBER_THREADS);
-#else
+#endif
+
+
+//#define APPROXIMATE_HYSTERESIS
+#ifdef APPROXIMATE_HYSTERESIS
     NumericalTrials trial;
 
     trial.approximateSystemHysteresis(
@@ -68,7 +73,11 @@ int main()
                 -SKIP_PRINT_UPDATE,
                 true);
 
-    /*
+#endif
+
+#define APPROXIMATE_MULTIPLE_M_MU
+#ifdef APPROXIMATE_MULTIPLE_M_MU
+    NumericalTrials trial;
     trial.approximateSystemTrackRepeating(
                 mu,4.0*mu,4,
                 c,g,d,
@@ -78,9 +87,7 @@ int main()
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
                 -SKIP_PRINT_UPDATE,NUMBER_THREADS,
-                true);
-     */
-#endif
+                false);
 #endif
 
     std::cout << "Done" << std::endl;

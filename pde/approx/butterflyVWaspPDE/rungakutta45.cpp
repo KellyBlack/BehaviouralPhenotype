@@ -12,7 +12,8 @@
 
 
 // Constructor for the class. Sets the initial condition and time step.
-RungaKutta45::RungaKutta45(double initialTimeStep, double *initialCondition)
+RungaKutta45::RungaKutta45(double initialTimeStep, double *initialCondition) :
+    ApproximationBase::ApproximationBase()
 {
     setDT(initialTimeStep);
     setCurrentTime(0.0);
@@ -29,12 +30,11 @@ RungaKutta45::RungaKutta45(double initialTimeStep, double *initialCondition)
 
 }
 
-long RungaKutta45::approximationByM(
-                  double cValue, double gValue, double dValue, double thetaValue,
-                  double lowM, double highM,long numberM,
+long RungaKutta45::approximationByM(double cValue, double gValue, double dValue, double thetaValue,
+                  double lowM, double highM, long numberM,
                   double startTime, double endTime, double initialDt, double minimumDT,
-                  double *initialCond,double tolerance,
-                  std::string filename, bool appendFile)
+                  double *initialCond, double tolerance,
+                  std::string filename, bool appendFile, int numberThreads)
 {
 
     // Create an ID and then create a message queue that will be associated with the ID
@@ -74,6 +74,7 @@ long RungaKutta45::approximationByM(
 
         // Set up the data structure that will keep track of the values of the coefficient for this numerical trial.
         // Then start a new thread.
+        RungaKutta45 *newApproximator = new RungaKutta45();
         RungaKutta45::MessageInformation *newProcess = new RungaKutta45::MessageInformation;
         newProcess->which = lupe;
         newProcess->theta = thetaValue;
@@ -81,9 +82,9 @@ long RungaKutta45::approximationByM(
         newProcess->g     = gValue;
         newProcess->d     = dValue;
         newProcess->m     = m;
-        newProcess->trial = new RungaKutta45;
+        newProcess->trial = static_cast<ApproximationBase*>(newApproximator);
         newProcess->process =
-                new std::thread(&RungaKutta45::approximation,newProcess->trial,
+                new std::thread(&RungaKutta45::approximation,newApproximator,
                                 lupe,cValue,gValue,dValue,m,thetaValue,
                                 startTime,endTime,initialDt,minimumDT,
                                 initialCond,tolerance,msgID);

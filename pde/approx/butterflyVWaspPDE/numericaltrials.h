@@ -3,16 +3,16 @@
 
 #include <vector>
 #include <string>
-#include <thread>
 
 
 #include "util.h"
 #include "legendre.h"
 #include "lu_decomp.h"
+#include "approximationbase.h"
 #include "butterflies.h"
 
 
-class NumericalTrials
+class NumericalTrials : public ApproximationBase
 {
 public:
     NumericalTrials();
@@ -36,7 +36,8 @@ public:
             int skipPrint,
             int skipFileSave);
 
-    int approximateSystemTrackRepeating(double muLow, double muHigh, int numberMu,
+    int approximateSystemTrackRepeating(
+            double muLow, double muHigh, int numberMu,
             double c, double g, double d,
             double mLow, double mHigh, int numberM,
             double dt,unsigned long maxTimeLupe,
@@ -44,11 +45,12 @@ public:
             double maxDeltaNorm, int maxNewtonSteps,
             int skipPrint, int numProcesses, bool appendFile);
 
-    int approximateSystemQuietResponse(double mu, double c, double g, double d, double m,
-            double dt,unsigned long maxTimeLupe,
+    int approximateSystemQuietResponse(
+            double mu, double c, double g, double d, double m,
+            double dt, unsigned long maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
-            int skipPrint, int msgID,unsigned long which);
+            int skipPrint, int msgID, long which);
 
     int approximateSystemHysteresis(double mu,
             double c, double g, double d,
@@ -69,44 +71,6 @@ public:
 
 protected:
 
-    // Set up the data structure that will be used to keep track of the processes
-    // and returned information associated with each process.
-    struct MessageInformation
-    {
-        unsigned long which;
-        double mu;
-        double c;
-        double g;
-        double d;
-        double m;
-        double time;
-        double maxButterfly;
-        double minButterfly;
-        double maxWasp;
-        double minWasp;
-        std::thread *process;
-        NumericalTrials *trial;
-    };
-
-    struct MaxMinBuffer
-    {
-      long mtype;
-      unsigned long which;
-      double mu;
-      double c;
-      double g;
-      double d;
-      double m;
-      double endTime;
-      double maxButterfly;
-      double minButterfly;
-      double maxWasp;
-      double minWasp;
-    };
-
-    MessageInformation* findReturnedProcessParameters(
-            MaxMinBuffer msgValue,
-            std::vector<MessageInformation*> processes);
 
 private:
 

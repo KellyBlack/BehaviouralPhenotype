@@ -4,7 +4,9 @@
 #include <string>
 #include <thread>
 
-class RungaKutta45
+#include "approximationbase.h"
+
+class RungaKutta45 : public ApproximationBase
 {
 public:
     explicit RungaKutta45(double initialTimeStep=1.0E-3,double *initialCondition=nullptr);
@@ -13,7 +15,8 @@ public:
     long approximationByM(double cValue, double gValue, double dValue, double thetaValue,
                       double lowM, double highM, long numberM,
                       double startTime, double endTime, double initialDt, double minimumDT, double *initialCond, double tolerance,
-                      std::string filename, bool appendFile);
+                      std::string filename, bool appendFile,
+                      int numberThreads);
 
     long approximation(long which,
                       double cValue, double gValue, double dValue, double mValue, double thetaValue,
@@ -63,40 +66,6 @@ private:
     double theta = 0.0;
     double minimumDT = 1.0E-5;
 
-    // Set up the data structure that will be used to keep track of the processes
-    // and returned information associated with each process.
-    struct MessageInformation
-    {
-        long which;
-        double theta;
-        double c;
-        double g;
-        double d;
-        double m;
-        double time;
-        double maxButterfly;
-        double minButterfly;
-        double maxWasp;
-        double minWasp;
-        std::thread *process;
-        RungaKutta45 *trial;
-    };
-
-    struct MaxMinBuffer
-    {
-      long mtype;
-      long which;
-      double theta;
-      double c;
-      double g;
-      double d;
-      double m;
-      double endTime;
-      double maxButterfly;
-      double minButterfly;
-      double maxWasp;
-      double minWasp;
-    };
 
 
 };
