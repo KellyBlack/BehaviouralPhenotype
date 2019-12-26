@@ -56,7 +56,7 @@ long RungaKutta45::approximationByM(double cValue, double gValue, double dValue,
     }
 
     RungaKutta45::MaxMinBuffer msgValue;
-    //RungaKutta45::MessageInformation* processInformation;
+    RungaKutta45::MessageInformation* processInformation;
     std::vector<RungaKutta45::MessageInformation*> processes;
 
     // Need to make sure there are no messages in the buffer left
@@ -68,6 +68,7 @@ long RungaKutta45::approximationByM(double cValue, double gValue, double dValue,
     }
 
     long lupe;
+    long currentNumberProcesses = 0;
     for(lupe=0;lupe<numberM;++lupe)
     {
         double m = lowM + static_cast<double>(lupe)*(highM-lowM)/static_cast<double>(numberM-1);
@@ -91,15 +92,41 @@ long RungaKutta45::approximationByM(double cValue, double gValue, double dValue,
         processes.push_back(newProcess);
         std::cout << "starting " << lupe << "/" << m << ": " << newProcess->process << std::endl;
 
-        /*
-        approximation(lupe,
-                      cValue,gValue,dValue,m,thetaValue,
-                      startTime,endTime,initialDt,minimumDT,
-                      initialCond,tolerance);
-        */
 
-        newProcess->process->join();
+        if(++currentNumberProcesses>=numberThreads)
+        {
+            msgrcv(msgID,&msgValue,sizeof(msgValue),0x4,0);
+            processInformation = findReturnedProcessParameters(msgValue,processes);
+
+            csvFile << msgValue.which << ","
+                    << msgValue.c << "," << msgValue.g << ","
+                    << msgValue.d << ","  << msgValue.m << "," << msgValue.theta << "," << msgValue.endTime << ","
+                    << msgValue.maxWasp << "," << msgValue.minWasp << ","
+                    << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
+
+            if(processInformation!= nullptr)
+            {
+                std::cout << msgValue.which << ","
+                        << msgValue.c << "," << msgValue.g << ","
+                        << msgValue.d << ","  << msgValue.m << "," << msgValue.theta << "," << msgValue.endTime << ","
+                        << msgValue.maxWasp << "," << msgValue.minWasp << ","
+                        << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
+                delete processInformation->trial;
+                processInformation->process->join();
+                currentNumberProcesses -= 1;
+            }
+        }
+
+    }
+
+    std::cout << std::endl << std::endl << "All processes finished. " << currentNumberProcesses  << std::endl;
+
+    // All of the process have been started. Now wait for them all to end and record the results.
+    while(currentNumberProcesses>0)
+    {
+        std::cout << "Need to wait: " << currentNumberProcesses << std::endl;
         msgrcv(msgID,&msgValue,sizeof(msgValue),0x4,0);
+        processInformation = findReturnedProcessParameters(msgValue,processes);
 
         csvFile << msgValue.which << ","
                 << msgValue.c << "," << msgValue.g << ","
@@ -107,12 +134,17 @@ long RungaKutta45::approximationByM(double cValue, double gValue, double dValue,
                 << msgValue.maxWasp << "," << msgValue.minWasp << ","
                 << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
 
-        std::cout << msgValue.which << ","
-                << msgValue.c << "," << msgValue.g << ","
-                << msgValue.d << ","  << msgValue.m << "," << msgValue.theta << "," << msgValue.endTime << ","
-                << msgValue.maxWasp << "," << msgValue.minWasp << ","
-                << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
-
+        if(processInformation!= nullptr)
+        {
+            std::cout << msgValue.which << ","
+                    << msgValue.c << "," << msgValue.g << ","
+                    << msgValue.d << ","  << msgValue.m << "," << msgValue.theta << "," << msgValue.endTime << ","
+                    << msgValue.maxWasp << "," << msgValue.minWasp << ","
+                    << msgValue.minButterfly << "," << msgValue.maxButterfly << std::endl;
+            processInformation->process->join();
+            delete processInformation->trial;
+            currentNumberProcesses -= 1;
+        }
     }
 
     // Life is good. End it now.
@@ -302,8 +334,7 @@ long RungaKutta45::approximation(long which,
     values.minWasp = minWaspDensity;
     values.maxButterfly = maxButterfliesDensity;
     values.minButterfly = minButterfliesDensity;
-    msgsnd(msgID,&values,sizeof(values),2);
-    //std::cout << "DONE " << which << std::endl;
+    msgsnd(msgID,&values,sizeof(values),0);
 
 
     return(1);

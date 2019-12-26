@@ -27,7 +27,7 @@ int main()
 
     std::cout << "Starting" << std::endl;
 
-//#define ODE_APPROXIMATION
+#define ODE_APPROXIMATION
 #ifdef ODE_APPROXIMATION
 
     double theta = 1.0;
@@ -37,9 +37,9 @@ int main()
     initialCond[0] = 1.0;
     initialCond[1] = 1.0;
     odeApprox.approximationByM(c,g,d,theta,
-                               1.0,10.0,10,
+                               0.1,10.0,200,
                                0.0,500.0,dt,1.0E-5,
-                               initialCond,1.0E-5,
+                               initialCond,1.0E-6,
                                "rk45.csv",false,NUMBER_THREADS);
 
 #endif
@@ -75,7 +75,7 @@ int main()
 
 #endif
 
-#define APPROXIMATE_MULTIPLE_M_MU
+//#define APPROXIMATE_MULTIPLE_M_MU
 #ifdef APPROXIMATE_MULTIPLE_M_MU
     NumericalTrials trial;
     trial.approximateSystemTrackRepeating(

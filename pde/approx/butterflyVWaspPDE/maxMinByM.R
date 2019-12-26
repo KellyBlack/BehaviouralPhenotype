@@ -37,7 +37,7 @@ a <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_1.csv')
 
 plot.new()
 plot.window(xlim=c(0,1.05*max(a$m)),
-            ylim=c(0,1.06*max(a$maxButterfly)))
+            ylim=c(0,1.16*max(a$maxButterfly)))
 title(main="Max and Min Of The Butterfly Density After A Long Time Span",
       xlab='m',
       ylab='Butterfly Density')
@@ -63,7 +63,16 @@ results <- plotResults(a)
 #     ylab='Butterfly Density',
 #     col=2,lwd=2)
 
-legend(0.1,0.35,results$labels,lty=results$plotTypes,
+ode <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/rk45.csv')
+odeOrder <- sort(ode$m,index.return=TRUE)
+points(ode$m[odeOrder$ix],ode$minButterfly[odeOrder$ix],type='l',lty=3)
+points(ode$m[odeOrder$ix],ode$maxButterfly[odeOrder$ix],type='l',lty=3)
+results$labels <- c(results$labels,'ODE')
+results$plotTypes <- c(results$plotTypes,3)
+results$pchTypes <- c(results$pchTypes,-1)
+results$colours <- c(results$colours,1)
+
+legend(0.1,0.8,results$labels,lty=results$plotTypes,
        pch=results$pchTypes,col=results$colours,lwd=2)
 #legend(0.2,1.1,
 #       c(expression(paste(mu,'=0.2')),
