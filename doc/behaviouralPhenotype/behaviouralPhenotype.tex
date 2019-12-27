@@ -222,7 +222,7 @@ of ordinary differential equations
   \label{eq:initialSystem1}
   \frac{d}{dt} b(t) & = & \alpha \cdot b(t) (K - b(t)) - \beta \cdot w(t) \frac{b(t)}{c+b(t)}, \\
   \label{eq:initialSystem2}
-  \frac{d}{dt} w(t) & = & -d \cdot w(t) + g \cdot w(t) \frac{b}{c+b(t)}.
+  \frac{d}{dt} w(t) & = & -d \cdot w(t) + g \cdot w(t) \frac{b(t)}{c+b(t)}.
 \end{eqnarray}
 The density of butterflies is modeled by the function $b(t)$, the
 density of wasps is modeled by the function $w(t)$, and the parameters
@@ -328,6 +328,11 @@ where
 \begin{eqnarray}
   \hat{p}(\theta) & = & 1 + m \cdot \theta.
 \end{eqnarray}
+The domain for the scaled variable, $\theta$, is $0\leq\theta\leq 1$.
+Neumann boundary conditions are used in the subsequent numerical
+approximations below. A variety of initial conditions have been
+explored, and they are described in the results section, section
+\ref{section:results}.
 
 
 \subsection{Stability Analysis Of A Simplified System Of ODEs}
@@ -359,9 +364,10 @@ $b=0$ and away from $w=0$.
 
 We introduce the numerical approximation of the coupled PDE and ODE
 system in equations (\ref{eq:scaledodePDE1}) and
-(\ref{eq:scaledodePDE2}). For the full system, we make use of a Legendre
-pseudo-spectral collocation method (cite Canuto). First, the
-butterfly density is discretized in $\theta$ as
+(\ref{eq:scaledodePDE2}). For the full system, we make use of a
+Legendre pseudo-spectral collocation method (cite Canuto , Gotlieb,
+Hestevhan ). First, the butterfly density is discretized in $\theta$
+as
 \begin{eqnarray}
   \label{eqn:spatialDiscretization}
   b_N(t,\theta) & = & \sum^N_{i=0} \hat{b}_i(t) \phi_i(\theta),
@@ -401,22 +407,24 @@ and the resulting sum results in an equivalent norm compared to the
 Gauss quadrature which is exact for polynomials up to degree
 $N$. (cite Canuto.)
 
-The resulting variational form for the Galerkin approximation on the
-discrete inner product for equation (\ref{eq:scaledodePDE1}) is
+The resulting variational form for Neumann boundary conditions using a
+Galerkin approximation and a discrete inner product for equation
+(\ref{eq:scaledodePDE1}) is
 \begin{eqnarray}
   \sum_{j=0}^N \sum_{i=0}^N  \hat{b}_i'(t) \phi_i(\theta_j) \phi_k(\theta_j) w_j
   & = &
   \sum_{j=0}^N \sum_{i=0}^N  \hat{b}_i(t) (1 - \hat{b}_i(t) ) \phi_i(\theta_j) \phi_k(\theta_j) w_j \\
-  & &  -  \sum_{j=0}^N w(t) \frac{\hat{p}(\theta) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j) }{c+\hat{p}(\theta) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j)} \phi_k(\theta_j) w_j \nonumber \\ 
+  & &  -  \sum_{j=0}^N w(t) \frac{\hat{p}(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j) }{c+\hat{p}(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j)} \phi_k(\theta_j) w_j \nonumber \\ 
   & & - \sum_{j=0}^N \mu  \sum_{i=0}^N \hat{b}_i(t) \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j, \nonumber
 \end{eqnarray}
-for all $k$ from $0$ to $N$.  The basis functions are the Lagrange
-interpolants on the abscissa, and the equations can be reduced to
+for all integer values of $k$ from $0$ to $N$ inclusive.  The basis
+functions are the Lagrange interpolants on the abscissa, and the
+equations can be reduced to
 \begin{eqnarray}
   \hat{b}_k'(t) 
   & = &
-  \hat{b}_k(t) (1 - \hat{b}_k(t) ) -  w(t) \frac{\hat{p}(\theta) \hat{b}_k(t)) }{c+\hat{p}(\theta)  \hat{b}_k(t) }  
-   - \frac{\mu}{w_k} \sum_{i=0}^N \hat{b}_i(t) \left( \sum_{j=0}^N  \phi_i'(\theta_j) \phi_j'(\theta_j)  w_j \right). \nonumber
+  \hat{b}_k(t) (1 - \hat{b}_k(t) ) -  w(t) \frac{\hat{p}(\theta_k) \hat{b}_k(t)) }{c+\hat{p}(\theta_k)  \hat{b}_k(t) }  
+   - \frac{\mu}{w_k} \sum_{i=0}^N \hat{b}_i(t) \left( \sum_{j=0}^N  \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j \right). \nonumber
 \end{eqnarray}
 
 Combined with equation (\ref{eq:scaledodePDE2}) the approximation
@@ -430,6 +438,7 @@ methods). At each time step the resulting non-linear system is
 approximated using Newton's method.
 
 \section{Results}
+\label{section:results}
 
 \section{Conclusion}
 
