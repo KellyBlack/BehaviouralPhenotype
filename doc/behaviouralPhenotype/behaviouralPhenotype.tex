@@ -248,7 +248,7 @@ the parameter,
 Our first task is to determine how the type II, or Holling type
 response, should be expressed in this new context. Formal derivations
 of the response function for the case given in equations
-\ref{eq:initialSystem1} and \ref{eq:initialSystem2} are provided in
+(\ref{eq:initialSystem1}) and (\ref{eq:initialSystem2}) are provided in
 (cite formal derivation of type II). In the derivation here, however,
 we follow the approach in Hollings original discussion (cite
 Hollings). We begin by finding an expression that relates the rate of
@@ -272,19 +272,19 @@ the normalized form is
 where the slope is chosen so that the area under the line from
 $\theta=0$ to $\theta=L$ is one.
 
-Turning back to equation \ref{eq:processingTime}, the rate of
+Turning back to equation (\ref{eq:processingTime}), the rate of
 predation is solved for, and the result is
 \begin{eqnarray}
   \label{eq:rateOfPredation}
   r & = &  \frac{p(\theta) b(t,\theta) }{1 + \gamma p(\theta) b(t,\theta)}.
 \end{eqnarray}
 This result can be immediately substituted into equation
-\ref{eq:initialSystem1} in the more traditional form as
+(\ref{eq:initialSystem1}) in the more traditional form as
 \begin{eqnarray}
   \label{eq:butterflyPredationRate}
   \beta \cdot w(t) \frac{p(\theta) b(t,\theta) }{c +  p(\theta) b(t,\theta)}
 \end{eqnarray}
-Equation \ref{eq:initialSystem2}, though, is for the rate of predation
+Equation (\ref{eq:initialSystem2}), though, is for the rate of predation
 for the single wasp population, so the impact for the wasps must be
 accumulated across the entire butterfly population,
 \begin{eqnarray}
@@ -356,6 +356,78 @@ non-trivial fixed points that occur in the first quadrant away from
 $b=0$ and away from $w=0$.
 
 \section{Numerical Approximation}
+
+We introduce the numerical approximation of the coupled PDE and ODE
+system in equations (\ref{eq:scaledodePDE1}) and
+(\ref{eq:scaledodePDE2}). For the full system, we make use of a Legendre
+pseudo-spectral collocation method (cite Canuto). First, the
+butterfly density is discretized in $\theta$ as
+\begin{eqnarray}
+  \label{eqn:spatialDiscretization}
+  b_N(t,\theta) & = & \sum^N_{i=0} \hat{b}_i(t) \phi_i(\theta),
+\end{eqnarray}
+where $\phi_i(\theta)$ is the Lagrange interpolant on the
+$i$\textsuperscript{th} abscissa of the Legendre-Gauss-Labatto
+quadrature.
+
+The abscissa of the Legendre-Gauss-Labatto quadrature are the zeroes
+of the function
+\begin{eqnarray}
+  \psi(\theta) & = & \left(1-\theta^2\right) L_{N}'(\theta),
+\end{eqnarray}
+where $L_N(\theta)$ is the $n$\textsuperscript{th} Legendre
+polynomial. (cite Davis) The associated weights are
+\begin{eqnarray}
+  w_n & = & .
+\end{eqnarray}
+Given $\psi(\theta)$ the Lagrange interpolants can be calculated
+\begin{eqnarray}
+  \phi_i(\theta) & = & \frac{\psi(\theta)}{\psi'(\theta)(\theta-\theta_i)}.
+\end{eqnarray}
+The function $\psi(\theta)$ coincides with the Legendre differential
+equation, and the relationship can be simplified as
+\begin{eqnarray}
+  \psi'(\theta) & = & -N(N+1)L_N(\theta).
+\end{eqnarray}
+
+The discretization of equations (\ref{eq:scaledodePDE1}) and
+(\ref{eq:scaledodePDE2}) is constructed by substituting the definition
+of $b_N$ from equation (\ref{eqn:spatialDiscretization}). A Galerkin
+approximation is constructed, and one minor complication is that the
+Lagrange interpolants are polynomials of degree $N$, and the
+Gauss-Labatto quadrature is exact for polynomials up to degree
+$N$. The integral is approximated using the Gauss-Labatto quadrature,
+and the resulting sum results in an equivalent norm compared to the
+Gauss quadrature which is exact for polynomials up to degree
+$N$. (cite Canuto.)
+
+The resulting variational form for the Galerkin approximation on the
+discrete inner product for equation (\ref{eq:scaledodePDE1}) is
+\begin{eqnarray}
+  \sum_{j=0}^N \sum_{i=0}^N  \hat{b}_i'(t) \phi_i(\theta_j) \phi_k(\theta_j) w_j
+  & = &
+  \sum_{j=0}^N \sum_{i=0}^N  \hat{b}_i(t) (1 - \hat{b}_i(t) ) \phi_i(\theta_j) \phi_k(\theta_j) w_j \\
+  & &  -  \sum_{j=0}^N w(t) \frac{\hat{p}(\theta) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j) }{c+\hat{p}(\theta) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j)} \phi_k(\theta_j) w_j \nonumber \\ 
+  & & - \sum_{j=0}^N \mu  \sum_{i=0}^N \hat{b}_i(t) \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j, \nonumber
+\end{eqnarray}
+for all $k$ from $0$ to $N$.  The basis functions are the Lagrange
+interpolants on the abscissa, and the equations can be reduced to
+\begin{eqnarray}
+  \hat{b}_k'(t) 
+  & = &
+  \hat{b}_k(t) (1 - \hat{b}_k(t) ) -  w(t) \frac{\hat{p}(\theta) \hat{b}_k(t)) }{c+\hat{p}(\theta)  \hat{b}_k(t) }  
+   - \frac{\mu}{w_k} \sum_{i=0}^N \hat{b}_i(t) \left( \sum_{j=0}^N  \phi_i'(\theta_j) \phi_j'(\theta_j)  w_j \right). \nonumber
+\end{eqnarray}
+
+Combined with equation (\ref{eq:scaledodePDE2}) the approximation
+consists of a system of $N+2$ ordinary differential equations. The
+integral in equation (\ref{eq:scaledodePDE2}) is approximated using
+the Legendre-Gauss-Labatto quadrature. The temporal discretization of
+the resulting system is constructed using a second order, implicit
+multi-step scheme. The scheme is implemented as a fully implicit
+second order Adams-Moulton scheme.  (cite SIAM methods of numerical
+methods). At each time step the resulting non-linear system is
+approximated using Newton's method.
 
 \section{Results}
 
