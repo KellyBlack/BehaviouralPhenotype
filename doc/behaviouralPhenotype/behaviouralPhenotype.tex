@@ -73,15 +73,21 @@ with a shared interdependence.
 Kortet, \textit{et al} (cite) note the impact of variation in the
 distribution of behaviour, they also note potential challenges this
 recognition implies. One difficulty is identifying and quantifying the
-distribution. An example they provide is the methods used to capture
-individuals in a population can result in a biased estimate. The
-reason for this is that some methods may be more or less likely to
-capture a subset of individuals based on how bold or timid the animals
-may be.
+distribution. One example relates to the capture of Pumpkin Seed Fish
+(cite Wilson and Shy and Bold), and the methods used to capture
+individuals in a population can result in a biased estimate.  Some
+methods may be more or less likely to capture a subset of individuals
+based on the individual's behaviours. 
 
 (Find example from their paper.)  Other mathematical models have been
 developed.... Compartmental models by citation. Other agent based
 models by citation. Hybrid models by citation.
+
+stochastic compartment model - Keeling and Grenfel
+
+Stochastic model by Loyd
+
+Compartment model by Loyd and Smith
 
 Another, more detailed example of the importance of behavioural
 differences between individuals in a population is provided by Keiser
@@ -180,9 +186,10 @@ of options have been employed to model a behavioural distribution in a
 given population. These methods include compartmental models, agent
 based models, and hybrids of these two models. One potential issue,
 though, is that the number of variations can be quite high. For
-example (citation genetic sites) examines a system in which over 120
-genetic sites determine a given animal's propensity. The number of
-combinations of such sites can be extremely high.
+example (citation genetic sites - Abolins and Abols) examines a system
+in which over 120 genetic sites determine a given animal's
+propensity. The number of combinations of such sites can be extremely
+high.
 
 In our treatment we instead tread the distribution as being
 continuous. The way in which this manifests itself within a model is
@@ -191,9 +198,9 @@ parameter. The parameter within the model will be allowed to vary
 according to some function of the new parameter.
 
 On the surface this is akin to a Bayesian statistical approach that is
-often used to estimate the value of a parameter. (cite Bayesian
-papers) In these approaches a probability distribution is assumed to
-describe the likelihood that a parameter takes on a given range of
+often used to estimate the value of a parameter. (cite Ramsay,
+Fitzpatrick) In these approaches a probability distribution is assumed
+to describe the likelihood that a parameter takes on a given range of
 values. In our case, though, we turn this around and assume that the
 population itself varies, and the relative population density depends
 on the parameter.
@@ -249,7 +256,7 @@ Our first task is to determine how the type II, or Holling type
 response, should be expressed in this new context. Formal derivations
 of the response function for the case given in equations
 (\ref{eq:initialSystem1}) and (\ref{eq:initialSystem2}) are provided in
-(cite formal derivation of type II). In the derivation here, however,
+(cite Holling, Dawes and Souza). In the derivation here, however,
 we follow the approach in Hollings original discussion (cite
 Hollings). We begin by finding an expression that relates the rate of
 butterfly predation by a single wasp,
@@ -386,7 +393,9 @@ polynomial. (cite Davis) The associated weights are
 \begin{eqnarray}
   w_n & = & .
 \end{eqnarray}
-Given $\psi(\theta)$ the Lagrange interpolants can be calculated
+In our examples the quadrature is approximated using the methods
+described by Golub and Welsch (cite Golub).  Given $\psi(\theta)$ the
+Lagrange interpolants can be calculated
 \begin{eqnarray}
   \phi_i(\theta) & = & \frac{\psi(\theta)}{\psi'(\theta)(\theta-\theta_i)}.
 \end{eqnarray}
