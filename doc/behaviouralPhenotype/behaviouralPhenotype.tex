@@ -316,12 +316,12 @@ $\bar{W}=$, $\bar{T}=$, and $\bar{\Theta}=L$. The resulting system
 can be reduced to the following form
 \begin{eqnarray}
   \label{eq:scaledodePDE1}
-  \frac{\partial}{\partial t} b(t,\theta) & = &
+  \frac{\partial}{\partial t} b & = &
       b (1 - b)
       -  w \frac{\hat{p}(\theta) b}{c+\hat{p}(\theta)b}
       + \mu \frac{\partial^2}{\partial \theta^2} b , \\
   \label{eq:scaledodePDE2}
-  \frac{d}{dt} w(t) & = & -d \cdot w +
+  \frac{d}{dt} w & = & -d \cdot w +
       \int^1_{\theta=0} g \cdot w \frac{\hat{p}(\theta) b }{c + \hat{p}(\theta) b} ~ d\theta,
 \end{eqnarray}
 where
@@ -330,9 +330,30 @@ where
 \end{eqnarray}
 
 
-\subsection{Stability Analysis Of The Simplified System}
+\subsection{Stability Analysis Of A Simplified System Of ODEs}
 
+Before proceeding to the numerical approximation of the full model, we
+first examine the stability of a simplified system. The simplified
+system is found by examining an ODE with a similar form. By assuming
+that the distribution of the butterflies is a constant consistent with
+a single value of $\theta$, the system is approximated by the
+following system of ODEs:
+\begin{eqnarray}
+  \label{eq:scaledODE1}
+  \frac{d}{dt} b(t) & = &
+      b(t) (1 - b(t))
+      -  w(t) \frac{\hat{p}(\theta) b(t)}{c+\hat{p}(\theta)b(t)}, \\
+  \label{eq:scaledODE2}
+  \frac{d}{dt} w(t) & = & -d \cdot w(t) +
+       g \cdot w(t) \frac{\hat{p}(\theta) b(t) }{c + \hat{p}(\theta) b(t)}.
+\end{eqnarray}
 
+by focusing on the system of ODEs, we can examine an approximation to
+the system by treating the variable $\theta$ as a fixed parameter and
+can gain some insight into the distributed system. The analysis here
+focused on the stability of the linearized system, and we focus on the
+non-trivial fixed points that occur in the first quadrant away from
+$b=0$ and away from $w=0$.
 
 \section{Numerical Approximation}
 
