@@ -227,13 +227,13 @@ The system adapted from (cite type II paper) is begins with the system
 of ordinary differential equations
 \begin{eqnarray}
   \label{eq:initialSystem1}
-  \frac{d}{dt} b(t) & = & \alpha \cdot b(t) (K - b(t)) - \beta \cdot w(t) \frac{b(t)}{c+b(t)}, \\
+  \frac{d}{dt} b(t) & = & \alpha \cdot b(t) (K - b(t)) - \gamma \cdot w(t) \frac{b(t)}{c+b(t)}, \\
   \label{eq:initialSystem2}
   \frac{d}{dt} w(t) & = & -d \cdot w(t) + g \cdot w(t) \frac{b(t)}{c+b(t)}.
 \end{eqnarray}
 The density of butterflies is modeled by the function $b(t)$, the
 density of wasps is modeled by the function $w(t)$, and the parameters
-$\alpha$, $\beta$, $d$, and $g$ are positive constants. The fixed
+$\alpha$, $\gamma$, $d$, and $g$ are positive constants. The fixed
 points and linear stability of this particular system was explored in
 (cite type II paper). 
 
@@ -274,22 +274,23 @@ minimal value $p(0)=a$, and the relationship has a positive slope then
 the normalized form is
 \begin{eqnarray}
   \label{eq:linearFormP}
-  p(\theta) & = & \frac{m}{something} \left( \theta + a \right).
+  p(\theta) & = & a + \frac{2(1-aL)}{L^2} \theta.
 \end{eqnarray}
 where the slope is chosen so that the area under the line from
-$\theta=0$ to $\theta=L$ is one.
+$\theta=0$ to $\theta=L$ is one. On immediate restriction on the
+parameters requires that $0<aL<1$.
 
 Turning back to equation (\ref{eq:processingTime}), the rate of
 predation is solved for, and the result is
 \begin{eqnarray}
   \label{eq:rateOfPredation}
-  r & = &  \frac{p(\theta) b(t,\theta) }{1 + \gamma p(\theta) b(t,\theta)}.
+  r & = &  \frac{p(\theta) b(t,\theta) }{1 + what p(\theta) b(t,\theta)}.
 \end{eqnarray}
 This result can be immediately substituted into equation
 (\ref{eq:initialSystem1}) in the more traditional form as
 \begin{eqnarray}
   \label{eq:butterflyPredationRate}
-  \beta \cdot w(t) \frac{p(\theta) b(t,\theta) }{c +  p(\theta) b(t,\theta)}
+  \gamma \cdot w(t) \frac{p(\theta) b(t,\theta) }{c +  p(\theta) b(t,\theta)}
 \end{eqnarray}
 Equation (\ref{eq:initialSystem2}), though, is for the rate of predation
 for the single wasp population, so the impact for the wasps must be
@@ -309,7 +310,7 @@ given by
   \label{eq:odePDE1}
   \frac{\partial}{\partial t} b(t,\theta) & = &
       \alpha \cdot b(t,\theta) (K - b(t,\theta))
-      - \beta \cdot w(t) \frac{p(\theta) b(t,\theta)}{c+p(\theta)b(t,\theta)}
+      - \gamma \cdot w(t) \frac{p(\theta) b(t,\theta)}{c+p(\theta)b(t,\theta)}
       + \mu \frac{\partial^2}{\partial \theta^2} b(t,\theta) , \\
   \label{eq:odePDE2}
   \frac{d}{dt} w(t) & = & -d \cdot w(t) +
@@ -318,9 +319,10 @@ given by
 
 The system can be scaled as $b\rightarrow \bar{B}\hat{b}$,
 $w\rightarrow \bar{W}\hat{w}$, $t\rightarrow \bar{T}\hat{t}$, and
-$\theta\rightarrow \bar{\Theta}\hat{\theta}$. We choose $\bar{B}=$,
-$\bar{W}=$, $\bar{T}=$, and $\bar{\Theta}=L$. The resulting system
-can be reduced to the following form
+$\theta\rightarrow \bar{\Theta}\hat{\theta}$. We choose $\bar{B}=K$,
+$\bar{W}=\frac{\alpha K^2 a}{\gamma}$, $\bar{T}=\frac{1}{\alpha K a}$,
+and $\bar{\Theta}=L$. The resulting system can be reduced to the
+following form
 \begin{eqnarray}
   \label{eq:scaledodePDE1}
   \frac{\partial}{\partial t} b & = &
@@ -366,6 +368,109 @@ can gain some insight into the distributed system. The analysis here
 focused on the stability of the linearized system, and we focus on the
 non-trivial fixed points that occur in the first quadrant away from
 $b=0$ and away from $w=0$.
+
+We first determine the nullclines for the system.
+The $b$-nullclines for the system in the $b-w$ plane are given by
+\begin{eqnarray}
+  \label{eq:bnullclines}
+  b & = & 0, \\
+  w & = & (1-b)(c+b\cdot(1+m\theta)).
+\end{eqnarray}
+The second nullcline is a parabola opening downward, and the vertex is located at
+$b=\frac{1+m\theta+1}{2(1+m\theta)}$. The $w$-nullclines are given by
+\begin{eqnarray}
+  \label{eq:wnullclines}
+  w & = & 0, \\
+  b & = & \frac{cd}{(g-d)(1+m\theta)}.
+\end{eqnarray}
+The second nullcline is a vertical line in the $b-w$ plane. In order
+for a fixed point to exist in the first quadrant an immediate
+restriction on the parameters requires that $g>d$.  Given the
+nullclines, the only fixed point that occurs in the first quadrant
+away from an axis is at $b=\frac{cd}{(1+m\theta)(g-d)}$ and
+$w=\left(\frac{cd}{g-d}+c\right)
+\left(1-\frac{cd}{(1+m\theta)(g-d)}\right)$.
+
+The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
+(\ref{eq:scaledODE2}) at the fixed point is
+\begin{eqnarray}
+  J & = &
+          \left[
+          \begin{array}{rr}
+            J_{11} & J_{12} \\
+            J_{21} & 0
+          \end{array}
+          \right],
+\end{eqnarray}
+where
+\begin{eqnarray}
+  \label{eq:jacobian}
+  J_{11} & = & (1+m\theta)(1-2b) - w (1+m\theta)\frac{c}{(c+(1+m\theta)b)^2}, \\
+  J_{12} & = & \frac{-b\cdot(1+m\theta)}{c+(1+m\theta)b}, \\
+  J_{21} & = & \frac{g\cdot c \cdot w \cdot (1+m\theta)}{(c+(1+m\theta)b)^2}.
+\end{eqnarray}
+The eigen values of the Jacobian have negative real part when the
+trace is negative,
+\begin{eqnarray}
+  (1+m\theta)(1-2b) - w (1+m\theta)\frac{c}{(c+(1+m\theta)b)^2} & < & 0.
+\end{eqnarray}
+Substituting the values of $b$ and $w$ for the non-trivial fixed point
+yields
+\begin{eqnarray}
+  \label{eqn:traceNegative}
+  \frac{(1+m\theta)-c}{2(1+m\theta)} & < & \frac{cd}{(g-d)(1+m\theta)}.
+\end{eqnarray}
+This expression can be viewed through another substitution. Let
+$u=1+m\theta$ and $v=\frac{cd}{g-d}=\frac{c}{\frac{g}{d}-1}$, and the
+relationship in equation (\ref{eqn:traceNegative}) is now
+\begin{eqnarray}
+  \label{eq:stabilityParameters}
+  v & > & \frac{u-c}{2}.
+\end{eqnarray}
+Note also that under this transformation, the value of the butterfly
+density at the fixed point is $\frac{v}{u}$. The scaling in the
+original model is based on the carrying capacity which presumes that
+\begin{eqnarray}
+  \frac{v}{u} & < & 1,
+\end{eqnarray}
+or 
+\begin{eqnarray}
+  \label{eq:boundFixedPoint}
+  v & < & u.
+\end{eqnarray}
+
+A feasible region that implies stability of the fixed point can be
+determined in the $u-v$ plane. If the parameters result in a point in
+the region bounded by equation (\ref{eq:stabilityParameters}),
+equation (\ref{eq:boundFixedPoint}), and $v>0$ then the resulting
+fixed point will be linearly stable. A graphical depiction of the
+stability region in the $u-v$ plane is shown in Figure
+\ref{fig:uvStabilityRegion}.
+
+\begin{figure}[htb]
+  \centering
+  Figure goes here...
+  \caption[Stability region in the $u-v$ plane.]{Graphical view of the
+    combined feasible and stability region in the $u-v$ plane.}
+  \label{fig:uvStabilityRegion}
+\end{figure}
+
+In the context of the full, distributed system in equation
+(\ref{eq:scaledodePDE1}) and equation (\ref{eq:scaledodePDE2}) the
+domain of $\theta$ is $0\leq\theta\leq 0$. For a given set of
+parameters the value of $v$ is fully determined. The values of $u$
+vary from $u=1$ to $u=1+m\theta$.  The corresponding region in the
+$u-v$ plane is along a horizontal line segment from $(1,v)$ to
+$(1+m\theta,v)$ as shown in Figure \ref{fig:distributedLineSegment}.
+
+\begin{figure}[htb]
+  \centering
+  Figure goes here...
+  \caption[Domain of the distributed system in the $u-v$
+  plane.]{Domain of the parameters for the distributed system for a
+    given set of parameters for $0\leq\theta\leq 1$.}
+  \label{fig:distributedLineSegment}
+\end{figure}
 
 \section{Numerical Approximation}
 
