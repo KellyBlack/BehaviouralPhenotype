@@ -34,10 +34,10 @@ int main()
     double initialCond[2];
     RungaKutta45 odeApprox;
 
-    initialCond[0] = 1.0;
-    initialCond[1] = 1.0;
+    initialCond[0] = c*d/((g-d)*(1.0+m))*0.95;
+    initialCond[1] = (1.0-initialCond[0])*(c+initialCond[0]*(1.0+m));
     odeApprox.approximationByM(c,g,d,theta,
-                               0.1,10.0,200,
+                               0.1,15.0,300,
                                0.0,500.0,dt,1.0E-5,
                                initialCond,1.0E-6,
                                "rk45.csv",false,NUMBER_THREADS);

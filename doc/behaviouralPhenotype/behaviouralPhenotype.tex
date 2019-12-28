@@ -257,12 +257,28 @@ response, should be expressed in this new context. Formal derivations
 of the response function for the case given in equations
 (\ref{eq:initialSystem1}) and (\ref{eq:initialSystem2}) are provided in
 (cite Holling, Dawes and Souza). In the derivation here, however,
-we follow the approach in Hollings original discussion (cite
-Hollings). We begin by finding an expression that relates the rate of
-butterfly predation by a single wasp,
+we follow the approach in Holling's original discussion (cite
+Hollings). We begin by finding an expression that relates the number
+of eggs parasitized by a single wasp,
 \begin{eqnarray}
   \label{eq:processingTime}
-  Y = ????
+  Y(\theta) & = & r T_{\mathrm{search}}(\theta) b(t,\theta) p(\theta),
+\end{eqnarray}
+where $T_{\mathrm{search}}$ is the search time required by the wasp to
+find the location of a butterfly's clutch. The time a wasp requires to
+parasitize the clutch is assumed to be proportional to the number of
+eggs, and the total time is
+\begin{eqnarray}
+  \label{eq:totalEgglayingTime}
+  T_{\mathrm{total}}(\theta) & = & T_{\mathrm{search}}(\theta) + \beta Y(\theta).
+\end{eqnarray}
+Substituting the search time found in equation
+(\ref{eq:totalEgglayingTime}) back into equation
+(\ref{eq:processingTime}) results in an expression for the rate of
+predation per wasp,
+\begin{eqnarray}
+  \label{eq:waspPredationRate}
+  Y(\theta) & = & \frac{\beta T_{\mathrm{total}} b(t,\theta) p(\theta)}{1 + \beta r b(t,\theta) p(\theta)}.
 \end{eqnarray}
 
 In this case $p(\theta)$ represents the impact of the use of the
@@ -284,7 +300,7 @@ Turning back to equation (\ref{eq:processingTime}), the rate of
 predation is solved for, and the result is
 \begin{eqnarray}
   \label{eq:rateOfPredation}
-  r & = &  \frac{p(\theta) b(t,\theta) }{1 + what p(\theta) b(t,\theta)}.
+  r & = &  \frac{p(\theta) b(t,\theta) }{1 + \beta p(\theta) b(t,\theta)}.
 \end{eqnarray}
 This result can be immediately substituted into equation
 (\ref{eq:initialSystem1}) in the more traditional form as
@@ -470,6 +486,17 @@ $(1+m\theta,v)$ as shown in Figure \ref{fig:distributedLineSegment}.
   plane.]{Domain of the parameters for the distributed system for a
     given set of parameters for $0\leq\theta\leq 1$.}
   \label{fig:distributedLineSegment}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=12cm]{ODEButterflyBounds.pdf}
+  \caption[Upper and lower bounds of the butterfly density.]{The upper
+    and lower bounds of the long term density of the butterfly
+    population. The population was approximated for different values
+    of $m$. The approximation was stopped if it either became close to
+    a steady state or a limit cycle.}
+  \label{fig:odeButterflyBifurcation}
 \end{figure}
 
 \section{Numerical Approximation}
