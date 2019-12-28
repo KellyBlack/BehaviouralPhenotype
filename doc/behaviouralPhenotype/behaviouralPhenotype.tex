@@ -512,10 +512,10 @@ as
   b_N(t,\theta) & = & \sum^N_{i=0} \hat{b}_i(t) \phi_i(\theta),
 \end{eqnarray}
 where $\phi_i(\theta)$ is the Lagrange interpolant on the
-$i$\textsuperscript{th} abscissa of the Legendre-Gauss-Labatto
+$i$\textsuperscript{th} abscissa of the Legendre-Gauss-Lobatto
 quadrature.
 
-The abscissa of the Legendre-Gauss-Labatto quadrature are the zeroes
+The abscissa of the Legendre-Gauss-Lobatto quadrature are the zeroes
 of the function
 \begin{eqnarray}
   \psi(\theta) & = & \left(1-\theta^2\right) L_{N}'(\theta),
@@ -542,8 +542,8 @@ The discretization of equations (\ref{eq:scaledodePDE1}) and
 of $b_N$ from equation (\ref{eqn:spatialDiscretization}). A Galerkin
 approximation is constructed, and one minor complication is that the
 Lagrange interpolants are polynomials of degree $N$, and the
-Gauss-Labatto quadrature is exact for polynomials up to degree
-$N$. The integral is approximated using the Gauss-Labatto quadrature,
+Gauss-Lobatto quadrature is exact for polynomials up to degree
+$N$. The integral is approximated using the Gauss-Lobatto quadrature,
 and the resulting sum results in an equivalent norm compared to the
 Gauss quadrature which is exact for polynomials up to degree
 $N$. (cite Canuto.)
@@ -571,7 +571,7 @@ equations can be reduced to
 Combined with equation (\ref{eq:scaledodePDE2}) the approximation
 consists of a system of $N+2$ ordinary differential equations. The
 integral in equation (\ref{eq:scaledodePDE2}) is approximated using
-the Legendre-Gauss-Labatto quadrature. The temporal discretization of
+the Legendre-Gauss-Lobatto quadrature. The temporal discretization of
 the resulting system is constructed using a second order, implicit
 multi-step scheme. The scheme is implemented as a fully implicit
 second order Adams-Moulton scheme.  (cite SIAM methods of numerical
