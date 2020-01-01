@@ -17,16 +17,17 @@
 \section{Introduction}
 
 There is great interest in the role of variation in animal
-personalities (cite Kortet).  The variation in animal behaviours as
-well as the variation in the coresponding genetic basis for animal
-personalities plays a role in the broader population dynamics of the
-species as well as the other animals that interact with the species. A
-variety of mathematical models are being developed to explore this
-important aspect of interactions. The models include compartment
-models, stochastic, agent based models, as well as combinations of
-these approaches. One difficulty, though, with such approaches is the
-challenge of developing appropriate analytic tools to examine the
-general properties of the resulting models.
+personalities\cite{doi:10.1111/j.1461-0248.2010.01536.x}.  The
+variation in animal behaviours as well as the variation in the
+coresponding genetic basis for animal personalities plays a role in
+the broader population dynamics of the species as well as the other
+animals that interact with the species. A variety of mathematical
+models are being developed to explore this important aspect of
+interactions. The models include compartment models, stochastic, agent
+based models, as well as combinations of these approaches. One
+difficulty, though, with such approaches is the challenge of
+developing appropriate analytic tools to examine the general
+properties of the resulting models.
 
 We propose an approach that assumes a continuous distribution
 associated with one behavioural aspect of an animal's behaviour. In
@@ -67,23 +68,27 @@ directly observed and provides context for the importance of the
 general phenomena.
 
 A number of authors have noted the importance of the role of variation
-in a species' habits or genetics  (cite Pinter-Wollman, Kortet,
-Keiser). We begin this discussion with the survey provided by Kortet,
-\textit{et al} (cite). The authors note that within any large group of
-animals certain behaviours can vary across the population. They go on
-to propose that the diversity of behaviours can profoundly impact the
-broader dynamics of the population of the animals as well as animals
-with a shared interdependence.
+in a species' habits or
+genetics\cite{doi:10.1111/j.1461-0248.2010.01536.x} (cite
+Pinter-Wollman, Keiser). We begin this discussion with the survey
+provided by Kortet, \textit{et
+  al}\cite{doi:10.1111/j.1461-0248.2010.01536.x}. The authors note
+that within any large group of animals certain behaviours can vary
+across the population. They go on to propose that the diversity of
+behaviours can profoundly impact the broader dynamics of the
+population of the animals as well as animals with a shared
+interdependence.
 
-Kortet, \textit{et al} (cite) note the impact of variation in the
-distribution of behaviour. They note some potential challenges this
-recognition implies, as well. One challenge is the difficulty to
-identify and quantifyi the distribution of animal personalities in a
-given population. A specific example relates to the capture of Pumpkin
-Seed Fish (cite Wilson and Shy and Bold), and the methods used to
-capture individuals in a population can result in a biased estimate.
-Some methods may be more or less likely to capture a subset of
-individuals based on the individuals' behaviours.
+Kortet, \textit{et al}\cite{doi:10.1111/j.1461-0248.2010.01536.x} note
+the impact of variation in the distribution of behaviour. They note
+some potential challenges this recognition implies, as well. One
+challenge is the difficulty to identify and quantifyi the distribution
+of animal personalities in a given population. A specific example
+relates to the capture of Pumpkin Seed Fish (cite Wilson and Shy and
+Bold), and the methods used to capture individuals in a population can
+result in a biased estimate.  Some methods may be more or less likely
+to capture a subset of individuals based on the individuals'
+behaviours.
 
 (Find example from their paper.)  Other mathematical models have been
 developed.... Compartmental models by citation. Other agent based
@@ -319,7 +324,7 @@ Equation (\ref{eq:initialSystem2}), though, is for the rate of predation
 for the single wasp population, so the impact for the wasps must be
 accumulated across the entire butterfly population,
 \begin{eqnarray}
-  \label{eq:waspPredationRate}
+  \label{eq:totalWaspPredationRate}
   \int^L_{\theta=0} g \cdot w(t) \frac{p(\theta) b(t,\theta) }{c + p(\theta) b(t,\theta)} ~ d\theta.
 \end{eqnarray}
 
@@ -592,5 +597,7 @@ approximated using Newton's method.
 
 \section{Acknowledgements}
 
+\bibliographystyle{siam}
+\bibliography{animalBehaviour}
 
 \end{document}
