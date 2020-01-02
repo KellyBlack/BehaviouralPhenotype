@@ -522,8 +522,7 @@ $(1+m\theta,v)$ as shown in Figure \ref{fig:distributedLineSegment}.
 We introduce the method for the numerical approximation of the coupled
 PDE and ODE system in equations (\ref{eq:scaledodePDE1}) and
 (\ref{eq:scaledodePDE2}). For the full system, we make use of a
-Legendre pseudo-spectral collocation method\cite{spectralMethodsFluids} (cite Gotlieb,
-Hestevhan ). First, the butterfly density is discretized in $\theta$
+Legendre pseudo-spectral collocation method\cite{spectralMethodsFluids,hesthaven_gottlieb_gottlieb_2007} (cite Gotlieb). First, the butterfly density is discretized in $\theta$
 as
 \begin{eqnarray}
   \label{eqn:spatialDiscretization}
@@ -531,7 +530,7 @@ as
 \end{eqnarray}
 where $\phi_i(\theta)$ is the Lagrange interpolant on the
 $i$\textsuperscript{th} abscissa of the Legendre-Gauss-Lobatto
-quadrature.
+quadrature\cite{hesthaven_gottlieb_gottlieb_2007}.
 
 The abscissa of the Legendre-Gauss-Lobatto quadrature are the zeroes
 of the function
