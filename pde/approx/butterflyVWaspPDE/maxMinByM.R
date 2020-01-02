@@ -65,8 +65,8 @@ results <- plotResults(a)
 
 ode <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/rk45.csv')
 odeOrder <- sort(ode$m,index.return=TRUE)
-points(ode$m[odeOrder$ix],ode$minButterfly[odeOrder$ix],type='l',lty=3)
-points(ode$m[odeOrder$ix],ode$maxButterfly[odeOrder$ix],type='l',lty=3)
+points(ode$m[odeOrder$ix],ode$minButterfly[odeOrder$ix],type='l',lty=3,lwd=4)
+points(ode$m[odeOrder$ix],ode$maxButterfly[odeOrder$ix],type='l',lty=3,lwd=4)
 results$labels <- c(results$labels,'ODE')
 results$plotTypes <- c(results$plotTypes,3)
 results$pchTypes <- c(results$pchTypes,-1)
@@ -82,4 +82,6 @@ legend(0.1,0.8,results$labels,lty=results$plotTypes,
 #       col=c(4,6,2),
 #       lwd=c(2,2,2)
 #       )
+#dev.off()
+#dev.copy(pdf,'maxMinByM-mu-01-04.pdf')
 #dev.off()
