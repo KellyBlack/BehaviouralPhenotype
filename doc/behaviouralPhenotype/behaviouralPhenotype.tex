@@ -523,8 +523,9 @@ $(1+m\theta,v)$ as shown in Figure \ref{fig:distributedLineSegment}.
 We introduce the method for the numerical approximation of the coupled
 PDE and ODE system in equations (\ref{eq:scaledodePDE1}) and
 (\ref{eq:scaledodePDE2}). For the full system, we make use of a
-Legendre pseudo-spectral collocation method\cite{spectralMethodsFluids,hesthaven_gottlieb_gottlieb_2007,gottlieb1977numerical}. First, the butterfly density is discretized in $\theta$
-as
+Legendre pseudo-spectral collocation
+method\cite{spectralMethodsFluids,hesthaven_gottlieb_gottlieb_2007,gottlieb1977numerical}. First,
+the butterfly density is discretized in $\theta$ as
 \begin{eqnarray}
   \label{eqn:spatialDiscretization}
   b_N(t,\theta) & = & \sum^N_{i=0} \hat{b}_i(t) \phi_i(\theta),
@@ -598,6 +599,15 @@ method.
 
 \section{Results}
 \label{section:results}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=12cm]{maxMinByM-mu-01-04.pdf}
+  \caption[Maximum and minimum values of the butterfly
+  density]{Maximum and minimum values of the butterfly densities after
+    a long time period as the parameter $m$ varies.}
+  \label{fig:maxMinButterflySmallMu}
+\end{figure}
 
 \section{Conclusion}
 
