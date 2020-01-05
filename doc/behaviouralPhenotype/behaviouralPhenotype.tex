@@ -611,6 +611,7 @@ numerical exploration of the existance of a stable steady state or
 limit cycles is given.
 
 \subsection{Approximation of the system of ODEs}
+\label{subsection:odeApproximation}
 
 We first examine the behaviour of the system of ODEs given in
 equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Our focus
@@ -659,13 +660,36 @@ cycle. (Need to check to see if this is consistent with the theory!)
 
 \subsection{Approximation of the coupled PDE and ODE}
 
-
-equations (\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2})
-Approximation from section \ref{numericalApproximation}
+The numerical exploration of the full, coupled system of the PDE and
+ODE, equations (\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2}),
+is examined. The approximation method is that same as described in
+section \ref{numericalApproximation}. The parameter range is similar
+to that in subsection \ref{subsection:odeApproximation}.
 
 The value of the parameters in the example are $c=2.8$, $g=0.6$,
-$d=0.1$. Approximations were constructed for values of $m$ sarting at
-$m=0.1$ and ending at $m=15.0$.
+$d=0.1$, and $\mu=0.01$. The temporal behaviour of the system is
+similar to that found in the previous subsection, subsection
+\ref{subsection:odeApproximation}. For example, an approximation for
+--- provide example for $m=5$. --- Need to discuss this.
+
+The onset of a limit cycle is delayed with respect to the system of
+ODEs. For this value of $m$ the fixed point for the ODEs results in a
+limit cycle. However, in the case of the coupled PDE and ODE system a
+limit cycle did not appear until much larger values of $m$. For
+example, at $m=12$, a repeating patter was found. The results of an
+approximation are shown in Figure \ref{fig:approximationM12Mu01}.
+
+The results shown in Figure \ref{fig:approximationM12Mu01} are only
+for a short time span in order to make it easier to show the change in
+time. The initial condition in this case is a Gaussian with a center
+at the right end point.  Similar patterns emerge for an initial
+condition that is a Gaussian centered at the left, a constant initial
+condition, and an initial condition with the butterfly density set at
+the theoretical steady state given each value of $\theta$.
+
+
+Approximations were constructed for
+values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
 
 
 \begin{figure}[htb]
