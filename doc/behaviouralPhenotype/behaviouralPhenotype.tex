@@ -604,19 +604,21 @@ method.
 
 A collection of specific approximations is provided. We start with an
 examination of the behaviour of the system of ODEs given in equations
-(\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Next some
-approximations of the coupled PDE and ODE from equations
-(\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2}) are provided. In
-both sets of examples a numerical exploration of the existance of a
-stable steady state or limit cycles is given.
+(\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Next approximations
+of the coupled PDE and ODE from equations (\ref{eq:scaledodePDE1}) and
+(\ref{eq:scaledodePDE2}) are provided. In both sets of examples a
+numerical exploration of the existance of a stable steady state or
+limit cycles is given.
 
 \subsection{Approximation of the system of ODEs}
 
-First, approximations of the nonlinear system of ODEs from the system
-of ODEs given in equations (\ref{eq:scaledODE1}) and
-(\ref{eq:scaledODE2}) is provided. Our focus is on the stability
-characteristics of the fixed points as well as the long term dynamics
-of the system.
+We first examine the behaviour of the system of ODEs given in
+equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Our focus
+is on the stability characteristics of the fixed points as well as the
+long term dynamics of the system. The behaviour at the non-trivial
+fixed point is explored with respect to changes in the parameter
+$m$. Because the change in $\theta$ is not relevant for the ODE we
+assume that $\theta=1$.
 
 An example of the long term behaviour is provided in Figure
 \ref{fig:odeButterflyBifurcation}. The system of ODEs given in
@@ -626,22 +628,23 @@ size of 1.0E-5.  The value of the parameters in the example are
 $c=2.8$, $g=0.6$, $d=0.1$. Approximations were constructed for values
 of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
 
-The initial approximation was started near the non-trivial steady
-state, but the values of the butterflies and wasps were taken to be
-95\% of the values for the steady state. The approximation was run
-until it detected the state was not changing or a limit cycle was
-reached. In this case, if both densities reained to within 1.0E-7 for
-over 2000 time steps it was considered to be at a steady state. For
-the limit cycle if the minimum and maximum for both densities was
-within 1.0E-7 for two full cycles then it was considered to be in a
-limit cycle.
+The approximation for the initial value of $m$ was started near the
+non-trivial steady state, but the values of the butterflies and wasps
+were taken to be 95\% of the values for the steady state. The
+approximation was run until it detected the state was not changing or
+a limit cycle was reached. In this case, if both densities did not
+change more than 1.0E-7 from a previous high or low value for over
+2000 time steps it was considered to be at a steady state. For the
+limit cycle if the minimum and maximum for both densities was within
+1.0E-7 for two full cycles then it was considered to be in a limit
+cycle.
 
 After the initial approximation, the initial condition for the next
 value of $m$ was the end state of the previous approximation. This
-process was done for the values of $m$ starting at the lowest and
-increasing. It was then repeated for the value of $m$ starting at the
-highest value and decreasing. The results were nearly identical, and
-no hysteresis was detected.
+process was done for the values of $m$ starting at the lowest value
+and increasing. the process was then repeated for the value of $m$
+starting at the highest value and decreasing. The results were nearly
+identical, and no hysteresis was detected.
 
 The results of the series of approximations are shown in Figure
 \ref{fig:odeButterflyBifurcation}. The values of $m$ are given along
@@ -655,6 +658,7 @@ steady state. For larger values of $m$ the system approached a limit
 cycle. (Need to check to see if this is consistent with the theory!)
 
 \subsection{Approximation of the coupled PDE and ODE}
+
 
 equations (\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2})
 Approximation from section \ref{numericalApproximation}
