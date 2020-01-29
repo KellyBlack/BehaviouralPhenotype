@@ -349,15 +349,16 @@ accumulated across the entire butterfly population,
 \end{eqnarray}
 
 We are almost ready to put these terms together for the current
-model. It is assumed that the mixing of the butterfly population is
-uniform, and a standard Fickian diffusion is assumed to approximate
-the sharing of the genetic information relative to the propensity to
-use the anti-aphrodisiac. The result is a coupled PDE and ODE system
-given by 
+model. It is assumed that the mixing and interactions within the
+butterfly population is uniform, and the diffusion of the trait
+roughly follows Fick's law\cite{logan2006applied}. Here, a second
+order derivative term approximates the sharing of the genetic
+information relative to the propensity to use the
+anti-aphrodisiac. The result is a coupled PDE and ODE system given by
 \begin{eqnarray}
   \label{eq:odePDE1}
   \frac{\partial}{\partial t} b(t,\theta) & = &
-      \alpha \cdot b(t,\theta) (K - b(t,\theta))
+      \alpha \cdot p(\theta) b(t,\theta) (K - b(t,\theta))
       - \gamma \cdot w(t) \frac{p(\theta) b(t,\theta)}{c+p(\theta)b(t,\theta)}
       + \mu \frac{\partial^2}{\partial \theta^2} b(t,\theta) , \\
   \label{eq:odePDE2}
