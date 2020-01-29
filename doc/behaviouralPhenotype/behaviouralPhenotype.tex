@@ -33,7 +33,7 @@ We propose an approach that assumes a continuous distribution
 associated with one behavioural aspect of an animal's behaviour. In
 this initial exploration of a novel approach a relatively
 straight-forward interaction is chosen. The example chosen is based on
-the interactions beteen parasitic wasps, \textit{Trichogramma} Wasps,
+the interactions between parasitic wasps, \textit{Trichogramma} Wasps,
 and the butterfly \textit{Pieris
   brasicae}\cite{10.1093/beheco/arq007}.  The propensity of
 \textit{Pieris brasicae} to employ a chemical associated with mating
@@ -209,11 +209,12 @@ examines a system in which over 120 genetic sites determine a given
 animal's propensity. The resulting number of combinations of such
 sites can be extremely high.
 
-In our treatment we instead treat the distribution as being
-continuous. The way in which this manifests itself within a model is
-to treat the population as a distribution that depends on a
-parameter. A new independent variable is introduced within the model,
-and the parameter will as the independent variable varies.
+Rather than treat the possible behaviours as a discrete distribution
+we instead treat it as a continuous distribution. The way in which
+this manifests itself within a model is to treat the population as a
+distribution that depends on a new parameter. This new independent
+variable is introduced within the model, and the parameter is now a
+function that will vary as the independent variable varies.
 
 At first glance, this is akin to a Bayesian statistical approach that
 is often used to estimate the value of a parameter. (cite Ramsay,
@@ -233,16 +234,17 @@ butterflies and wasps as well as direct mortality of the interaction
 we assume a predator-prey relationship rather than a disease like
 relationship modeled in other parasitic systems.
 
-The particular model examined is similar to that examined by (cite
-stability of predator prey with type II response). A type II response
-is assumed due to the aforementioned long time scale of predator
-interaction. We assume logistic growth for the butterfly
-population. In this case the wasps are a generalist predator, but in
-this initial treatment we assume a single dependence with respect to
-the wasp as a first step in modeling this system (cite stability paper).
-
-The system adapted from (cite type II stability paper) begins with the
-system of ordinary differential equations
+The system is adapted from Tewa, \textit{et al}\cite{TEWA20134825}. We
+first focus on the model as a system of ordinary differential
+equations and later adapt it for the distributed system described
+above. The basic assumption is that in the absence of predation the
+butterfly population will act like a logistic equation. In the absence
+of any butterflies the wasps will slowly die out. For this particular
+system \textit{brasicae} is a generalist predator, and this is an
+assumption that should be revisited beyond this initial
+investigation. Finally, it is assumed that the interaction between the
+two can be approximated as a type II response\cite{TEWA20134825}, and
+the resulting ordinary differential equation is given by
 \begin{eqnarray}
   \label{eq:initialSystem1}
   \frac{d}{dt} b(t) & = & \alpha \cdot b(t) (K - b(t)) - \gamma \cdot w(t) \frac{b(t)}{c+b(t)}, \\
@@ -297,23 +299,34 @@ Substituting the search time found in equation
 predation per wasp,
 \begin{eqnarray}
   \label{eq:waspPredationRate}
-  Y(\theta) & = & \frac{\beta T_{\mathrm{total}} b(t,\theta) p(\theta)}{1 + \beta r b(t,\theta) p(\theta)}.
+  Y(\theta) & = & \frac{r\beta T_{\mathrm{total}} b(t,\theta) p(\theta)}{1 + \beta r b(t,\theta) p(\theta)}.
 \end{eqnarray}
 
 In this case $p(\theta)$ represents the impact of the use of the
 anti-pheromone, and we assume a linear relationship with a positive
 slope. As $\theta$ increases the more likely an individual butterfly
 is to make use of the anti-pheromone and the more likely a wasp is to
-locate and ride along with a butterfly. If we assume $p(0)$ is some
-minimal value $p(0)=a$, and the relationship has a positive slope then
-the normalized form is
+locate and ride along with a butterfly. The function, $p(\theta)$,
+will be used to balance the positive and negative impacts in the
+growth as well as the predation terms in equation
+(\ref{eq:initialSystem1}), and the parameters $\alpha$ and $\gamma$
+provide relative scales for the two impacts. We will normalize
+$p(\theta)$ because it will be scaled later.
+
+First, $p(\theta)$ should be a strictly positive function. If it is
+zero then equation (\ref{eq:initialSystem1}) will indicate no growth
+and no predation. We can then assume $p(0)$ is a minimal value,
+$p(0)=a$, and the relationship has a positive slope. The resulting
+normalized form is
 \begin{eqnarray}
   \label{eq:linearFormP}
   p(\theta) & = & a + \frac{2(1-aL)}{L^2} \theta.
 \end{eqnarray}
 where the slope is chosen so that the area under the line from
 $\theta=0$ to $\theta=L$ is one. One immediate restriction on the
-parameters requires that $0<aL<1$.
+parameters requires that $0<aL<1$. The interpretation of the slope is
+that the greater the slope the greater the variation in the observed
+trait.
 
 Turning back to equation (\ref{eq:processingTime}), the rate of
 predation is solved for, and the result is
