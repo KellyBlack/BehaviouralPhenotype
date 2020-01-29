@@ -375,7 +375,7 @@ following form
 \begin{eqnarray}
   \label{eq:scaledodePDE1}
   \frac{\partial}{\partial t} b & = &
-      b (1 - b)
+      \hat{p}(\theta) b (1 - b)
       -  w \frac{\hat{p}(\theta) b}{c+\hat{p}(\theta)b}
       + \mu \frac{\partial^2}{\partial \theta^2} b , \\
   \label{eq:scaledodePDE2}
@@ -387,7 +387,10 @@ where
   \hat{p}(\theta) & = & 1 + m \cdot \theta.
 \end{eqnarray}
 The domain for the scaled independent variable, $\theta$, is
-$0\leq\theta\leq 1$.  Neumann boundary conditions are used in the
+$0\leq\theta\leq 1$. As previously noted, the slope, $m$, can be
+interpreted to indicate how much variation in the trait is present in
+a population. The larger $m$ is the greater the amount of variation.
+With respect to the PDE, Neumann boundary conditions are used in the
 subsequent numerical approximations below. A variety of initial
 conditions have been explored, and they are described in the results
 section, section \ref{section:results}.
@@ -404,7 +407,7 @@ following system of ODEs:
 \begin{eqnarray}
   \label{eq:scaledODE1}
   \frac{d}{dt} b(t) & = &
-      b(t) (1 - b(t))
+      \hat{p}(\theta) b(t) (1 - b(t))
       -  w(t) \frac{\hat{p}(\theta) b(t)}{c+\hat{p}(\theta)b(t)}, \\
   \label{eq:scaledODE2}
   \frac{d}{dt} w(t) & = & -d \cdot w(t) +
@@ -425,15 +428,15 @@ The $b$-nullclines for the system in the $b-w$ plane are given by
   b & = & 0, \\
   w & = & (1-b)(c+b\cdot(1+m\theta)).
 \end{eqnarray}
-The second nullcline is a parabola opening downward, and the vertex is located at
-$b=\frac{1+m\theta+1}{2(1+m\theta)}$. The $w$-nullclines are given by
+The second $b$-nullcline is a parabola opening downward, and the vertex is located at
+$b=\frac{1+m\theta-c}{2(1+m\theta)}$. The $w$-nullclines are given by
 \begin{eqnarray}
   \label{eq:wnullclines}
   w & = & 0, \\
   b & = & \frac{cd}{(g-d)(1+m\theta)}.
 \end{eqnarray}
-The second nullcline is a vertical line in the $b-w$ plane. In order
-for a fixed point to exist in the first quadrant an immediate
+The second $w$-nullcline is a vertical line in the $b-w$ plane. In
+order for a fixed point to exist in the first quadrant an immediate
 restriction on the parameters requires that $g>d$.  Given the
 nullclines, the only fixed point that occurs in the first quadrant
 away from an axis is at $b=\frac{cd}{(1+m\theta)(g-d)}$ and
@@ -506,7 +509,7 @@ stability region in the $u-v$ plane is shown in Figure
 
 In the context of the full, distributed system in equation
 (\ref{eq:scaledodePDE1}) and equation (\ref{eq:scaledodePDE2}) the
-domain of $\theta$ is $0\leq\theta\leq 0$. For a given set of
+domain of $\theta$ is $0\leq\theta\leq 1$. For a given set of
 parameters the value of $v$ is fully determined. The values of $u$
 vary from $u=1$ to $u=1+m\theta$.  The corresponding region in the
 $u-v$ plane is along a horizontal line segment from $(1,v)$ to
