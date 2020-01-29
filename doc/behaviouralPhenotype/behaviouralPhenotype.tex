@@ -520,7 +520,13 @@ $(1+m\theta,v)$ as shown in Figure \ref{fig:distributedLineSegment}.
   \includegraphics[width=12cm]{odeStability-uv-plane-Line.pdf}
   \caption[Domain of the distributed system in the $u-v$
   plane.]{Domain of the parameters for the distributed system for a
-    given set of parameters for $0\leq\theta\leq 1$.}
+    given set of parameters for $0\leq\theta\leq 1$. The dotted line
+    represents the values of $\hat{p}(\theta)=1+m\theta$ for all
+    values of $\theta$. The figure on the left is an example of a
+    smaller value of $m$ while the figure on the right is an example
+    of a larger value of $m$. The whole population shown in the figure
+    on the left lie in a stable region, while part of the population
+    shown in the figure on the right lie in an unstable region.}
   \label{fig:distributedLineSegment}
 \end{figure}
 
@@ -559,13 +565,13 @@ of the function
   \psi(\theta) & = & \left(1-\theta^2\right) L_{N}'(\theta),
 \end{eqnarray}
 where $L_N(\theta)$ is the $n$\textsuperscript{th} Legendre
-polynomial\cite{davis2007methods}.  The associated weights are
-\begin{eqnarray}
-  w_n & = & .
-\end{eqnarray}
-In our examples the quadrature is approximated using the methods
-described by Golub and Welsch\cite{gaussQuadratureRules}.  Given
-$\psi(\theta)$ the Lagrange interpolants can be calculated
+polynomial\cite{davis2007methods}.  The weights, $w_n$, associated
+with the quadrature are identical to those described in
+Davis\cite{davis2007methods} as well as Golub and
+Welsch\cite{gaussQuadratureRules}. In our examples the quadrature is
+approximated using the methods described by Golub and
+Welsch\cite{gaussQuadratureRules}.  Given $\psi(\theta)$ the Lagrange
+interpolants can be calculated
 \begin{eqnarray}
   \phi_i(\theta) & = & \frac{\psi(\theta)}{\psi'(\theta)(\theta-\theta_i)}.
 \end{eqnarray}
@@ -592,7 +598,7 @@ Galerkin approximation and a discrete inner product for equation
 \begin{eqnarray}
   \sum_{j=0}^N \sum_{i=0}^N  \hat{b}_i'(t) \phi_i(\theta_j) \phi_k(\theta_j) w_j
   & = &
-  \sum_{j=0}^N \sum_{i=0}^N  \hat{b}_i(t) (1 - \hat{b}_i(t) ) \phi_i(\theta_j) \phi_k(\theta_j) w_j \\
+  \sum_{j=0}^N \sum_{i=0}^N \hat{p}(\theta_j)  \hat{b}_i(t) (1 - \hat{b}_i(t) ) \phi_i(\theta_j) \phi_k(\theta_j) w_j \\
   & &  -  \sum_{j=0}^N w(t) \frac{\hat{p}(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j) }{c+\hat{p}(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j)} \phi_k(\theta_j) w_j \nonumber \\ 
   & & - \sum_{j=0}^N \mu  \sum_{i=0}^N \hat{b}_i(t) \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j, \nonumber
 \end{eqnarray}
@@ -602,8 +608,9 @@ equations can be reduced to
 \begin{eqnarray}
   \hat{b}_k'(t) 
   & = &
-  \hat{b}_k(t) (1 - \hat{b}_k(t) ) -  w(t) \frac{\hat{p}(\theta_k) \hat{b}_k(t)) }{c+\hat{p}(\theta_k)  \hat{b}_k(t) }  
-   - \frac{\mu}{w_k} \sum_{i=0}^N \hat{b}_i(t) \left( \sum_{j=0}^N  \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j \right). \nonumber
+        \hat{p}(\theta_j) \hat{b}_k(t) (1 - \hat{b}_k(t) )
+        -  w(t) \frac{\hat{p}(\theta_k) \hat{b}_k(t)) }{c+\hat{p}(\theta_k)  \hat{b}_k(t) }  
+   - \frac{\mu}{w_k} \sum_{i=0}^N \hat{b}_i(t) \left( \sum_{j=0}^N  \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j \right).
 \end{eqnarray}
 
 Combined with equation (\ref{eq:scaledodePDE2}) the approximation
