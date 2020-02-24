@@ -167,17 +167,18 @@ apply another pheromone, referred to as an anti-aphrodisiac, that will
 reduce the effectiveness of the original pheromone emitted by the
 female.
 
-Some species of \textit{Trichogramma} wasps parasitize the eggs of the
-butterflies. Sometimes they physically attach themselves to a
-butterfly and ride it until the butterfly begins to attach their eggs
-in a preferable location. The wasps are able to detect the presence of
-the anti-aphrodisiac which is correlated with an increased probability
-that a butterfly with the anti-aphrodisiac is more likely to lay
-eggs. In response, the wasps are more likely to ride on a butterfly if
-it detects the anti-aphrodisiac. It is important to note this method
-of predation on a butterfly's eggs requires a non-trivial time
-commitment with respect to handling and detecting the presence of the
-eggs.
+The downside to the use of the pheremone is that it exposes the eggs
+to a greater risk or predation. Some species of \textit{Trichogramma}
+wasps parasitize the eggs of the butterflies. Sometimes they
+physically attach themselves to a butterfly and ride it until the
+butterfly begins to attach their eggs in a preferable location. The
+wasps are able to detect the presence of the anti-aphrodisiac which is
+correlated with an increased probability that a butterfly with the
+anti-aphrodisiac is more likely to lay eggs. In response, the wasps
+are more likely to ride on a butterfly if it detects the
+anti-aphrodisiac. It is important to note this method of predation on
+a butterfly's eggs requires a non-trivial time commitment with respect
+to handling and detecting the presence of the eggs.
 
 The authors\cite{10.1093/beheco/arq007} note that the probability that
 a male will make use of the anti-aphrodisiac varies between
@@ -205,13 +206,13 @@ sites can be extremely high.
 Rather than treat the possible behaviours as a discrete distribution
 we instead treat it as a continuous distribution. The way in which
 this manifests itself within a model is to treat the population as a
-distribution that depends on a new parameter. This new independent
+distribution with respect to the new parameter. This new independent
 variable is introduced within the model, and the parameter is now a
 function that will vary as the independent variable varies.
 
 At first glance, this is akin to a Bayesian statistical approach that
-is often used to estimate the value of a parameter. (cite Ramsay,
-Fitzpatrick) In these approaches a probability distribution is assumed
+is often used to estimate the value of a
+parameter\cite{doi:10.1111/j.1467-9868.2007.00610.x, }. In these approaches a probability distribution is assumed
 to describe the likelihood that a parameter takes on a given range of
 values. In our case, though, we turn this around and assume that the
 population itself varies, and the relative population density depends
