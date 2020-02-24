@@ -212,11 +212,12 @@ function that will vary as the independent variable varies.
 
 At first glance, this is akin to a Bayesian statistical approach that
 is often used to estimate the value of a
-parameter\cite{doi:10.1111/j.1467-9868.2007.00610.x,Fitzpatrick_1991}. In these approaches a probability distribution is assumed
-to describe the likelihood that a parameter takes on a given range of
-values. In our case, though, we turn this around and assume that the
-population itself varies, and the relative population density depends
-on the underlying variable.
+parameter\cite{doi:10.1111/j.1467-9868.2007.00610.x,Fitzpatrick_1991}. In
+these approaches a probability distribution is assumed to describe the
+likelihood that a parameter takes on a given range of values. In our
+case, though, we turn this around and assume that the population
+itself varies, and the relative population density depends on the
+underlying variable.
 
 A question arises about how to translate the impact of this parameter
 within a given model. In this initial examination of the approach we
@@ -232,13 +233,15 @@ The system is adapted from Tewa, \textit{et al}\cite{TEWA20134825}. We
 first focus on the model as a system of ordinary differential
 equations and later adapt it for the distributed system described
 above. The basic assumption is that in the absence of predation the
-butterfly population will act like a logistic equation. In the absence
-of any butterflies the wasps will slowly die out. For this particular
-system \textit{brasicae} is a generalist predator, and this is an
-assumption that should be revisited beyond this initial
-investigation. Finally, it is assumed that the interaction between the
-two can be approximated as a type II response\cite{TEWA20134825}, and
-the resulting ordinary differential equation is given by
+butterfly population will act in a way consistent with the logistic
+equation. In the absence of any butterflies the wasps will slowly die
+out. For this particular system, however, \textit{brasicae} is a
+generalist predator, and this is an assumption that should be
+revisited beyond this initial investigation. Finally, the predation by
+\textit{brasicae} requires substantial time for the wasp to follow the
+moths and oviposit its eggs, and the rate of predation can be
+approximated as a type II response\cite{TEWA20134825}.  The resulting
+ordinary differential equation is given by
 \begin{eqnarray}
   \label{eq:initialSystem1}
   \frac{d}{dt} b(t) & = & \alpha \cdot b(t) (K - b(t)) - \gamma \cdot w(t) \frac{b(t)}{c+b(t)}, \\
