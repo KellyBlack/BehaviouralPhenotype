@@ -16,18 +16,18 @@
 
 \section{Introduction}
 
-There is great interest in the role of variation in animal
-personalities\cite{doi:10.1111/j.1461-0248.2010.01536.x}.  The
-variation in animal behaviours as well as the variation in the
-coresponding genetic basis for animal personalities plays a role in
-the broader population dynamics of the species as well as the other
-animals that interact with the species. A variety of mathematical
-models are being developed to explore this important aspect of
-interactions. The models include compartment models, stochastic, agent
-based models, as well as combinations of these approaches. One
-difficulty, though, with such approaches is the challenge of
-developing appropriate analytic tools to examine the general
-properties of the resulting models.
+The impact of variation of animal personalities on broad population
+dynamics is receiving a great deal of
+attention\cite{doi:10.1111/j.1461-0248.2010.01536.x}.  The variation
+in animal behaviours as well as the variation in the coresponding
+genetic basis for animal personalities plays a role in the broader
+population dynamics of the species as well as the other animals that
+interact with the species. A variety of mathematical models are being
+developed to explore this important aspect of interactions. The models
+include compartment models, stochastic, agent based models, as well as
+combinations of these approaches. One difficulty, though, with such
+approaches is the challenge of developing appropriate analytic tools
+to examine the general properties of the resulting models.
 
 We propose an approach that assumes a continuous distribution
 associated with one behavioural aspect of an animal's behaviour. In
@@ -300,45 +300,29 @@ predation per wasp,
 \end{eqnarray}
 
 In this case $p(\theta)$ represents the impact of the use of the
-anti-pheromone, and we assume a linear relationship with a positive
-slope. As $\theta$ increases the more likely an individual butterfly
-is to make use of the anti-pheromone and the more likely a wasp is to
-locate and ride along with a butterfly. The function, $p(\theta)$,
-will be used to balance the positive and negative impacts in the
-growth as well as the predation terms in equation
+anti-pheromone. As $\theta$ increases the more likely an individual
+butterfly is to make use of the anti-pheromone and the more likely a
+wasp is to locate and ride along with a butterfly. The function,
+$p(\theta)$, will be used to balance the positive and negative impacts
+in the growth as well as the predation terms in equation
 (\ref{eq:initialSystem1}), and the parameters $\alpha$ and $\gamma$
 provide relative scales for the two impacts. We will normalize
 $p(\theta)$ because it will be scaled later.
 
-First, $p(\theta)$ should be a strictly positive function. If it is
-zero then equation (\ref{eq:initialSystem1}) will indicate no growth
-and no predation. We can then assume $p(0)$ is a minimal value,
-$p(0)=a$, and the relationship has a positive slope. The resulting
-normalized form is
-\begin{eqnarray}
-  \label{eq:linearFormP}
-  p(\theta) & = & a + \frac{2(1-aL)}{L^2} \theta.
-\end{eqnarray}
-where the slope is chosen so that the area under the line from
-$\theta=0$ to $\theta=L$ is one. One immediate restriction on the
-parameters requires that $0<aL<1$. The interpretation of the slope is
-that the greater the slope the greater the variation in the observed
-trait.
 
-Turning back to equation (\ref{eq:processingTime}), the rate of
-predation is solved for, and the result is
-\begin{eqnarray}
-  \label{eq:rateOfPredation}
-  r & = &  \frac{p(\theta) b(t,\theta) }{1 + \beta p(\theta) b(t,\theta)}.
-\end{eqnarray}
-This result can be immediately substituted into equation
-(\ref{eq:initialSystem1}) in the more traditional form as
+Turning back to equation (\ref{eq:waspPredationRate}), the rate of
+predation can now be approximated.  The result can be immediately
+substituted into equation (\ref{eq:initialSystem1}) in the more
+traditional form as
 \begin{eqnarray}
   \label{eq:butterflyPredationRate}
   \gamma \cdot w(t) \frac{p(\theta) b(t,\theta) }{c +  p(\theta) b(t,\theta)}
 \end{eqnarray}
-Equation (\ref{eq:initialSystem2}), though, is for the rate of predation
-for the single wasp population, so the impact for the wasps must be
+The values of the constants $c$ and $\gamma$ are the result of
+combining the terms that include $r$, $\beta$, and $T_\mathrm{total}$
+in equation (\ref{eq:waspPredationRate}).  Equation
+(\ref{eq:initialSystem2}), though, is for the rate of predation for
+the single wasp population, so the impact for the wasps must be
 accumulated across the entire butterfly population,
 \begin{eqnarray}
   \label{eq:totalWaspPredationRate}
@@ -362,6 +346,26 @@ anti-aphrodisiac. The result is a coupled PDE and ODE system given by
   \frac{d}{dt} w(t) & = & -d \cdot w(t) +
       \int^L_{\theta=0} g \cdot w(t) \frac{p(\theta) b(t,\theta) }{c + p(\theta) b(t,\theta)} ~ d\theta.
 \end{eqnarray}
+
+As previously noted, the function $p(\theta)$ is assumed to be an
+increasing function for $0\leq\theta\leq L$, and $p(0)>0$. If it is
+zero then equation (\ref{eq:initialSystem1}) will indicate no growth
+and no predation. We can assume $p(0)$ is a minimal value, $p(0)=a$,
+and the relationship has a positive slope. We examine the simplest
+such relationship, a linear function.
+
+This function is scaled separately in equations (\ref{eq:odePDE1}) and
+(\ref{eq:odePDE2}), and the function can be scaled in an arbitrary
+manner. We choose to scale the function so that its integral is one,
+and the resulting normalized form is
+\begin{eqnarray}
+  \label{eq:linearFormP}
+  p(\theta) & = & a + \frac{2(1-aL)}{L^2} \theta.
+\end{eqnarray}
+One immediate restriction on the parameters requires that
+$0<aL<1$. The interpretation of the slope is that the greater the
+value of the slope then the greater the variation is in the observed
+trait.
 
 The variables can be scaled as $b\rightarrow \bar{B}\hat{b}$,
 $w\rightarrow \bar{W}\hat{w}$, $t\rightarrow \bar{T}\hat{t}$, and
