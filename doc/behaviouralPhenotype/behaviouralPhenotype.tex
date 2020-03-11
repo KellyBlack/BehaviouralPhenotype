@@ -474,52 +474,53 @@ yields
   \frac{\hat{p}(\theta)-c}{2\hat{p}(\theta)} & < & \frac{cd}{(g-d)\hat{p}(\theta)}.
 \end{eqnarray}
 This expression can be viewed through another substitution. Let
-$u=1+m\theta$ and $v=\frac{cd}{g-d}=\frac{c}{\frac{g}{d}-1}$, and the
-relationship in equation (\ref{eqn:traceNegative}) is now
+$u=\frac{cd}{g-d}=\frac{c}{\frac{g}{d}-1}$, and since
+$\hat{p}(\theta)>0$ the relationship in equation
+(\ref{eqn:traceNegative}) is now
 \begin{eqnarray}
   \label{eq:stabilityParameters}
-  v & > & \frac{u-c}{2}.
+  u & > & \frac{p-c}{2}.
 \end{eqnarray}
 Note also that under this transformation, the value of the butterfly
-density at the fixed point is $\frac{v}{u}$. The scaling in the
+density at the fixed point is $\frac{u}{p}$. The scaling in the
 original model is based on the carrying capacity which presumes that
 \begin{eqnarray}
-  \frac{v}{u} & < & 1,
+  \frac{u}{p} & < & 1,
 \end{eqnarray}
 or 
 \begin{eqnarray}
   \label{eq:boundFixedPoint}
-  v & < & u.
+  u & < & p.
 \end{eqnarray}
 
 A feasible region that implies stability of the fixed point can be
-determined in the $u-v$ plane. If the parameters result in a point in
+determined in the $u-p$ plane. If the parameters result in a point in
 the region bounded by equation (\ref{eq:stabilityParameters}),
 equation (\ref{eq:boundFixedPoint}), and $v>0$ then the resulting
 fixed point will be linearly stable. A graphical depiction of the
-stability region in the $u-v$ plane is shown in Figure
+stability region in the $u-p$ plane is shown in Figure
 \ref{fig:uvStabilityRegion}.
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=10cm]{odeStability-uv-plane.pdf}
-  \caption[Stability region in the $u-v$ plane.]{Graphical view of the
-    combined feasible and stability region in the $u-v$ plane.}
+  \caption[Stability region in the $u-p$ plane.]{Graphical view of the
+    combined feasible and stability region in the $u-p$ plane.}
   \label{fig:uvStabilityRegion}
 \end{figure}
 
 In the context of the full, distributed system in equation
 (\ref{eq:scaledodePDE1}) and equation (\ref{eq:scaledodePDE2}) the
 domain of $\theta$ is $0\leq\theta\leq 1$. For a given set of
-parameters the value of $v$ is fully determined. The values of $u$
-vary from $u=1$ to $u=1+m\theta$.  The corresponding region in the
-$u-v$ plane is along a horizontal line segment from $(1,v)$ to
-$(1+m\theta,v)$ as shown in Figure \ref{fig:distributedLineSegment}.
+parameters the value of $u$ is fully determined. The values of $p$
+vary from $p=1$ to $p=1+m$.  The corresponding region in the $u-p$
+plane is along a horizontal line segment from $(1,u)$ to
+$(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}.
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=12cm]{odeStability-uv-plane-Line.pdf}
-  \caption[Domain of the distributed system in the $u-v$
+  \caption[Domain of the distributed system in the $u-p$
   plane.]{Domain of the parameters for the distributed system for a
     given set of parameters for $0\leq\theta\leq 1$. The dotted line
     represents the values of $\hat{p}(\theta)=1+m\theta$ for all
