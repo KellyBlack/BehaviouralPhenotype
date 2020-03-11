@@ -415,34 +415,34 @@ following system of ODEs:
        g \cdot w(t) \frac{\hat{p}(\theta) b(t) }{c + \hat{p}(\theta) b(t)}.
 \end{eqnarray}
 
-by focusing on the system of ODEs, we can examine an approximation to
+By focusing on the system of ODEs, we can examine an approximation to
 the system by treating the variable $\theta$ as a fixed parameter and
-can gain some insight into the distributed system. The analysis here
-focused on the stability of the linearized system, and we focus on the
-non-trivial fixed points that occur in the first quadrant away from
-$b=0$ and away from $w=0$.
+can gain some insight into the distributed system. The analysis in
+this section focuses on the stability of the linearized system. In
+particular the focus is on the non-trivial fixed points that occur in
+the first quadrant away from $b=0$ and away from $w=0$.
 
 We first determine the nullclines for the system.
 The $b$-nullclines for the system in the $b-w$ plane are given by
 \begin{eqnarray}
   \label{eq:bnullclines}
   b & = & 0, \\
-  w & = & (1-b)(c+b\cdot(1+m\theta)).
+  w & = & (1-b)(c+b\cdot p(\theta)).
 \end{eqnarray}
 The second $b$-nullcline is a parabola opening downward, and the vertex is located at
-$b=\frac{1+m\theta-c}{2(1+m\theta)}$. The $w$-nullclines are given by
+$b=\frac{p(\theta)-c}{2p(\theta)}$. The $w$-nullclines are given by
 \begin{eqnarray}
   \label{eq:wnullclines}
   w & = & 0, \\
-  b & = & \frac{cd}{(g-d)(1+m\theta)}.
+  b & = & \frac{cd}{(g-d)p(\theta)}.
 \end{eqnarray}
 The second $w$-nullcline is a vertical line in the $b-w$ plane. In
 order for a fixed point to exist in the first quadrant an immediate
 restriction on the parameters requires that $g>d$.  Given the
 nullclines, the only fixed point that occurs in the first quadrant
-away from an axis is at $b=\frac{cd}{(1+m\theta)(g-d)}$ and
+away from an axis is at $b=\frac{cd}{p(\theta)(g-d)}$ and
 $w=\left(\frac{cd}{g-d}+c\right)
-\left(1-\frac{cd}{(1+m\theta)(g-d)}\right)$.
+\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.
 
 The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) at the fixed point is
@@ -458,20 +458,20 @@ The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 where
 \begin{eqnarray}
   \label{eq:jacobian}
-  J_{11} & = & (1+m\theta)(1-2b) - w (1+m\theta)\frac{c}{(c+(1+m\theta)b)^2}, \\
-  J_{12} & = & \frac{-b\cdot(1+m\theta)}{c+(1+m\theta)b}, \\
-  J_{21} & = & \frac{g\cdot c \cdot w \cdot (1+m\theta)}{(c+(1+m\theta)b)^2}.
+  J_{11} & = & p(\theta)(1-2b) - w p(\theta)\frac{c}{(c+p(\theta)b)^2}, \\
+  J_{12} & = & \frac{-b\cdot p(\theta)}{c+p(\theta)b}, \\
+  J_{21} & = & \frac{g\cdot c \cdot w \cdot p(\theta)}{(c+p(\theta)b)^2}.
 \end{eqnarray}
 The eigen values of the Jacobian have negative real part when the
 trace is negative,
 \begin{eqnarray}
-  (1+m\theta)(1-2b) - w (1+m\theta)\frac{c}{(c+(1+m\theta)b)^2} & < & 0.
+  p(\theta)(1-2b) - w p(\theta)\frac{c}{(c+p(\theta)b)^2} & < & 0.
 \end{eqnarray}
 Substituting the values of $b$ and $w$ for the non-trivial fixed point
 yields
 \begin{eqnarray}
   \label{eqn:traceNegative}
-  \frac{(1+m\theta)-c}{2(1+m\theta)} & < & \frac{cd}{(g-d)(1+m\theta)}.
+  \frac{p(\theta)-c}{2p(\theta)} & < & \frac{cd}{(g-d)p(\theta)}.
 \end{eqnarray}
 This expression can be viewed through another substitution. Let
 $u=1+m\theta$ and $v=\frac{cd}{g-d}=\frac{c}{\frac{g}{d}-1}$, and the
