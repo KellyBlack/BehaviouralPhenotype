@@ -275,7 +275,7 @@ bye Dawes and Sousa\cite{DAWES201311}.  In the derivation here,
 however, we follow the approach in Holling's original
 discussion\cite{holling_1959A,holling_1959B}. We begin by finding an
 expression that relates the number of eggs parasitized by a single
-wasp,
+wasp, $Y(\theta)$, which is assumed to be a linear relationship,
 \begin{eqnarray}
   \label{eq:processingTime}
   Y(\theta) & = & r T_{\mathrm{search}}(\theta) b(t,\theta) p(\theta),
@@ -296,18 +296,18 @@ Substituting the search time found in equation
 predation per wasp,
 \begin{eqnarray}
   \label{eq:waspPredationRate}
-  Y(\theta) & = & \frac{r\beta T_{\mathrm{total}} b(t,\theta) p(\theta)}{1 + \beta r b(t,\theta) p(\theta)}.
+  Y(\theta) & = & \frac{r T_{\mathrm{total}} b(t,\theta) p(\theta)}{1 + \beta r b(t,\theta) p(\theta)}.
 \end{eqnarray}
 
-In this case $p(\theta)$ represents the impact of the use of the
-anti-pheromone. As $\theta$ increases the more likely an individual
-butterfly is to make use of the anti-pheromone and the more likely a
-wasp is to locate and ride along with a butterfly. The function,
-$p(\theta)$, will be used to balance the positive and negative impacts
-in the growth as well as the predation terms in equation
-(\ref{eq:initialSystem1}), and the parameters $\alpha$ and $\gamma$
-provide relative scales for the two impacts. We will normalize
-$p(\theta)$ because it will be scaled later.
+In this case $p(\theta)$ represents the impact associated with the use
+of the anti-pheromone. As $\theta$ increases the more likely an
+individual butterfly is to make use of the anti-pheromone and the more
+likely a wasp is to locate and ride along with a butterfly. The
+function, $p(\theta)$, will be used to balance the positive and
+negative impacts in the growth as well as the predation terms in
+equation (\ref{eq:initialSystem1}), and the parameters $\alpha$ and
+$\gamma$ provide relative scales for the two impacts. Note that we can
+normalize $p(\theta)$ because it is scaled by the parameter $r$.
 
 
 Turning back to equation (\ref{eq:waspPredationRate}), the rate of
@@ -321,8 +321,8 @@ traditional form as
 The values of the constants $c$ and $\gamma$ are the result of
 combining the terms that include $r$, $\beta$, and $T_\mathrm{total}$
 in equation (\ref{eq:waspPredationRate}).  Equation
-(\ref{eq:initialSystem2}), though, is for the rate of predation for
-the single wasp population, so the impact for the wasps must be
+(\ref{eq:initialSystem2}), though, is the rate of predation for the
+single wasp population, so the impact for the wasps must be
 accumulated across the entire butterfly population,
 \begin{eqnarray}
   \label{eq:totalWaspPredationRate}
