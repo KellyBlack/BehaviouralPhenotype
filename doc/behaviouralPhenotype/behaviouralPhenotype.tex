@@ -589,26 +589,27 @@ under what conditions? This is settled via the following lemma,
 \begin{proof}
   Notice that equations (\ref{eq:scaledODE1}) and
   (\ref{eq:scaledODE2}) have the form
-\begin{center}
-$b^{\prime }\left( t\right) =b(t)X\left( b,w\right) $
+\begin{eqnarray}
+  b^{\prime}\left( t \right) & = & b(t)X\left( b,w\right), \\
+  w^{\prime}\left( t \right) & = & w(t)Y\left( b,w\right)
+\end{eqnarray}
 
-$w^{\prime }\left( t\right) =w(t)Y\left( b,w\right) $
-\end{center}
 
-
-If $\ \left( b\left( t\right) ,w\left( t\right) \right) $ is a solution of
-such a system, then by the integrating factor trick
-
-$$\dfrac{d}{dt}\left( e^{\left( -\int_{0}^{t}X(s)ds\right) }b(t)\right) =0$$
-
+If $\ \left( b\left( t\right) ,w\left( t\right) \right)
+$ is a solution of such a system, then using an integrating factor
+\begin{eqnarray}
+\dfrac{d}{dt}\left( e^{\left( -\int_{0}^{t}X(s)ds\right) }b(t)\right) & = & 0
+\end{eqnarray}
 Consequently,
-
-$b(t)=e^{\left( -\int_{0}^{t}X(s)ds\right) }b(0)$ and $w(t)=e^{\left( -\int_{0}^{t}Y(s)ds\right) }w(0).$
-
+\begin{eqnarray}
+b(t) & = & e^{\left( -\int_{0}^{t}X(s)ds\right) }b(0), \\
+w(t) & = & e^{\left( -\int_{0}^{t}Y(s)ds\right) }w(0).
+\end{eqnarray}
 So for all $t>0$ and $b\left( 0\right) ,w\left( 0\right) >0$ .
 \end{proof}
 
-As for boundedness of solutions.
+The next question examined is whether or not the solutions are
+bounded.
 
 \begin{lemma} \label{mm} All the solutions of equations equations
   (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) which start in
@@ -623,26 +624,31 @@ Let's assume that $b(t),w(t)$ are any positive solution of equations
 (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}), then it is obvious
 that
 
-$$\frac{d}{dt}b(t)\leq \hat{p}\left( \theta \right) b(t)\left( 1-b(t)\right) $$
-
+\begin{eqnarray}
+  \frac{d}{dt}b(t) & \leq & \hat{p}\left( \theta \right) b(t)\left( 1-b(t)\right) 
+\end{eqnarray}
 We can see from the comparison argument that
-
-$$0\leq b(t)\leq 1$$
-
+\begin{eqnarray}
+  0\leq b(t)\leq 1
+\end{eqnarray}
 We claim that $T_{R}$ is forward invariant for all sufficiently large $R.$We
 need only show that solutions cannot leave $T_{R}$
 
-We show that $\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right) =\frac{d}{dt}%
-\left( R\right) <0$
+We show that
+$\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right) =\frac{d}{dt}%
+\left( R\right) <0$,
+\begin{eqnarray}
+  \frac{d}{dt}\left( R\right) & = & \frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right), \\
+                              & = & \left( \hat{p}\left( \theta \right) b(t)
+                                    \left( 1-b(t)\right) -
+                                     \frac{d}{g}w\left( t\right) \right), \\
+                              & = & \hat{p}\left( \theta \right) b(t)\left(1-b(t)\right) -
+                                    d\left( R-b(t)\right), \\
+                              & \leq & 0.
+\end{eqnarray}
 
-$$\frac{d}{dt}\left( R\right) =\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right)
-=\left( \hat{p}\left( \theta \right) b(t)\left( 1-b(t)\right) -\frac{d}{g}%
-w\left( t\right) \right) $$
 
-$$\frac{d}{dt}\left( R\right) =\hat{p}\left( \theta \right) b(t)\left(
-1-b(t)\right) -d\left( R-b(t)\right) \leq 0$$
-
-if $R$ is chosen large enough.
+In particular, if $R$ is chosen large enough.
 \end{proof}
 \begin{theorem}
   \index{3} Consider the model equations (\ref{eq:scaledODE1}) and
@@ -660,7 +666,7 @@ equilibrium $E^{\ast }=(b^{\ast },w^{\ast })$ is locally stable.
 \end{description}
 
 \begin{proof}
-  the non trivial equilibrium $E^{\ast }=(b^{\ast },w^{\ast })$ of the
+  The non trivial equilibrium $E^{\ast }=(b^{\ast },w^{\ast })$ of the
   model equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) will
   be center if $DetJ>0$ and $TraceJ=0$
 
@@ -713,8 +719,8 @@ if $\hat{p}(\theta )=c+\dfrac{2cd}{g-d}$
 
 In the next theorem we aim to investigate the effect of the impact
 associated with the use of the anti-pheromone $\hat{p}(\theta )$ on
-the limit cycle dynamics in equations (\ref{eq:scaledODE1}) and (
-ref{eq:scaledODE2}).
+the limit cycle dynamics in equations (\ref{eq:scaledODE1}) and
+(\ref{eq:scaledODE2}).
 
 \begin{theorem}
   \index{4} Consider the model equations (\ref{eq:scaledODE1}) and
