@@ -2,6 +2,14 @@
 \usepackage{graphicx}
 \usepackage[margin=2cm]{geometry}
 
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
+
 \title{A Continuous Model Of Behavioural Phenotype: An Example Of
   Interaction Between \textit{Pieris brasicae} And
   \textit{Trichogramma} Wasps}
@@ -416,7 +424,7 @@ conditions have been explored, and they are described in the results
 section, section \ref{section:results}.
 
 
-\subsection{Stability Analysis Of a Simplified System Of ODEs}
+\subsection{Parameter Dependence on Stability of the System}
 
 Before proceeding to the numerical approximation of the full model, we
 first examine the stability of a simplified system. The simplified
@@ -561,6 +569,188 @@ $(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}.
     a steady state or a limit cycle.}
   \label{fig:odeButterflyBifurcation}
 \end{figure}
+
+\subsection{Stability of the Equilibria}
+
+The linear stability with respect to the parameters were examined in
+the previous section. We now turn out attention to the existence of
+limit cycles or oscillatory behaviour of the solutions near the
+equilbria. Consider the model system, equations (\ref{eq:scaledODE1})
+and ( ref{eq:scaledODE2}). Can the impact associated with the use of
+the anti-pheromone destabilize/ stabilize this equilibrium? If so,
+under what conditions? This is settled via the following lemma,
+\begin{theorem}
+  \bigskip\ All solutions of equations (\ref{eq:scaledODE1}) and (
+  ref{eq:scaledODE2}) with initial values
+  $b\left( 0\right) ,w\left( 0\right) >0$ are always non-negative
+\end{theorem}
+
+
+\begin{proof}
+  Notice that equations (\ref{eq:scaledODE1}) and (
+  ref{eq:scaledODE2}) have the form
+\begin{center}
+$b^{\prime }\left( t\right) =b(t)X\left( b,w\right) $
+
+$w^{\prime }\left( t\right) =w(t)Y\left( b,w\right) $
+\end{center}
+
+
+If $\ \left( b\left( t\right) ,w\left( t\right) \right) $ is a solution of
+such a system, then by the integrating factor trick
+
+$$\dfrac{d}{dt}\left( e^{\left( -\int_{0}^{t}X(s)ds\right) }b(t)\right) =0$$
+
+Consequently,
+
+$b(t)=e^{\left( -\int_{0}^{t}X(s)ds\right) }b(0)$ and $w(t)=e^{\left( -\int_{0}^{t}Y(s)ds\right) }w(0).$
+
+So for all $t>0$ and $b\left( 0\right) ,w\left( 0\right) >0$ .
+\end{proof}
+
+As for boundedness of solutions.
+
+\begin{lemma} \label{mm} All the solutions of equations equations
+  (\ref{eq:scaledODE1}) and ( ref{eq:scaledODE2}) which start in
+  $R_{+}^{2}$ are uniformly bounded.
+\end{lemma}
+
+\begin{proof}
+For all $R>0$, consider the triangular regions $T_{R}=\left\{ \left(
+b(t),w(t)\right) \in R_{+}^{2}:R=b+\frac{1}{g}w\right\} $
+
+Let's assume that $b(t),w(t)$ are any positive solution of equations
+(\ref{eq:scaledODE1}) and ( ref{eq:scaledODE2}), then it is obvious
+that
+
+$$\frac{d}{dt}b(t)\leq \hat{p}\left( \theta \right) b(t)\left( 1-b(t)\right) $$
+
+We can see from the comparison argument that
+
+$$0\leq b(t)\leq 1$$
+
+We claim that $T_{R}$ is forward invariant for all sufficiently large $R.$We
+need only show that solutions cannot leave $T_{R}$
+
+We show that $\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right) =\frac{d}{dt}%
+\left( R\right) <0$
+
+$$\frac{d}{dt}\left( R\right) =\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right)
+=\left( \hat{p}\left( \theta \right) b(t)\left( 1-b(t)\right) -\frac{d}{g}%
+w\left( t\right) \right) $$
+
+$$\frac{d}{dt}\left( R\right) =\hat{p}\left( \theta \right) b(t)\left(
+1-b(t)\right) -d\left( R-b(t)\right) \leq 0$$
+
+if $R$ is chosen large enough.
+\end{proof}
+\begin{theorem}
+  \index{3} Consider the model equations (\ref{eq:scaledODE1}) and (
+  ref{eq:scaledODE2}). Assume that the following condition $g>d$ hold
+\end{theorem}
+
+\begin{description}
+\item[1]  If $%
+\hat{p}(\theta )=c+\dfrac{2cd}{g-d},$ then the non trivial equilibrium $%
+E^{\ast }=(b^{\ast },w^{\ast })$ is center.
+
+\item[2] If $0<\hat{p}(\theta )<c+\dfrac{2cd}{g-d}$ then the non trivial
+equilibrium $E^{\ast }=(b^{\ast },w^{\ast })$ is locally stable.
+\end{description}
+
+\begin{proof}
+  the non trivial equilibrium $E^{\ast }=(b^{\ast },w^{\ast })$ of the
+  model equations (\ref{eq:scaledODE1}) and ( ref{eq:scaledODE2}) will
+  be center if $DetJ>0$ and $TraceJ=0$
+
+since $DetJ>0$ all the time then the it only depend on the value of the $%
+TraceJ$
+\begin{center}
+$TraceJ=J_{11}=00$
+
+iff $\hat{p}(\theta )b^{\ast }\left( -1+\dfrac{\hat{p}(\theta )w^{\ast }}{%
+\left( c+\hat{p}(\theta )b^{\ast }\right) ^{2}}\right) =0$
+
+iff $\hat{p}(\theta )w^{\ast }=\left( c+\hat{p}(\theta )b^{\ast }\right)
+^{2} $
+
+iff $\hat{p}(\theta )\left( 1-b^{\ast }\right) =\left( c+\hat{p}(\theta
+)b^{\ast }\right) $
+
+iff $\hat{p}(\theta )-2\hat{p}(\theta )b^{\ast }=c$
+
+iff $\hat{p}(\theta )-\dfrac{2cd}{g-d}=c$
+
+if $\hat{p}(\theta )=c+\dfrac{2cd}{g-d}$
+\end{center}
+
+\end{proof}
+\begin{figure}[!htp]
+\begin{center}
+\includegraphics[scale=0.3]{s.eps}  
+
+\end{center}
+
+\caption{Figure shows sample runs of $b(t)$ and $w(t)$ for equations
+  (\ref{eq:scaledODE1}) and ( ref{eq:scaledODE2}), where
+  $\hat{p}(\theta )$ = 3, where the system is stable }
+      \label{fig:S}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!htp]
+\begin{center}
+\includegraphics[scale=0.28]{l1.eps}  
+\includegraphics[scale=0.28]{l2.eps}
+
+\end{center}
+
+\caption{Figure shows runs of $b(t)$ and $w(t)$ for equations
+  (\ref{eq:scaledODE1}) and ( ref{eq:scaledODE2}) has center
+  equilibrium point, where $\hat{p}(\theta )=3.92$. }
+      \label{fig:l1l2}
+\end{figure}
+
+In the next theorem we aim to investigate the effect of the impact
+associated with the use of the anti-pheromone $\hat{p}(\theta )$ on
+the limit cycle dynamics in equations (\ref{eq:scaledODE1}) and (
+ref{eq:scaledODE2}).
+
+\begin{theorem}
+  \index{4} Consider the model equations (\ref{eq:scaledODE1}) and (
+  ref{eq:scaledODE2}). Assume that $E^{\ast }=(b^{\ast },w^{\ast })$
+  is the positive non trivial equilibrium point of the model equations
+  (\ref{eq:scaledODE1}) and ( ref{eq:scaledODE2}) with \ $g>d$ and the
+  following condition hold
+\end{theorem}
+
+\begin{center}
+$%
+\hat{p}(\theta )>c+\dfrac{2cd}{g-d}>0,$
+\end{center}
+
+then the system possesses at least one closed loop in the first quadrant.
+
+\begin{proof}
+  From the local stability analysis, we have that if the above
+  conditions hold, then the positive equilibrium
+  $E^{\ast }=(b^{\ast },w^{\ast })$ of equations (\ref{eq:scaledODE1})
+  and ( ref{eq:scaledODE2}) is an unstable node or focus. The
+  existence of a closed loop now follows from Lemma \ref{mm} and
+  Poincair'e--Bendixson theorem [need citation].
+\end{proof}
+
+\begin{figure}[!htp]
+\begin{center}
+\includegraphics[scale=0.3]{lim.eps}  
+
+\end{center}
+
+\caption{Figure shows sample runs of $b(t)$ and $w(t)$ for equations
+  (\ref{eq:scaledODE1}) and ( ref{eq:scaledODE2}) , where
+  $\hat{p}(\theta )$ = 4, where the system has a limit cycle }
+      \label{fig:lim}
+\end{figure}
+
 
 
 \section{Numerical Approximation}
