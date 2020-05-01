@@ -426,12 +426,18 @@ section, section \ref{section:results}.
 
 \subsection{Parameter Dependence on Stability of the System}
 
-Before proceeding to the numerical approximation of the full model, we
-first examine the stability of a simplified system. The simplified
-system is found by examining an ODE with a similar form. By assuming
-that the distribution of the butterflies is a constant consistent with
-a single value of $\theta$, the system is approximated by the
-following system of ODEs:
+Prior to examining the behaviour of the distributed system given in
+equations \ref{eq:odePDE1} and \ref{eq:odePDE2}, the potential
+restrictions on the parameters are explored. We first examine a
+simplified system based on a system of ordinary differential
+equations.  The focus is on the impact of the parameters of the
+system, and a more complete analysis is provided in Appendix
+\ref{appendix:stability}.
+
+The simplified system is found by examining an ODE with a similar form
+as the distributed system. By assuming that the distribution of the
+butterflies is a constant consistent with a single value of $\theta$,
+the system is approximated by the following system of ODEs:
 \begin{eqnarray}
   \label{eq:scaledODE1}
   \frac{d}{dt} b(t) & = &
@@ -782,6 +788,7 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
 \appendix
 
 \section{Stability of the Equilibria}
+\label{appendix:stability}
 
 The linear stability with respect to the parameters were examined in
 the previous section. We now turn out attention to the existence of
