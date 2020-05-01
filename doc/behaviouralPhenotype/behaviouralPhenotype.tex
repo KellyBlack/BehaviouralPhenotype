@@ -590,6 +590,15 @@ of the coupled PDE and ODE from equations (\ref{eq:scaledodePDE1}) and
 numerical exploration of the existance of a stable steady state or
 limit cycles is given.
 
+The results given here rely on the numerical approximation of the two
+systems previously discussed. In particular approximation for the
+system of ODEs given in equations (\ref{eq:scaledODE1}) and
+(\ref{eq:scaledODE2}) is constructed using a Runga-Kutta Fehlberg
+method. Approximating the distributed system, equations
+(\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2}), requires a more
+careful implementation. The approximation method is described in
+Appendix \ref{numericalApproximation}.
+
 \subsection{Approximation of the system of ODEs}
 \label{subsection:odeApproximation}
 
@@ -642,9 +651,10 @@ cycle. (Need to check to see if this is consistent with the theory!)
 
 The numerical exploration of the full, coupled system of the PDE and
 ODE, equations (\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2}),
-is examined. The approximation method is that same as described in
-appendix \ref{numericalApproximation}. The parameter range is similar
-to that in subsection \ref{subsection:odeApproximation}.
+is examined. The details of the full approximation method are
+described in appendix \ref{numericalApproximation}. The parameter
+range is similar to that in subsection
+\ref{subsection:odeApproximation}.
 
 The value of the parameters in the example are $c=2.8$, $g=0.6$,
 $d=0.1$, and $\mu=0.01$. The temporal behaviour of the system is
