@@ -578,86 +578,6 @@ $(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}.
 
 
 
-\section{Numerical Approximation}
-\label{numericalApproximation}
-
-We introduce the method for the numerical approximation of the coupled
-PDE and ODE system in equations (\ref{eq:scaledodePDE1}) and
-(\ref{eq:scaledodePDE2}). For the full system, we make use of a
-Legendre pseudo-spectral collocation
-method\cite{spectralMethodsFluids,hesthaven_gottlieb_gottlieb_2007,gottlieb1977numerical}. First,
-the butterfly density is discretized in $\theta$ as
-\begin{eqnarray}
-  \label{eqn:spatialDiscretization}
-  b_N(t,\theta) & = & \sum^N_{i=0} \hat{b}_i(t) \phi_i(\theta),
-\end{eqnarray}
-where $\phi_i(\theta)$ is the Lagrange interpolant on the
-$i$\textsuperscript{th} abscissa of the Legendre-Gauss-Lobatto
-quadrature\cite{hesthaven_gottlieb_gottlieb_2007}.
-
-The abscissa of the Legendre-Gauss-Lobatto quadrature are the zeroes
-of the function
-\begin{eqnarray}
-  \psi(\theta) & = & \left(1-\theta^2\right) L_{N}'(\theta),
-\end{eqnarray}
-where $L_N(\theta)$ is the $n$\textsuperscript{th} Legendre
-polynomial\cite{davis2007methods}.  The weights, $w_n$, associated
-with the quadrature are identical to those described in
-Davis\cite{davis2007methods} as well as Golub and
-Welsch\cite{gaussQuadratureRules}. In our examples the quadrature is
-approximated using the methods described by Golub and
-Welsch\cite{gaussQuadratureRules}.  Given $\psi(\theta)$ the Lagrange
-interpolants can be calculated
-\begin{eqnarray}
-  \phi_i(\theta) & = & \frac{\psi(\theta)}{\psi'(\theta)(\theta-\theta_i)}.
-\end{eqnarray}
-The function $\psi(\theta)$ coincides with the Legendre differential
-equation, and the relationship can be simplified as
-\begin{eqnarray}
-  \psi'(\theta) & = & -N(N+1)L_N(\theta).
-\end{eqnarray}
-
-The discretization of equations (\ref{eq:scaledodePDE1}) and
-(\ref{eq:scaledodePDE2}) is constructed by substituting the definition
-of $b_N$ from equation (\ref{eqn:spatialDiscretization}). A Galerkin
-approximation is constructed, and one minor complication is that the
-Lagrange interpolants are polynomials of degree $N$, and the
-Gauss-Lobatto quadrature is exact for polynomials up to degree
-$N$. The integral is approximated using the Gauss-Lobatto quadrature,
-and the resulting sum results in an equivalent norm compared to the
-Gauss quadrature which is exact for polynomials up to degree
-$N$\cite{SobolevCanutoQuarteroni}.
-
-The resulting variational form for Neumann boundary conditions using a
-Galerkin approximation and a discrete inner product for equation
-(\ref{eq:scaledodePDE1}) is
-\begin{eqnarray}
-  \sum_{j=0}^N \sum_{i=0}^N  \hat{b}_i'(t) \phi_i(\theta_j) \phi_k(\theta_j) w_j
-  & = &
-  \sum_{j=0}^N \sum_{i=0}^N \hat{p}(\theta_j)  \hat{b}_i(t) (1 - \hat{b}_i(t) ) \phi_i(\theta_j) \phi_k(\theta_j) w_j \\
-  & &  -  \sum_{j=0}^N w(t) \frac{\hat{p}(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j) }{c+\hat{p}(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j)} \phi_k(\theta_j) w_j \nonumber \\ 
-  & & - \sum_{j=0}^N \mu  \sum_{i=0}^N \hat{b}_i(t) \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j, \nonumber
-\end{eqnarray}
-for all integer values of $k$ from $0$ to $N$ inclusive.  The basis
-functions are the Lagrange interpolants on the abscissa, and the
-equations can be reduced to
-\begin{eqnarray}
-  \hat{b}_k'(t) 
-  & = &
-        \hat{p}(\theta_j) \hat{b}_k(t) (1 - \hat{b}_k(t) )
-        -  w(t) \frac{\hat{p}(\theta_k) \hat{b}_k(t)) }{c+\hat{p}(\theta_k)  \hat{b}_k(t) }  
-   - \frac{\mu}{w_k} \sum_{i=0}^N \hat{b}_i(t) \left( \sum_{j=0}^N  \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j \right).
-\end{eqnarray}
-
-Combined with equation (\ref{eq:scaledodePDE2}) the approximation
-consists of a system of $N+2$ ordinary differential equations. The
-integral in equation (\ref{eq:scaledodePDE2}) is approximated using
-the Legendre-Gauss-Lobatto quadrature. The temporal discretization of
-the resulting system is constructed using a second order, implicit
-multi-step scheme. The scheme is implemented as a fully implicit
-second order Adams-Moulton scheme\cite{ascher2011first}. At each time
-step the resulting non-linear system is approximated using Newton's
-method.
 
 \section{Results}
 \label{section:results}
@@ -976,6 +896,87 @@ then the system possesses at least one closed loop in the first quadrant.
       \label{fig:lim}
 \end{figure}
 
+
+\section{Numerical Approximation}
+\label{numericalApproximation}
+
+We introduce the method for the numerical approximation of the coupled
+PDE and ODE system in equations (\ref{eq:scaledodePDE1}) and
+(\ref{eq:scaledodePDE2}). For the full system, we make use of a
+Legendre pseudo-spectral collocation
+method\cite{spectralMethodsFluids,hesthaven_gottlieb_gottlieb_2007,gottlieb1977numerical}. First,
+the butterfly density is discretized in $\theta$ as
+\begin{eqnarray}
+  \label{eqn:spatialDiscretization}
+  b_N(t,\theta) & = & \sum^N_{i=0} \hat{b}_i(t) \phi_i(\theta),
+\end{eqnarray}
+where $\phi_i(\theta)$ is the Lagrange interpolant on the
+$i$\textsuperscript{th} abscissa of the Legendre-Gauss-Lobatto
+quadrature\cite{hesthaven_gottlieb_gottlieb_2007}.
+
+The abscissa of the Legendre-Gauss-Lobatto quadrature are the zeroes
+of the function
+\begin{eqnarray}
+  \psi(\theta) & = & \left(1-\theta^2\right) L_{N}'(\theta),
+\end{eqnarray}
+where $L_N(\theta)$ is the $n$\textsuperscript{th} Legendre
+polynomial\cite{davis2007methods}.  The weights, $w_n$, associated
+with the quadrature are identical to those described in
+Davis\cite{davis2007methods} as well as Golub and
+Welsch\cite{gaussQuadratureRules}. In our examples the quadrature is
+approximated using the methods described by Golub and
+Welsch\cite{gaussQuadratureRules}.  Given $\psi(\theta)$ the Lagrange
+interpolants can be calculated
+\begin{eqnarray}
+  \phi_i(\theta) & = & \frac{\psi(\theta)}{\psi'(\theta)(\theta-\theta_i)}.
+\end{eqnarray}
+The function $\psi(\theta)$ coincides with the Legendre differential
+equation, and the relationship can be simplified as
+\begin{eqnarray}
+  \psi'(\theta) & = & -N(N+1)L_N(\theta).
+\end{eqnarray}
+
+The discretization of equations (\ref{eq:scaledodePDE1}) and
+(\ref{eq:scaledodePDE2}) is constructed by substituting the definition
+of $b_N$ from equation (\ref{eqn:spatialDiscretization}). A Galerkin
+approximation is constructed, and one minor complication is that the
+Lagrange interpolants are polynomials of degree $N$, and the
+Gauss-Lobatto quadrature is exact for polynomials up to degree
+$N$. The integral is approximated using the Gauss-Lobatto quadrature,
+and the resulting sum results in an equivalent norm compared to the
+Gauss quadrature which is exact for polynomials up to degree
+$N$\cite{SobolevCanutoQuarteroni}.
+
+The resulting variational form for Neumann boundary conditions using a
+Galerkin approximation and a discrete inner product for equation
+(\ref{eq:scaledodePDE1}) is
+\begin{eqnarray}
+  \sum_{j=0}^N \sum_{i=0}^N  \hat{b}_i'(t) \phi_i(\theta_j) \phi_k(\theta_j) w_j
+  & = &
+  \sum_{j=0}^N \sum_{i=0}^N \hat{p}(\theta_j)  \hat{b}_i(t) (1 - \hat{b}_i(t) ) \phi_i(\theta_j) \phi_k(\theta_j) w_j \\
+  & &  -  \sum_{j=0}^N w(t) \frac{\hat{p}(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j) }{c+\hat{p}(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j)} \phi_k(\theta_j) w_j \nonumber \\ 
+  & & - \sum_{j=0}^N \mu  \sum_{i=0}^N \hat{b}_i(t) \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j, \nonumber
+\end{eqnarray}
+for all integer values of $k$ from $0$ to $N$ inclusive.  The basis
+functions are the Lagrange interpolants on the abscissa, and the
+equations can be reduced to
+\begin{eqnarray}
+  \hat{b}_k'(t) 
+  & = &
+        \hat{p}(\theta_j) \hat{b}_k(t) (1 - \hat{b}_k(t) )
+        -  w(t) \frac{\hat{p}(\theta_k) \hat{b}_k(t)) }{c+\hat{p}(\theta_k)  \hat{b}_k(t) }  
+   - \frac{\mu}{w_k} \sum_{i=0}^N \hat{b}_i(t) \left( \sum_{j=0}^N  \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j \right).
+\end{eqnarray}
+
+Combined with equation (\ref{eq:scaledodePDE2}) the approximation
+consists of a system of $N+2$ ordinary differential equations. The
+integral in equation (\ref{eq:scaledodePDE2}) is approximated using
+the Legendre-Gauss-Lobatto quadrature. The temporal discretization of
+the resulting system is constructed using a second order, implicit
+multi-step scheme. The scheme is implemented as a fully implicit
+second order Adams-Moulton scheme\cite{ascher2011first}. At each time
+step the resulting non-linear system is approximated using Newton's
+method.
 
 
 \end{document}
