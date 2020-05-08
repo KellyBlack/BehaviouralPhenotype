@@ -788,13 +788,15 @@ direction associated with the non-zero eigenvalue then we have that
 \section{Stability of the Equilibria}
 \label{appendix:stability}
 
-The linear stability with respect to the parameters were examined in
-the previous section. We now turn out attention to the existence of
-limit cycles or oscillatory behaviour of the solutions near the
-equilbria. Consider the model system, equations (\ref{eq:scaledODE1})
-and (\ref{eq:scaledODE2}). Can the impact associated with the use of
-the anti-pheromone destabilize/stabilize this equilibrium? If so,
-under what conditions? This is settled via the following lemma,
+The linear stability with respect to the parameters for the
+non-trivial fixed points is examined in subsection subsection
+\ref{subsection:parameters}. We now turn out attention to the
+existence of limit cycles or oscillatory behaviour of the solutions
+near the equilbria. Consider the model system, equations
+(\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Can the impact
+associated with the use of the anti-pheromone destabilize/stabilize
+this equilibrium? If so, under what conditions? This is settled via
+the following lemma,
 \begin{theorem}
   \bigskip\ All solutions of equations (\ref{eq:scaledODE1}) and
   (\ref{eq:scaledODE2}) with initial values
@@ -824,8 +826,9 @@ w(t) & = & e^{\left( -\int_{0}^{t}Y(s)ds\right) }w(0).
 So for all $t>0$ and $b\left( 0\right) ,w\left( 0\right) >0$ .
 \end{proof}
 
-The next question examined is whether or not the solutions are
-bounded.
+Having established that the solutions are non-negative our attention
+now turns to whether or not the solutions are bounded. We can state
+that the solutions are bounded in the first quadrant.
 
 \begin{lemma} \label{mm} All the solutions of equations equations
   (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) which start in
@@ -837,18 +840,18 @@ For all $R>0$, consider the triangular regions $T_{R}=\left\{ \left(
 b(t),w(t)\right) \in R_{+}^{2}:R=b+\frac{1}{g}w\right\} $
 
 Let's assume that $b(t),w(t)$ are any positive solution of equations
-(\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}), then it is obvious
-that
-
+(\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Due to the
+non-negativity of the solutions it is immediately implied that
 \begin{eqnarray}
   \frac{d}{dt}b(t) & \leq & \hat{p}\left( \theta \right) b(t)\left( 1-b(t)\right) 
 \end{eqnarray}
-We can see from the comparison argument that
+This immediately leads to the bound on $b(t)$,
 \begin{eqnarray}
   0\leq b(t)\leq 1
 \end{eqnarray}
-We claim that $T_{R}$ is forward invariant for all sufficiently large $R.$We
-need only show that solutions cannot leave $T_{R}$
+assuming that the initial condition for $b(t)$ is less than one.  We
+claim that $T_{R}$ is forward invariant for all sufficiently large
+$R.$We need only show that solutions cannot leave $T_{R}$
 
 We show that
 $\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right) =\frac{d}{dt}%
