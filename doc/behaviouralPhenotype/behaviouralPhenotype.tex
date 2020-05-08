@@ -719,7 +719,7 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
 \section{The Fixed Points On The $b$ and $w$ Axes}
 \label{appendix:otherFixedPoints}
 
-In Subsection \ref{subsection:parameters} the stability of the
+In subsection \ref{subsection:parameters} the stability of the
 non-trivial fixed point is examined. More details about the other
 fixed points as well as more complete description of the Jacobian of
 the system given in equations (\ref{eq:scaledODE1}) and
@@ -763,7 +763,26 @@ For the fixed point at the origin, the Jacobian can be expressed as
           \right].
 \end{eqnarray*}
 it is assumed that both $p(\theta)$ and $d$ are non-negative, so the
-linear stability at the origin is a saddle.
+linear stability at the origin is semi-stable.
+
+For the fixed point at $w=0$ and
+$b=\frac{c\cdot d}{p(\theta)\left(g - d\right)}$, the Jacobian can be
+expressed as 
+\begin{eqnarray*}
+  J & = & \left[
+          \begin{array}{rr}
+            p(\theta)\left( 1 -
+            \frac{2c\cdot d}{p(\theta)(g-d)} \right) & -\frac{d}{g} \\
+            0 & 0
+          \end{array}
+          \right].
+\end{eqnarray*}
+As described in subsection \ref{subsection:parameters} it is assumed
+that $g>d$. In order for this fixed point to be stable in the
+direction associated with the non-zero eigenvalue then we have that
+\begin{eqnarray*}
+  p(\theta) & < & \frac{2cd}{g-d}.
+\end{eqnarray*}
 
 
 \section{Stability of the Equilibria}
