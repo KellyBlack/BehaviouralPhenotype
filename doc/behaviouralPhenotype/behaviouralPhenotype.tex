@@ -734,6 +734,27 @@ well. One is the fixed point at the origin, $b=0$ and $w=0$.
 The remaining fixed point occurs at $w=0$ and $b=\frac{c\cdot
   d}{p(\theta)\left(g - d\right)}$.
 
+The stability at these two fixed points can be examined by first
+determining the Jacobian of the system,
+\begin{eqnarray*}
+  J & = & \left[
+          \begin{array}{rr}
+            J_{11} & J_{12} \\
+            J_{21} & J_{22}
+          \end{array}
+          \right].
+\end{eqnarray*}
+The values of the entries in the matrix are
+\begin{eqnarray*}
+  J_{11} & = & p(\theta)\left(1-2b\right) -
+               \frac{w\cdot c \cdot p(\theta)}{\left( c + p(\theta)b \right)^2}, \\
+  J_{12} & = & -\frac{p(\theta)b}{c+p(\theta)b}, \\
+  J_{21} & = & g\cdot c \cdot  p(\theta) \frac{1}{\left(c+p(\theta)b\right)^2}, \\
+  J_{22} & = & -d + g\cdot c \cdot  p(\theta) \frac{1}{c+p(\theta)b}.
+\end{eqnarray*}
+
+
+
 \section{Stability of the Equilibria}
 \label{appendix:stability}
 
