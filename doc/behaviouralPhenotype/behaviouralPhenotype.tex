@@ -425,14 +425,15 @@ section, section \ref{section:results}.
 
 
 \subsection{Parameter Dependence on Stability of the System}
+\label{subsection:parameters}
 
 Prior to examining the behaviour of the distributed system given in
 equations \ref{eq:odePDE1} and \ref{eq:odePDE2}, the potential
 restrictions on the parameters are explored. We first examine a
 simplified system based on a system of ordinary differential
 equations.  The focus is on the impact of the parameters of the
-system, and a more complete analysis is provided in Appendix
-\ref{appendix:stability}.
+system, and a more complete analysis is provided in Appendices
+\ref{appendix:otherFixedPoints} and \ref{appendix:stability}.
 
 The simplified system is found by examining an ODE with a similar form
 as the distributed system. By assuming that the distribution of the
@@ -451,9 +452,9 @@ the system is approximated by the following system of ODEs:
 By focusing on the system of ODEs, we can examine an approximation to
 the system by treating the variable $\theta$ as a fixed parameter and
 can gain some insight into the distributed system. The analysis in
-this section focuses on the stability of the linearized system. In
-particular the focus is on the non-trivial fixed points that occur in
-the first quadrant away from $b=0$ and away from $w=0$.
+this section focuses on the stability of the linearized system at the
+nontrivial fixed point. More details about the other fixed points is
+provided in Appendix \ref{appendix:otherFixedPoints}
 
 We first determine the nullclines for the system.
 The $b$-nullclines for the system in the $b-w$ plane are given by
@@ -714,6 +715,24 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
 \clearpage
 
 \appendix
+
+\section{The Fixed Points On The $b$ and $w$ Axes}
+\label{appendix:otherFixedPoints}
+
+In Subsection \ref{subsection:parameters} the stability of the
+non-trivial fixed point is examined. More details about the other
+fixed points as well as more complete description of the Jacobian of
+the system given in equations (\ref{eq:scaledODE1}) and
+(\ref{eq:scaledODE2}) are provided here. In particular the other two
+fixed points are given, then the Jacobian is stated, and the linear
+stability at the other two fixed points is briefly explored.
+
+The fixed point for the he system of equations given in equations
+(\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) has one fixed point
+where both $b>0$ and $w>0$. There are two other fixed points as
+well. One is the fixed point at the origin, $b=0$ and $w=0$.
+The remaining fixed point occurs at $w=0$ and $b=\frac{c\cdot
+  d}{p(\theta)\left(g - d\right)}$.
 
 \section{Stability of the Equilibria}
 \label{appendix:stability}
