@@ -28,7 +28,8 @@
 \newcommand{\origD}{\hat{d}}
 \newcommand{\origG}{\hat{g}}
 \newcommand{\origL}{\hat{L}}
-\newcommand{\origP}{\hat{p}(\theta)}
+\newcommand{\origP}[1]{\hat{p}(#1)}
+\newcommand{\origTheta}{\hat{\theta}}
 
 \begin{document}
 
@@ -322,14 +323,14 @@ different propensity to use the anti-pheromone. In this treatment, we
 do not model the male and female populations separately, but treat
 them as a single population that intermingles in a relatively uniform
 fashion. The propensity for a butterfly to make use of the
-anti-pheromone depends on a new parameter, $\theta$. The value of
-$\theta$ is assumed to vary between $0$ and some positive constant,
-$\origL$, and the larger the value of $\theta$ the more likely an
+anti-pheromone depends on a new parameter, $\origTheta$. The value of
+$\origTheta$ is assumed to vary between $0$ and some positive constant,
+$\origL$, and the larger the value of $\origTheta$ the more likely an
 individual is to make use of the anti-pheromone. The distribution of
 the population of butterflies is now dependent on both the time and
 the new parameter,
 \begin{eqnarray}
-  \origB & = & \origB(t,\theta).
+  \origB & = & \origB(t,\origTheta).
 \end{eqnarray}
 
 Our first task is to determine how the Holling type II response,
@@ -340,20 +341,20 @@ bye Dawes and Sousa\cite{DAWES201311}.  In the derivation here,
 however, we follow the approach in Holling's original
 discussion\cite{holling_1959A,holling_1959B}. We begin by finding an
 expression that relates the number of eggs parasitized by a single
-wasp, $Y(\theta)$, which is assumed to be a linear relationship,
+wasp, $Y(\origTheta)$, which is assumed to be a linear relationship,
 \begin{eqnarray}
   \label{eq:processingTime}
-  Y(\theta) & = & r T_{\mathrm{search}}(\theta) \origB(t,\theta) \origP,
+  Y(\origTheta) & = & r T_{\mathrm{search}}(\origTheta) \origB(t,\origTheta) \origP{\origTheta},
 \end{eqnarray}
 where $T_{\mathrm{search}}$ is the search time required by the wasp to
 find the location of a butterfly's clutch. The motivation for this is
-that the higher the value of $\theta$ the higher the success rate for
+that the higher the value of $\origTheta$ the higher the success rate for
 a given wasp.  The time a wasp requires to parasitize the clutch is
 assumed to be proportional to the number of eggs, and the total time
 is
 \begin{eqnarray}
   \label{eq:totalEgglayingTime}
-  T_{\mathrm{total}}(\theta) & = & T_{\mathrm{search}}(\theta) + \beta Y(\theta).
+  T_{\mathrm{total}}(\origTheta) & = & T_{\mathrm{search}}(\origTheta) + \beta Y(\origTheta).
 \end{eqnarray}
 Substituting the search time found in equation
 (\ref{eq:totalEgglayingTime}) back into equation
@@ -361,18 +362,18 @@ Substituting the search time found in equation
 predation per wasp,
 \begin{eqnarray}
   \label{eq:waspPredationRate}
-  Y(\theta) & = & \frac{r T_{\mathrm{total}} \origB(t,\theta) \origP}{1 + \beta r \origB(t,\theta) \origP}.
+  Y(\origTheta) & = & \frac{r T_{\mathrm{total}} \origB(t,\origTheta) \origP{\origTheta}}{1 + \beta r \origB(t,\origTheta) \origP{\origTheta}}.
 \end{eqnarray}
 
-In this case $\origP$ represents the impact associated with the use
-of the anti-pheromone. As $\theta$ increases the more likely an
+In this case $\origP{\origTheta}$ represents the impact associated with the use
+of the anti-pheromone. As $\origTheta$ increases the more likely an
 individual butterfly is to make use of the anti-pheromone and the more
 likely a wasp is to locate and ride along with a butterfly. The
-function, $\origP$, will be used to balance the positive and
+function, $\origP{\origTheta}$, will be used to balance the positive and
 negative impacts in the growth as well as the predation terms in
 equation (\ref{eq:initialSystem1}), and the parameters $\origAlpha$ and
 $\origGamma$ provide relative scales for the two impacts. Note that we can
-normalize $\origP$ because it is scaled by the parameter $r$.
+normalize $\origP{\origTheta}$ because it is scaled by the parameter $r$.
 
 
 Turning back to equation (\ref{eq:waspPredationRate}), the rate of
@@ -381,7 +382,7 @@ substituted into equation (\ref{eq:initialSystem1}) in the more
 traditional form as
 \begin{eqnarray}
   \label{eq:butterflyPredationRate}
-  \origGamma \cdot w(t) \frac{\origP \origB(t,\theta) }{\origC +  \origP \origB(t,\theta)},
+  \origGamma \cdot w(t) \frac{\origP{\origTheta} \origB(t,\origTheta) }{\origC +  \origP{\origTheta} \origB(t,\origTheta)},
 \end{eqnarray}
 where $\origC=\frac{1}{\beta r}$ and
 $\origGamma=\frac{T_{\mathrm{total}}}{\beta}$.  Looking back at the
@@ -392,7 +393,7 @@ the impact for the wasps must be accumulated across the entire
 butterfly population,
 \begin{eqnarray}
   \label{eq:totalWaspPredationRate}
-  \int^{\origL}_{\theta=0} \origG \cdot \origW(t) \frac{\origP \origB(t,\theta) }{\origC + \origP \origB(t,\theta)} ~ d\theta.
+  \int^{\origL}_{\origTheta=0} \origG \cdot \origW(t) \frac{\origP{\origTheta} \origB(t,\origTheta) }{\origC + \origP{\origTheta} \origB(t,\origTheta)} ~ d\origTheta.
 \end{eqnarray}
 
 We are almost ready to put these terms together for the current
@@ -404,38 +405,38 @@ information relative to the propensity to use the
 anti-aphrodisiac. The result is a coupled PDE and ODE system given by
 \begin{eqnarray}
   \label{eq:odePDE1}
-  \frac{\partial}{\partial t} \origB(t,\theta) & = &
-      \left[ \origAlpha \cdot \origP \origB(t,\theta) (\origK - \origB(t,\theta)) \right]
-      - \left[ \origGamma \cdot \origW(t) \frac{\origP \origB(t,\theta)}{\origC+\origP\origB(t,\theta)} \right]
-      + \left[ \mu \frac{\partial^2}{\partial \theta^2} \origB(t,\theta)\right], \\
+  \frac{\partial}{\partial t} \origB(t,\origTheta) & = &
+      \left[ \origAlpha \cdot \origP{\origTheta} \origB(t,\origTheta) (\origK - \origB(t,\origTheta)) \right]
+      - \left[ \origGamma \cdot \origW(t) \frac{\origP{\origTheta} \origB(t,\origTheta)}{\origC+\origP{\origTheta}\origB(t,\origTheta)} \right]
+      + \left[ \mu \frac{\partial^2}{\partial \origTheta^2} \origB(t,\origTheta)\right], \\
   \label{eq:odePDE2}
   \frac{d}{dt} \origW(t) & = & - \left[ \origD \cdot \origW(t) \right]  +
        \left[
-          \int^{\origL}_{\theta=0} \origG \cdot \origW(t) \frac{\origP \origB(t,\theta) }{\origC + \origP \origB(t,\theta)} ~ d\theta
+          \int^{\origL}_{\origTheta=0} \origG \cdot \origW(t) \frac{\origP{\origTheta} \origB(t,\origTheta) }{\origC + \origP{\origTheta} \origB(t,\origTheta)} ~ d\origTheta
        \right].
 \end{eqnarray}
 
-As previously noted, the function $\origP$ is assumed to be an
-increasing function for $0\leq\theta\leq \origL$, and $\hat{p}(0)>0$. If
-$\origP$ is zero then equation (\ref{eq:initialSystem1}) will
-indicate no growth and no predation. We can assume $\hat{p}(0)$ has a
-minimal value, $\hat{p}(0)=a$, and the relationship has a positive slope. We
+As previously noted, the function $\origP{\origTheta}$ is assumed to be an
+increasing function for $0\leq\origTheta\leq \origL$, and $\origP{0}>0$. If
+$\origP{\origTheta}$ is zero then equation (\ref{eq:initialSystem1}) will
+indicate no growth and no predation. We can assume $\origP{0}$ has a
+minimal value, $\origP{0}=a$, and the relationship has a positive slope. We
 examine the simplest such relationship, a linear function.
 
 This function is scaled separately in equations (\ref{eq:odePDE1}) and
 (\ref{eq:odePDE2}), and the function can be scaled in an arbitrary
 manner. We choose to scale the function so that its integral is one,
 \begin{eqnarray*}
-  \int^{\origL}_0 \origP ~ d\theta & = & 1,
+  \int^{\origL}_0 \origP{\origTheta} ~ d\origTheta & = & 1,
 \end{eqnarray*}
 and the resulting normalized form is
 \begin{eqnarray}
   \label{eq:linearFormP}
-  \origP & = & \origA + \frac{2(1-\origA\origL)}{\origL^2} \theta.
+  \origP{\origTheta} & = & \origA + \frac{2(1-\origA\origL)}{\origL^2} \origTheta.
 \end{eqnarray}
 One immediate restriction on the parameters requires that
 $0<\origA\origL<1$. The interpretation of the slope is that the greater the
-value of the slope times the maximum value of $\theta$,
+value of the slope times the maximum value of $\origTheta$,
 $\frac{2(1-\origC\origL)}{\origL}$, then the greater the variation is in the observed
 trait.
 
