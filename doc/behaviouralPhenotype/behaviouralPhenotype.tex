@@ -31,6 +31,7 @@
 \newcommand{\origP}[1]{\hat{p}(#1)}
 \newcommand{\origTheta}{\hat{\theta}}
 \newcommand{\origT}{\hat{t}}
+\newcommand{\origMu}{\hat{\mu}}
 
 \begin{document}
 
@@ -409,7 +410,7 @@ anti-aphrodisiac. The result is a coupled PDE and ODE system given by
   \frac{\partial}{\partial \origT} \origB(\origT,\origTheta) & = &
       \left[ \origAlpha \cdot \origP{\origTheta} \origB(\origT,\origTheta) (\origK - \origB(\origT,\origTheta)) \right]
       - \left[ \origGamma \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta)}{\origC+\origP{\origTheta}\origB(\origT,\origTheta)} \right]
-      + \left[ \mu \frac{\partial^2}{\partial \origTheta^2} \origB(\origT,\origTheta)\right], \\
+      + \left[ \origMu \frac{\partial^2}{\partial \origTheta^2} \origB(\origT,\origTheta)\right], \\
   \label{eq:odePDE2}
   \frac{d}{d\origT} \origW(\origT) & = & - \left[ \origD \cdot \origW(\origT) \right]  +
        \left[
@@ -441,15 +442,42 @@ value of the slope times the maximum value of $\origTheta$,
 $\frac{2(1-\origC\origL)}{\origL}$, then the greater the variation is in the observed
 trait.
 
+\begin{table}[h]
+  \centering
+  \begin{tabular}{l@{$=$}l}
+    $\bar{B}$ & $K$ \\ [10pt]
+    $\bar{W}$ & $\frac{\origAlpha \origK^2 \origA}{\origGamma}$ \\  [10pt]
+    $\bar{T}$ & $\frac{1}{\origAlpha \origK \origA}$ \\  [10pt]
+    $\bar{\Theta}$ & $\origL$
+  \end{tabular}
+  \caption{Choices made for scaling the variables to take advantage of the interdependence of the parameters}
+  \label{tab:scalingChoices}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{l@{$\rightarrow$}l}
+    $m$   & $\frac{2(1-\origA\origL)}{\origA\origL}$, \\  [10pt]
+    $c$   & $\frac{\origC}{\origK\origA}$ \\  [10pt]
+    $d$   & $\frac{\origD}{\origAlpha\origK\origA}$ \\  [10pt]
+    $\mu$ & $\frac{\origMu}{\origAlpha\origK\origA\origL^3}$  \\  [10pt]
+    $g$   & $\frac{\hat{\origG}}{\origAlpha\origK\origA}$
+  \end{tabular}
+  \caption{New values of parameters after scaling}
+  \label{tab:newParameters}
+\end{table}
+
+
 The variables can be scaled as $\origB\rightarrow \bar{B}b$,
-$\origW\rightarrow \bar{W}w$, $t\rightarrow \bar{T}\hat{t}$, and
-$\theta\rightarrow \bar{\Theta}\hat{\theta}$. We choose $\bar{B}=\origK$,
-$\bar{W}=\frac{\origAlpha \origK^2 \origA}{\origGamma}$, $\bar{T}=\frac{1}{\origAlpha \origK \origA}$,
-and $\bar{\Theta}=\origL$. The resulting system can be reduced to the
-following form
+$\origW\rightarrow \bar{W}w$, $\origT\rightarrow \bar{T}t$, and
+$\origTheta\rightarrow \bar{\Theta}\theta$. The choices made for our
+scalings can be found in Table \ref{tab:scalingChoices}, and the
+corresponding transformations for the new parameters can be found in
+Table \ref{tab:newParameters}.  The resulting system can be reduced to
+the following form
 \begin{eqnarray}
   \label{eq:scaledodePDE1}
-  \frac{\partial}{\partial \origT} b & = &
+  \frac{\partial}{\partial t} b & = &
       p(\theta) b (1 - b)
       -  w \frac{p(\theta) b}{c+p(\theta)b}
       + \mu \frac{\partial^2}{\partial \theta^2} b , \\
