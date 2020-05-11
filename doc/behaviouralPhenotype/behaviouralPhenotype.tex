@@ -18,6 +18,18 @@
   \and Malcolm R Adams, \and Aladeen Al Basheer, \and Caner Kazanci,
   \and Bernard Patten, \and Stuart Whipple, \and Sofya Zaytseva}
 
+\newcommand{\origB}{\hat{b}}
+\newcommand{\origW}{\hat{w}}
+\newcommand{\origAlpha}{\hat{\alpha}}
+\newcommand{\origK}{\hat{K}}
+\newcommand{\origGamma}{\hat{\gamma}}
+\newcommand{\origA}{\hat{a}}
+\newcommand{\origC}{\hat{c}}
+\newcommand{\origD}{\hat{d}}
+\newcommand{\origG}{\hat{g}}
+\newcommand{\origL}{\hat{L}}
+\newcommand{\origP}{\hat{p}(\theta)}
+
 \begin{document}
 
 \maketitle
@@ -294,13 +306,15 @@ approximated as a type II Holling response\cite{TEWA20134825}.  The
 resulting ordinary differential equation is given by
 \begin{eqnarray}
   \label{eq:initialSystem1}
-  \frac{d}{dt} b(t) & = & \alpha \cdot b(t) (K - b(t)) - \gamma \cdot w(t) \frac{b(t)}{c+b(t)}, \\
+  \frac{d}{dt} \origB(t) & = & \origAlpha \cdot \origB(t) (\origK - \origB(t))
+                               - \origGamma \cdot \origW(t) \frac{\origB(t)}{\origC+\origB(t)}, \\
   \label{eq:initialSystem2}
-  \frac{d}{dt} w(t) & = & -d \cdot w(t) + g \cdot w(t) \frac{b(t)}{c+b(t)}.
+  \frac{d}{dt} \origW(t) & = & -\origD \cdot \origW(t) + \origG \cdot \origW(t) \frac{\origB(t)}{\origC+\origB(t)}.
 \end{eqnarray}
-The density of butterflies is modeled by the function $b(t)$, the
-density of wasps is modeled by the function $w(t)$, and the parameters
-$\alpha$, $K$, $c$, $\gamma$, $d$, and $g$ are positive constants. 
+The density of butterflies is modeled by the function $\origB(t)$, the
+density of wasps is modeled by the function $\origW(t)$, and the
+parameters $\origA$, $\origK$, $\origC$, $\origGamma$, $\origD$, and
+$\origG$ are positive constants.
 
 The butterflies do not behave uniformly with respect to their decision
 to make use of the anti-pheromone, and different butterflies have a
@@ -310,12 +324,12 @@ them as a single population that intermingles in a relatively uniform
 fashion. The propensity for a butterfly to make use of the
 anti-pheromone depends on a new parameter, $\theta$. The value of
 $\theta$ is assumed to vary between $0$ and some positive constant,
-$L$, and the larger the value of $\theta$ the more likely an
+$\origL$, and the larger the value of $\theta$ the more likely an
 individual is to make use of the anti-pheromone. The distribution of
 the population of butterflies is now dependent on both the time and
 the new parameter,
 \begin{eqnarray}
-  b & = & b(t,\theta).
+  \origB & = & \origB(t,\theta).
 \end{eqnarray}
 
 Our first task is to determine how the Holling type II response,
@@ -329,7 +343,7 @@ expression that relates the number of eggs parasitized by a single
 wasp, $Y(\theta)$, which is assumed to be a linear relationship,
 \begin{eqnarray}
   \label{eq:processingTime}
-  Y(\theta) & = & r T_{\mathrm{search}}(\theta) b(t,\theta) p(\theta),
+  Y(\theta) & = & r T_{\mathrm{search}}(\theta) \origB(t,\theta) \origP,
 \end{eqnarray}
 where $T_{\mathrm{search}}$ is the search time required by the wasp to
 find the location of a butterfly's clutch. The motivation for this is
@@ -347,18 +361,18 @@ Substituting the search time found in equation
 predation per wasp,
 \begin{eqnarray}
   \label{eq:waspPredationRate}
-  Y(\theta) & = & \frac{r T_{\mathrm{total}} b(t,\theta) p(\theta)}{1 + \beta r b(t,\theta) p(\theta)}.
+  Y(\theta) & = & \frac{r T_{\mathrm{total}} \origB(t,\theta) \origP}{1 + \beta r \origB(t,\theta) \origP}.
 \end{eqnarray}
 
-In this case $p(\theta)$ represents the impact associated with the use
+In this case $\origP$ represents the impact associated with the use
 of the anti-pheromone. As $\theta$ increases the more likely an
 individual butterfly is to make use of the anti-pheromone and the more
 likely a wasp is to locate and ride along with a butterfly. The
-function, $p(\theta)$, will be used to balance the positive and
+function, $\origP$, will be used to balance the positive and
 negative impacts in the growth as well as the predation terms in
-equation (\ref{eq:initialSystem1}), and the parameters $\alpha$ and
-$\gamma$ provide relative scales for the two impacts. Note that we can
-normalize $p(\theta)$ because it is scaled by the parameter $r$.
+equation (\ref{eq:initialSystem1}), and the parameters $\origAlpha$ and
+$\origGamma$ provide relative scales for the two impacts. Note that we can
+normalize $\origP$ because it is scaled by the parameter $r$.
 
 
 Turning back to equation (\ref{eq:waspPredationRate}), the rate of
@@ -367,10 +381,10 @@ substituted into equation (\ref{eq:initialSystem1}) in the more
 traditional form as
 \begin{eqnarray}
   \label{eq:butterflyPredationRate}
-  \gamma \cdot w(t) \frac{p(\theta) b(t,\theta) }{c +  p(\theta) b(t,\theta)},
+  \origGamma \cdot w(t) \frac{\origP \origB(t,\theta) }{\origC +  \origP \origB(t,\theta)},
 \end{eqnarray}
-where $c=\frac{1}{\beta r}$ and
-$\gamma=\frac{T_{\mathrm{total}}}{\beta}$.  Looking back at the
+where $\origC=\frac{1}{\beta r}$ and
+$\origGamma=\frac{T_{\mathrm{total}}}{\beta}$.  Looking back at the
 original predator-prey system, in particular equation
 (\ref{eq:initialSystem2}), the rate of predation for the single wasp
 population must accommodate the variation across all butterflies, and
@@ -378,7 +392,7 @@ the impact for the wasps must be accumulated across the entire
 butterfly population,
 \begin{eqnarray}
   \label{eq:totalWaspPredationRate}
-  \int^L_{\theta=0} g \cdot w(t) \frac{p(\theta) b(t,\theta) }{c + p(\theta) b(t,\theta)} ~ d\theta.
+  \int^{\origL}_{\theta=0} \origG \cdot \origW(t) \frac{\origP \origB(t,\theta) }{\origC + \origP \origB(t,\theta)} ~ d\theta.
 \end{eqnarray}
 
 We are almost ready to put these terms together for the current
@@ -390,60 +404,60 @@ information relative to the propensity to use the
 anti-aphrodisiac. The result is a coupled PDE and ODE system given by
 \begin{eqnarray}
   \label{eq:odePDE1}
-  \frac{\partial}{\partial t} b(t,\theta) & = &
-      \left[ \alpha \cdot p(\theta) b(t,\theta) (K - b(t,\theta)) \right]
-      - \left[ \gamma \cdot w(t) \frac{p(\theta) b(t,\theta)}{c+p(\theta)b(t,\theta)} \right]
-      + \left[ \mu \frac{\partial^2}{\partial \theta^2} b(t,\theta)\right], \\
+  \frac{\partial}{\partial t} \origB(t,\theta) & = &
+      \left[ \origAlpha \cdot \origP \origB(t,\theta) (\origK - \origB(t,\theta)) \right]
+      - \left[ \origGamma \cdot \origW(t) \frac{\origP \origB(t,\theta)}{\origC+\origP\origB(t,\theta)} \right]
+      + \left[ \mu \frac{\partial^2}{\partial \theta^2} \origB(t,\theta)\right], \\
   \label{eq:odePDE2}
-  \frac{d}{dt} w(t) & = & - \left[ d \cdot w(t) \right]  +
+  \frac{d}{dt} \origW(t) & = & - \left[ \origD \cdot \origW(t) \right]  +
        \left[
-          \int^L_{\theta=0} g \cdot w(t) \frac{p(\theta) b(t,\theta) }{c + p(\theta) b(t,\theta)} ~ d\theta
+          \int^{\origL}_{\theta=0} \origG \cdot \origW(t) \frac{\origP \origB(t,\theta) }{\origC + \origP \origB(t,\theta)} ~ d\theta
        \right].
 \end{eqnarray}
 
-As previously noted, the function $p(\theta)$ is assumed to be an
-increasing function for $0\leq\theta\leq L$, and $p(0)>0$. If
-$p(\theta)$ is zero then equation (\ref{eq:initialSystem1}) will
-indicate no growth and no predation. We can assume $p(0)$ has a
-minimal value, $p(0)=a$, and the relationship has a positive slope. We
+As previously noted, the function $\origP$ is assumed to be an
+increasing function for $0\leq\theta\leq \origL$, and $\hat{p}(0)>0$. If
+$\origP$ is zero then equation (\ref{eq:initialSystem1}) will
+indicate no growth and no predation. We can assume $\hat{p}(0)$ has a
+minimal value, $\hat{p}(0)=a$, and the relationship has a positive slope. We
 examine the simplest such relationship, a linear function.
 
 This function is scaled separately in equations (\ref{eq:odePDE1}) and
 (\ref{eq:odePDE2}), and the function can be scaled in an arbitrary
 manner. We choose to scale the function so that its integral is one,
 \begin{eqnarray*}
-  \int^L_0 p(\theta) ~ d\theta & = & 1,
+  \int^{\origL}_0 \origP ~ d\theta & = & 1,
 \end{eqnarray*}
 and the resulting normalized form is
 \begin{eqnarray}
   \label{eq:linearFormP}
-  p(\theta) & = & a + \frac{2(1-aL)}{L^2} \theta.
+  \origP & = & \origA + \frac{2(1-\origA\origL)}{\origL^2} \theta.
 \end{eqnarray}
 One immediate restriction on the parameters requires that
-$0<aL<1$. The interpretation of the slope is that the greater the
+$0<\origA\origL<1$. The interpretation of the slope is that the greater the
 value of the slope times the maximum value of $\theta$,
-$\frac{2(1-aL)}{L}$, then the greater the variation is in the observed
+$\frac{2(1-\origC\origL)}{\origL}$, then the greater the variation is in the observed
 trait.
 
-The variables can be scaled as $b\rightarrow \bar{B}\hat{b}$,
-$w\rightarrow \bar{W}\hat{w}$, $t\rightarrow \bar{T}\hat{t}$, and
-$\theta\rightarrow \bar{\Theta}\hat{\theta}$. We choose $\bar{B}=K$,
-$\bar{W}=\frac{\alpha K^2 a}{\gamma}$, $\bar{T}=\frac{1}{\alpha K a}$,
-and $\bar{\Theta}=L$. The resulting system can be reduced to the
+The variables can be scaled as $\origB\rightarrow \bar{B}b$,
+$\origW\rightarrow \bar{W}w$, $t\rightarrow \bar{T}\hat{t}$, and
+$\theta\rightarrow \bar{\Theta}\hat{\theta}$. We choose $\bar{B}=\origK$,
+$\bar{W}=\frac{\origAlpha \origK^2 \origA}{\origGamma}$, $\bar{T}=\frac{1}{\origAlpha \origK \origA}$,
+and $\bar{\Theta}=\origL$. The resulting system can be reduced to the
 following form
 \begin{eqnarray}
   \label{eq:scaledodePDE1}
   \frac{\partial}{\partial t} b & = &
-      \hat{p}(\theta) b (1 - b)
-      -  w \frac{\hat{p}(\theta) b}{c+\hat{p}(\theta)b}
+      p(\theta) b (1 - b)
+      -  w \frac{p(\theta) b}{c+p(\theta)b}
       + \mu \frac{\partial^2}{\partial \theta^2} b , \\
   \label{eq:scaledodePDE2}
   \frac{d}{dt} w & = & -d \cdot w +
-      \int^1_{\theta=0} g \cdot w \frac{\hat{p}(\theta) b }{c + \hat{p}(\theta) b} ~ d\theta,
+      \int^1_{\theta=0} g \cdot w \frac{p(\theta) b }{c + p(\theta) b} ~ d\theta,
 \end{eqnarray}
 where
 \begin{eqnarray}
-  \hat{p}(\theta) & = & 1 + m \cdot \theta.
+  p(\theta) & = & 1 + m \cdot \theta.
 \end{eqnarray}
 The domain for the scaled independent variable, $\theta$, is
 $0\leq\theta\leq 1$. As previously noted, the slope, $m$, can be
@@ -453,7 +467,7 @@ With respect to the PDE, Neumann boundary conditions are used in the
 subsequent numerical approximations below,
 \begin{eqnarray*}
   \frac{\partial}{\partial\theta} b(t,\theta) \bigg|_{\theta=0} & = & 0, \\
-  \frac{\partial}{\partial\theta} b(t,\theta) \bigg|_{\theta=L} & = & 0. \\
+  \frac{\partial}{\partial\theta} b(t,\theta) \bigg|_{\theta=1} & = & 0. \\
 \end{eqnarray*}
 A variety of initial
 conditions have been explored, and they are described in the results
@@ -479,11 +493,11 @@ of ODEs:
 \begin{eqnarray}
   \label{eq:scaledODE1}
   \frac{d}{dt} b(t) & = &
-      \hat{p}(\theta) b(t) (1 - b(t))
-      -  w(t) \frac{\hat{p}(\theta) b(t)}{c+\hat{p}(\theta)b(t)}, \\
+      p(\theta) b(t) (1 - b(t))
+      -  w(t) \frac{p(\theta) b(t)}{c+p(\theta)b(t)}, \\
   \label{eq:scaledODE2}
   \frac{d}{dt} w(t) & = & -d \cdot w(t) +
-       g \cdot w(t) \frac{\hat{p}(\theta) b(t) }{c + \hat{p}(\theta) b(t)}.
+       g \cdot w(t) \frac{p(\theta) b(t) }{c + p(\theta) b(t)}.
 \end{eqnarray}
 
 By focusing on the system of ODEs, we can examine an approximation to
@@ -498,23 +512,23 @@ The $b$-nullclines for the system in the $b,w$ plane are given by
 \begin{eqnarray}
   \label{eq:bnullclines}
   b & = & 0, \\
-  w & = & (1-b)(c+b\cdot \hat{p}(\theta)).
+  w & = & (1-b)(c+b\cdot p(\theta)).
 \end{eqnarray}
 The second $b$-nullcline is a parabola opening downward, and the vertex is located at
-$b=\frac{\hat{p}(\theta)-c}{2\hat{p}(\theta)}$. The $w$-nullclines are given by
+$b=\frac{p(\theta)-c}{2p(\theta)}$. The $w$-nullclines are given by
 \begin{eqnarray}
   \label{eq:wnullclines}
   w & = & 0, \\
-  b & = & \frac{cd}{(g-d)\hat{p}(\theta)}.
+  b & = & \frac{cd}{(g-d)p(\theta)}.
 \end{eqnarray}
 The second $w$-nullcline is a vertical line in the $b,w$ plane. In
 order for a fixed point to exist in the first quadrant an immediate
 restriction on the parameters requires that $g>d$.  Given the
 nullclines, the only fixed point that occurs in the first quadrant
-away from an axis is at $b^*=\frac{cd}{\hat{p}(\theta)(g-d)}$ and
-$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{\hat{p}(\theta)(g-d)}\right)$.
+away from an axis is at $b^*=\frac{cd}{p(\theta)(g-d)}$ and
+$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.
 Note that a requirement for a positive value of $w^*$ is that
-$1-\frac{cd}{\hat{p}(\theta)(g-d)}>0$.
+$1-\frac{cd}{p(\theta)(g-d)}>0$.
 
 The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) at the fixed point is
@@ -530,24 +544,24 @@ The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 where
 \begin{eqnarray}
   \label{eq:jacobian}
-  J_{11} & = & \hat{p}(\theta)(1-2b^*) - w^* \hat{p}(\theta)\frac{c}{(c+\hat{p}(\theta)b^*)^2}, \\
-  J_{12} & = & \frac{-b^*\cdot \hat{p}(\theta)}{c+\hat{p}(\theta)b^*}, \\
-  J_{21} & = & \frac{g\cdot c \cdot w^* \cdot \hat{p}(\theta)}{(c+\hat{p}(\theta)b^*)^2}.
+  J_{11} & = & p(\theta)(1-2b^*) - w^* p(\theta)\frac{c}{(c+p(\theta)b^*)^2}, \\
+  J_{12} & = & \frac{-b^*\cdot p(\theta)}{c+p(\theta)b^*}, \\
+  J_{21} & = & \frac{g\cdot c \cdot w^* \cdot p(\theta)}{(c+p(\theta)b^*)^2}.
 \end{eqnarray}
 The eigen values of the Jacobian have negative real part when the
 trace is negative,
 \begin{eqnarray}
-  \hat{p}(\theta)(1-2b) - w \hat{p}(\theta)\frac{c}{(c+\hat{p}(\theta)b)^2} & < & 0.
+  p(\theta)(1-2b) - w p(\theta)\frac{c}{(c+p(\theta)b)^2} & < & 0.
 \end{eqnarray}
 Substituting the values of $b$ and $w$ for the non-trivial fixed point
 yields
 \begin{eqnarray}
   \label{eqn:traceNegative}
-  \frac{\hat{p}(\theta)-c}{2\hat{p}(\theta)} & < & \frac{cd}{(g-d)\hat{p}(\theta)}.
+  \frac{p(\theta)-c}{2p(\theta)} & < & \frac{cd}{(g-d)p(\theta)}.
 \end{eqnarray}
 This expression can be viewed through another substitution. Let
 $u=\frac{cd}{g-d}=\frac{c}{\frac{g}{d}-1}$, and since
-$\hat{p}(\theta)>0$ the relationship in equation
+$p(\theta)>0$ the relationship in equation
 (\ref{eqn:traceNegative}) is now
 \begin{eqnarray}
   \label{eq:stabilityParameters}
@@ -595,7 +609,7 @@ $(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}.
   \caption[Domain of the distributed system in the $u-p$
   plane.]{Domain of the parameters for the distributed system for a
     given set of parameters for $0\leq\theta\leq 1$. The dotted line
-    represents the values of $\hat{p}(\theta)=1+m\theta$ for all
+    represents the values of $p(\theta)=1+m\theta$ for all
     values of $\theta$. The figure on the left is an example of a
     smaller value of $m$ while the figure on the right is an example
     of a larger value of $m$. The whole population shown in the figure
@@ -881,7 +895,7 @@ Let's assume that $b(t),w(t)$ are any positive solution of equations
 (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Due to the
 non-negativity of the solutions it is immediately implied that
 \begin{eqnarray}
-  \frac{d}{dt}b(t) & \leq & \hat{p}\left( \theta \right) b(t)\left( 1-b(t)\right) 
+  \frac{d}{dt}b(t) & \leq & p\left( \theta \right) b(t)\left( 1-b(t)\right) 
 \end{eqnarray}
 This immediately leads to the bound on $b(t)$,
 \begin{eqnarray}
@@ -896,10 +910,10 @@ $\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right) =\frac{d}{dt}%
 \left( R\right) <0$,
 \begin{eqnarray}
   \frac{d}{dt}\left( R\right) & = & \frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right), \\
-                              & = & \left( \hat{p}\left( \theta \right) b(t)
+                              & = & \left( p\left( \theta \right) b(t)
                                     \left( 1-b(t)\right) -
                                      \frac{d}{g}w\left( t\right) \right), \\
-                              & = & \hat{p}\left( \theta \right) b(t)\left(1-b(t)\right) -
+                              & = & p\left( \theta \right) b(t)\left(1-b(t)\right) -
                                     d\left( R-b(t)\right), \\
                               & \leq & 0.
 \end{eqnarray}
@@ -915,10 +929,10 @@ In particular, if $R$ is chosen large enough.
 
 \begin{description}
 \item[1]  If $%
-\hat{p}(\theta )=c+\dfrac{2cd}{g-d},$ then the non trivial equilibrium $%
+p(\theta )=c+\dfrac{2cd}{g-d},$ then the non trivial equilibrium $%
 E^{\ast }=(b^{\ast },w^{\ast })$ is center.
 
-\item[2] If $0<\hat{p}(\theta )<c+\dfrac{2cd}{g-d}$ then the non trivial
+\item[2] If $0<p(\theta )<c+\dfrac{2cd}{g-d}$ then the non trivial
 equilibrium $E^{\ast }=(b^{\ast },w^{\ast })$ is locally stable.
 \end{description}
 
@@ -932,20 +946,20 @@ TraceJ$
 \begin{center}
 $TraceJ=J_{11}=00$
 
-iff $\hat{p}(\theta )b^{\ast }\left( -1+\dfrac{\hat{p}(\theta )w^{\ast }}{%
-\left( c+\hat{p}(\theta )b^{\ast }\right) ^{2}}\right) =0$
+iff $p(\theta )b^{\ast }\left( -1+\dfrac{p(\theta )w^{\ast }}{%
+\left( c+p(\theta )b^{\ast }\right) ^{2}}\right) =0$
 
-iff $\hat{p}(\theta )w^{\ast }=\left( c+\hat{p}(\theta )b^{\ast }\right)
+iff $p(\theta )w^{\ast }=\left( c+p(\theta )b^{\ast }\right)
 ^{2} $
 
-iff $\hat{p}(\theta )\left( 1-b^{\ast }\right) =\left( c+\hat{p}(\theta
+iff $p(\theta )\left( 1-b^{\ast }\right) =\left( c+p(\theta
 )b^{\ast }\right) $
 
-iff $\hat{p}(\theta )-2\hat{p}(\theta )b^{\ast }=c$
+iff $p(\theta )-2p(\theta )b^{\ast }=c$
 
-iff $\hat{p}(\theta )-\dfrac{2cd}{g-d}=c$
+iff $p(\theta )-\dfrac{2cd}{g-d}=c$
 
-if $\hat{p}(\theta )=c+\dfrac{2cd}{g-d}$
+if $p(\theta )=c+\dfrac{2cd}{g-d}$
 \end{center}
 
 \end{proof}
@@ -957,7 +971,7 @@ if $\hat{p}(\theta )=c+\dfrac{2cd}{g-d}$
 
 \caption{Figure shows sample runs of $b(t)$ and $w(t)$ for equations
   (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}), where
-  $\hat{p}(\theta )$ = 3, where the system is stable }
+  $p(\theta )$ = 3, where the system is stable }
       \label{fig:S}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -970,12 +984,12 @@ if $\hat{p}(\theta )=c+\dfrac{2cd}{g-d}$
 
 \caption{Figure shows runs of $b(t)$ and $w(t)$ for equations
   (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) has center
-  equilibrium point, where $\hat{p}(\theta )=3.92$. }
+  equilibrium point, where $p(\theta )=3.92$. }
       \label{fig:l1l2}
 \end{figure}
 
 In the next theorem we aim to investigate the effect of the impact
-associated with the use of the anti-pheromone $\hat{p}(\theta )$ on
+associated with the use of the anti-pheromone $p(\theta )$ on
 the limit cycle dynamics in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}).
 
@@ -989,7 +1003,7 @@ the limit cycle dynamics in equations (\ref{eq:scaledODE1}) and
 
 \begin{center}
 $%
-\hat{p}(\theta )>c+\dfrac{2cd}{g-d}>0,$
+p(\theta )>c+\dfrac{2cd}{g-d}>0,$
 \end{center}
 
 then the system possesses at least one closed loop in the first quadrant.
@@ -1011,7 +1025,7 @@ then the system possesses at least one closed loop in the first quadrant.
 
 \caption{Figure shows sample runs of $b(t)$ and $w(t)$ for equations
   (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) , where
-  $\hat{p}(\theta )$ = 4, where the system has a limit cycle }
+  $p(\theta )$ = 4, where the system has a limit cycle }
       \label{fig:lim}
 \end{figure}
 
@@ -1072,8 +1086,8 @@ Galerkin approximation and a discrete inner product for equation
 \begin{eqnarray}
   \sum_{j=0}^N \sum_{i=0}^N  \hat{b}_i'(t) \phi_i(\theta_j) \phi_k(\theta_j) w_j
   & = &
-  \sum_{j=0}^N \sum_{i=0}^N \hat{p}(\theta_j)  \hat{b}_i(t) (1 - \hat{b}_i(t) ) \phi_i(\theta_j) \phi_k(\theta_j) w_j \\
-  & &  -  \sum_{j=0}^N w(t) \frac{\hat{p}(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j) }{c+\hat{p}(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j)} \phi_k(\theta_j) w_j \nonumber \\ 
+  \sum_{j=0}^N \sum_{i=0}^N p(\theta_j)  \hat{b}_i(t) (1 - \hat{b}_i(t) ) \phi_i(\theta_j) \phi_k(\theta_j) w_j \\
+  & &  -  \sum_{j=0}^N w(t) \frac{p(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j) }{c+p(\theta_j) \sum_{i=0}^N \hat{b}_i(t) \phi_i(\theta_j)} \phi_k(\theta_j) w_j \nonumber \\ 
   & & - \sum_{j=0}^N \mu  \sum_{i=0}^N \hat{b}_i(t) \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j, \nonumber
 \end{eqnarray}
 for all integer values of $k$ from $0$ to $N$ inclusive.  The basis
@@ -1082,8 +1096,8 @@ equations can be reduced to
 \begin{eqnarray}
   \hat{b}_k'(t) 
   & = &
-        \hat{p}(\theta_j) \hat{b}_k(t) (1 - \hat{b}_k(t) )
-        -  w(t) \frac{\hat{p}(\theta_k) \hat{b}_k(t)) }{c+\hat{p}(\theta_k)  \hat{b}_k(t) }  
+        p(\theta_j) \hat{b}_k(t) (1 - \hat{b}_k(t) )
+        -  w(t) \frac{p(\theta_k) \hat{b}_k(t)) }{c+p(\theta_k)  \hat{b}_k(t) }  
    - \frac{\mu}{w_k} \sum_{i=0}^N \hat{b}_i(t) \left( \sum_{j=0}^N  \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j \right).
 \end{eqnarray}
 
