@@ -30,6 +30,7 @@
 \newcommand{\origL}{\hat{L}}
 \newcommand{\origP}[1]{\hat{p}(#1)}
 \newcommand{\origTheta}{\hat{\theta}}
+\newcommand{\origT}{\hat{t}}
 
 \begin{document}
 
@@ -307,15 +308,15 @@ approximated as a type II Holling response\cite{TEWA20134825}.  The
 resulting ordinary differential equation is given by
 \begin{eqnarray}
   \label{eq:initialSystem1}
-  \frac{d}{dt} \origB(t) & = & \origAlpha \cdot \origB(t) (\origK - \origB(t))
-                               - \origGamma \cdot \origW(t) \frac{\origB(t)}{\origC+\origB(t)}, \\
+  \frac{d}{d\origT} \origB(\origT) & = & \origAlpha \cdot \origB(\origT) (\origK - \origB(\origT))
+                               - \origGamma \cdot \origW(\origT) \frac{\origB(\origT)}{\origC+\origB(\origT)}, \\
   \label{eq:initialSystem2}
-  \frac{d}{dt} \origW(t) & = & -\origD \cdot \origW(t) + \origG \cdot \origW(t) \frac{\origB(t)}{\origC+\origB(t)}.
+  \frac{d}{d\origT} \origW(\origT) & = & -\origD \cdot \origW(\origT) + \origG \cdot \origW(\origT) \frac{\origB(\origT)}{\origC+\origB(\origT)}.
 \end{eqnarray}
-The density of butterflies is modeled by the function $\origB(t)$, the
-density of wasps is modeled by the function $\origW(t)$, and the
-parameters $\origA$, $\origK$, $\origC$, $\origGamma$, $\origD$, and
-$\origG$ are positive constants.
+The density of butterflies is modeled by the function
+$\origB(\origT)$, the density of wasps is modeled by the function
+$\origW(\origT)$, and the parameters $\origA$, $\origK$, $\origC$,
+$\origGamma$, $\origD$, and $\origG$ are positive constants.
 
 The butterflies do not behave uniformly with respect to their decision
 to make use of the anti-pheromone, and different butterflies have a
@@ -330,7 +331,7 @@ individual is to make use of the anti-pheromone. The distribution of
 the population of butterflies is now dependent on both the time and
 the new parameter,
 \begin{eqnarray}
-  \origB & = & \origB(t,\origTheta).
+  \origB & = & \origB(\origT,\origTheta).
 \end{eqnarray}
 
 Our first task is to determine how the Holling type II response,
@@ -344,7 +345,7 @@ expression that relates the number of eggs parasitized by a single
 wasp, $Y(\origTheta)$, which is assumed to be a linear relationship,
 \begin{eqnarray}
   \label{eq:processingTime}
-  Y(\origTheta) & = & r T_{\mathrm{search}}(\origTheta) \origB(t,\origTheta) \origP{\origTheta},
+  Y(\origTheta) & = & r T_{\mathrm{search}}(\origTheta) \origB(\origT,\origTheta) \origP{\origTheta},
 \end{eqnarray}
 where $T_{\mathrm{search}}$ is the search time required by the wasp to
 find the location of a butterfly's clutch. The motivation for this is
@@ -362,7 +363,7 @@ Substituting the search time found in equation
 predation per wasp,
 \begin{eqnarray}
   \label{eq:waspPredationRate}
-  Y(\origTheta) & = & \frac{r T_{\mathrm{total}} \origB(t,\origTheta) \origP{\origTheta}}{1 + \beta r \origB(t,\origTheta) \origP{\origTheta}}.
+  Y(\origTheta) & = & \frac{r T_{\mathrm{total}} \origB(\origT,\origTheta) \origP{\origTheta}}{1 + \beta r \origB(\origT,\origTheta) \origP{\origTheta}}.
 \end{eqnarray}
 
 In this case $\origP{\origTheta}$ represents the impact associated with the use
@@ -382,7 +383,7 @@ substituted into equation (\ref{eq:initialSystem1}) in the more
 traditional form as
 \begin{eqnarray}
   \label{eq:butterflyPredationRate}
-  \origGamma \cdot w(t) \frac{\origP{\origTheta} \origB(t,\origTheta) }{\origC +  \origP{\origTheta} \origB(t,\origTheta)},
+  \origGamma \cdot w(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta) }{\origC +  \origP{\origTheta} \origB(\origT,\origTheta)},
 \end{eqnarray}
 where $\origC=\frac{1}{\beta r}$ and
 $\origGamma=\frac{T_{\mathrm{total}}}{\beta}$.  Looking back at the
@@ -393,7 +394,7 @@ the impact for the wasps must be accumulated across the entire
 butterfly population,
 \begin{eqnarray}
   \label{eq:totalWaspPredationRate}
-  \int^{\origL}_{\origTheta=0} \origG \cdot \origW(t) \frac{\origP{\origTheta} \origB(t,\origTheta) }{\origC + \origP{\origTheta} \origB(t,\origTheta)} ~ d\origTheta.
+  \int^{\origL}_{\origTheta=0} \origG \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta) }{\origC + \origP{\origTheta} \origB(\origT,\origTheta)} ~ d\origTheta.
 \end{eqnarray}
 
 We are almost ready to put these terms together for the current
@@ -405,14 +406,14 @@ information relative to the propensity to use the
 anti-aphrodisiac. The result is a coupled PDE and ODE system given by
 \begin{eqnarray}
   \label{eq:odePDE1}
-  \frac{\partial}{\partial t} \origB(t,\origTheta) & = &
-      \left[ \origAlpha \cdot \origP{\origTheta} \origB(t,\origTheta) (\origK - \origB(t,\origTheta)) \right]
-      - \left[ \origGamma \cdot \origW(t) \frac{\origP{\origTheta} \origB(t,\origTheta)}{\origC+\origP{\origTheta}\origB(t,\origTheta)} \right]
-      + \left[ \mu \frac{\partial^2}{\partial \origTheta^2} \origB(t,\origTheta)\right], \\
+  \frac{\partial}{\partial \origT} \origB(\origT,\origTheta) & = &
+      \left[ \origAlpha \cdot \origP{\origTheta} \origB(\origT,\origTheta) (\origK - \origB(\origT,\origTheta)) \right]
+      - \left[ \origGamma \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta)}{\origC+\origP{\origTheta}\origB(\origT,\origTheta)} \right]
+      + \left[ \mu \frac{\partial^2}{\partial \origTheta^2} \origB(\origT,\origTheta)\right], \\
   \label{eq:odePDE2}
-  \frac{d}{dt} \origW(t) & = & - \left[ \origD \cdot \origW(t) \right]  +
+  \frac{d}{d\origT} \origW(\origT) & = & - \left[ \origD \cdot \origW(\origT) \right]  +
        \left[
-          \int^{\origL}_{\origTheta=0} \origG \cdot \origW(t) \frac{\origP{\origTheta} \origB(t,\origTheta) }{\origC + \origP{\origTheta} \origB(t,\origTheta)} ~ d\origTheta
+          \int^{\origL}_{\origTheta=0} \origG \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta) }{\origC + \origP{\origTheta} \origB(\origT,\origTheta)} ~ d\origTheta
        \right].
 \end{eqnarray}
 
@@ -448,7 +449,7 @@ and $\bar{\Theta}=\origL$. The resulting system can be reduced to the
 following form
 \begin{eqnarray}
   \label{eq:scaledodePDE1}
-  \frac{\partial}{\partial t} b & = &
+  \frac{\partial}{\partial \origT} b & = &
       p(\theta) b (1 - b)
       -  w \frac{p(\theta) b}{c+p(\theta)b}
       + \mu \frac{\partial^2}{\partial \theta^2} b , \\
