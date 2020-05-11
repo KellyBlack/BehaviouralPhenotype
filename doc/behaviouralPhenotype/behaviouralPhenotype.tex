@@ -563,7 +563,7 @@ $1-\frac{cd}{p(\theta)(g-d)}>0$.
 The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) at the fixed point is
 \begin{eqnarray}
-  J & = &
+  J ~ \bigg|_{(b^*,w^*)} & = &
           \left[
           \begin{array}{rr}
             J_{11} & J_{12} \\
@@ -581,7 +581,7 @@ where
 The eigen values of the Jacobian have negative real part when the
 trace is negative,
 \begin{eqnarray}
-  p(\theta)(1-2b) - w p(\theta)\frac{c}{(c+p(\theta)b)^2} & < & 0.
+  p(\theta)(1-2b^*) - w^* p(\theta)\frac{c}{(c+p(\theta)b^*)^2} & < & 0.
 \end{eqnarray}
 Substituting the values of $b$ and $w$ for the non-trivial fixed point
 yields
@@ -832,7 +832,7 @@ The values of the entries in the matrix are
                \frac{w\cdot c \cdot p(\theta)}{\left( c + p(\theta)b \right)^2}, \\
   J_{12} & = & -\frac{p(\theta)b}{c+p(\theta)b}, \\
   J_{21} & = & g\cdot c \cdot  p(\theta) \frac{1}{\left(c+p(\theta)b\right)^2}, \\
-  J_{22} & = & -d + g\cdot c \cdot  p(\theta) \frac{1}{c+p(\theta)b}.
+  J_{22} & = & -d + g\cdot b \cdot  p(\theta) \frac{1}{c+p(\theta)b}.
 \end{eqnarray*}
 
 For the fixed point at the origin, the Jacobian can be expressed as 
