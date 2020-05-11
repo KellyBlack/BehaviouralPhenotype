@@ -191,7 +191,7 @@ preliminary insights into the resulting system.
 The example of social spiders was briefly discussed earlier, but the
 model developed here focuses on the interaction between butterflies,
 \textit{Pieris brasicae}, and \textit{Trichogramma} wasps that prey on
-the butterflies' eggs. The interactions between these populations has
+the butterflies' eggs. The interactions between these populations have
 received a good deal of attention
 \cite{PMC2797620,doi:10.1111/j.1439-0418.1986.tb00834.x,Figueroa2010AttractionOT,10.3389/fpls.2019.01768}. We
 focus on the results of one source in particular Huigens \textit{et
@@ -210,7 +210,7 @@ apply another pheromone, referred to as an anti-aphrodisiac, that will
 reduce the effectiveness of the original pheromone emitted by the
 female.
 
-The downside to the use of the pheremone is that it exposes the eggs
+The downside to the use of the pheromone is that it exposes the eggs
 to a greater risk of predation. Some species of \textit{Trichogramma}
 wasps parasitize the eggs of the butterflies. Sometimes they
 physically attach themselves to a butterfly and ride it until the
@@ -218,7 +218,7 @@ butterfly begins to attach their eggs in a preferable location. The
 wasps are able to detect the presence of the anti-aphrodisiac which is
 correlated with an increased probability that a butterfly with the
 anti-aphrodisiac is more likely to lay eggs. In response, the wasps
-are more likely to ride on a butterfly if it detects the
+are more likely to ride on a butterfly if they detect the
 anti-aphrodisiac. It is important to note this method of predation on
 a butterfly's eggs requires a non-trivial time commitment with respect
 to handling and detecting the presence of the eggs.
@@ -267,10 +267,10 @@ within a given model. In this initial examination of the approach we
 employ the simplest option and assume a linear impact with respect to
 the new independent variable. In particular, for the interactions
 between the butterflies and wasps we track the population densities of
-the two populations. Due to the time scale of interactions between the
-butterflies and wasps as well as direct mortality of the interaction
-we assume a predator-prey relationship rather than a disease like
-relationship modeled in other parasitic systems.
+the two populations. The interactions between the two species result
+in immediate mortality on the potential offspring, and we assume a
+predator-prey relationship rather than a disease like relationship
+modeled in other parasitic systems.
 
 The system is adapted from Tewa, \textit{et al}\cite{TEWA20134825}. We
 first focus on the model as a system of ordinary differential
@@ -278,13 +278,13 @@ equations and later adapt it for the distributed system described
 above. The basic assumption is that in the absence of predation the
 butterfly population will act in a way consistent with the logistic
 equation. In the absence of any butterflies the wasps will slowly die
-out. For this particular system, however, \textit{brasicae} is a
-generalist predator, and this is an assumption that should be
-revisited beyond this initial investigation. Finally, the predation by
-\textit{brasicae} requires substantial time for the wasp to follow the
-moths and oviposit its eggs, and the rate of predation can be
-approximated as a type II response\cite{TEWA20134825}.  The resulting
-ordinary differential equation is given by
+out. For this particular system, however, the \textit{Trichogramma}
+wasps are generalist predators, and this is an assumption that should
+be revisited beyond this initial investigation.  To account for the
+substantial time the wasps require to follow the butterflies and allow
+them to oviposit their eggs, we assume the rate of predation to be
+approximated as a type II Holling response\cite{TEWA20134825}.  The
+resulting ordinary differential equation is given by
 \begin{eqnarray}
   \label{eq:initialSystem1}
   \frac{d}{dt} b(t) & = & \alpha \cdot b(t) (K - b(t)) - \gamma \cdot w(t) \frac{b(t)}{c+b(t)}, \\
@@ -295,13 +295,14 @@ The density of butterflies is modeled by the function $b(t)$, the
 density of wasps is modeled by the function $w(t)$, and the parameters
 $\alpha$, $\gamma$, $d$, and $g$ are positive constants. 
 
-For this situation, though, there is a distribution associated with
-the butterflies' propensity to make use of the anti-pheromone. We do
-not model the male and female populations separately, but treat them
-as a single population that intermingles in a relatively uniform
+The butterflies do not behave uniformly with respect to their decision
+to make use of the anti-pheromone, and different butterflies have a
+different propensity to use the anti-pheromone. In this treatment, we
+do not model the male and female populations separately, but treat
+them as a single population that intermingles in a relatively uniform
 fashion. The propensity for a butterfly to make use of the
 anti-pheromone depends on a new parameter, $\theta$. The value of
-$\theta$ is assume to vary between $0$ and some positive constant,
+$\theta$ is assumed to vary between $0$ and some positive constant,
 $L$, and the larger the value of $\theta$ the more likely an
 individual is to make use of the anti-pheromone. The distribution of
 the population of butterflies is now dependent on both the time and
@@ -310,9 +311,9 @@ the new parameter,
   b & = & b(t,\theta).
 \end{eqnarray}
 
-Our first task is to determine how the type II, or Holling type
-response, should be expressed in this new context. Formal derivations
-of the response function for the case given in equations
+Our first task is to determine how the Holling type II response,
+should be expressed in this new context. Formal derivations of the
+response function for the case given in equations
 (\ref{eq:initialSystem1}) and (\ref{eq:initialSystem2}) are provided
 bye Dawes and Sousa\cite{DAWES201311}.  In the derivation here,
 however, we follow the approach in Holling's original
@@ -359,14 +360,15 @@ substituted into equation (\ref{eq:initialSystem1}) in the more
 traditional form as
 \begin{eqnarray}
   \label{eq:butterflyPredationRate}
-  \gamma \cdot w(t) \frac{p(\theta) b(t,\theta) }{c +  p(\theta) b(t,\theta)}
+  \gamma \cdot w(t) \frac{p(\theta) b(t,\theta) }{c +  p(\theta) b(t,\theta)},
 \end{eqnarray}
-The values of the constants $c$ and $\gamma$ are the result of
-combining the terms that include $r$, $\beta$, and $T_\mathrm{total}$
-in equation (\ref{eq:waspPredationRate}).  Equation
-(\ref{eq:initialSystem2}), though, is the rate of predation for the
-single wasp population, so the impact for the wasps must be
-accumulated across the entire butterfly population,
+where $c=\frac{1}{\beta r}$ and
+$\gamma=\frac{T_{\mathrm{total}}}{\beta}$.  Looking back at the
+original predator-prey system, in particular equation
+(\ref{eq:initialSystem2}), the rate of predation for the single wasp
+population must accommodate the variation across all butterflies, and
+the impact for the wasps must be accumulated across the entire
+butterfly population,
 \begin{eqnarray}
   \label{eq:totalWaspPredationRate}
   \int^L_{\theta=0} g \cdot w(t) \frac{p(\theta) b(t,\theta) }{c + p(\theta) b(t,\theta)} ~ d\theta.
@@ -374,7 +376,7 @@ accumulated across the entire butterfly population,
 
 We are almost ready to put these terms together for the current
 model. It is assumed that the mixing and interactions within the
-butterfly population is uniform, and the diffusion of the trait
+butterfly population are uniform, and the diffusion of the trait
 roughly follows Fick's law\cite{logan2006applied}. Here, a second
 order derivative term approximates the sharing of the genetic
 information relative to the propensity to use the
@@ -382,24 +384,29 @@ anti-aphrodisiac. The result is a coupled PDE and ODE system given by
 \begin{eqnarray}
   \label{eq:odePDE1}
   \frac{\partial}{\partial t} b(t,\theta) & = &
-      \alpha \cdot p(\theta) b(t,\theta) (K - b(t,\theta))
-      - \gamma \cdot w(t) \frac{p(\theta) b(t,\theta)}{c+p(\theta)b(t,\theta)}
-      + \mu \frac{\partial^2}{\partial \theta^2} b(t,\theta) , \\
+      \left[ \alpha \cdot p(\theta) b(t,\theta) (K - b(t,\theta)) \right]
+      - \left[ \gamma \cdot w(t) \frac{p(\theta) b(t,\theta)}{c+p(\theta)b(t,\theta)} \right]
+      + \left[ \mu \frac{\partial^2}{\partial \theta^2} b(t,\theta)\right], \\
   \label{eq:odePDE2}
-  \frac{d}{dt} w(t) & = & -d \cdot w(t) +
-      \int^L_{\theta=0} g \cdot w(t) \frac{p(\theta) b(t,\theta) }{c + p(\theta) b(t,\theta)} ~ d\theta.
+  \frac{d}{dt} w(t) & = & - \left[ d \cdot w(t) \right]  +
+       \left[
+          \int^L_{\theta=0} g \cdot w(t) \frac{p(\theta) b(t,\theta) }{c + p(\theta) b(t,\theta)} ~ d\theta
+       \right].
 \end{eqnarray}
 
 As previously noted, the function $p(\theta)$ is assumed to be an
-increasing function for $0\leq\theta\leq L$, and $p(0)>0$. If it is
-zero then equation (\ref{eq:initialSystem1}) will indicate no growth
-and no predation. We can assume $p(0)$ is a minimal value, $p(0)=a$,
-and the relationship has a positive slope. We examine the simplest
-such relationship, a linear function.
+increasing function for $0\leq\theta\leq L$, and $p(0)>0$. If
+$p(\theta)$ is zero then equation (\ref{eq:initialSystem1}) will
+indicate no growth and no predation. We can assume $p(0)$ has a
+minimal value, $p(0)=a$, and the relationship has a positive slope. We
+examine the simplest such relationship, a linear function.
 
 This function is scaled separately in equations (\ref{eq:odePDE1}) and
 (\ref{eq:odePDE2}), and the function can be scaled in an arbitrary
 manner. We choose to scale the function so that its integral is one,
+\begin{eqnarray*}
+  \int^L_0 p(\theta) ~ d\theta & = & 1,
+\end{eqnarray*}
 and the resulting normalized form is
 \begin{eqnarray}
   \label{eq:linearFormP}
@@ -407,7 +414,8 @@ and the resulting normalized form is
 \end{eqnarray}
 One immediate restriction on the parameters requires that
 $0<aL<1$. The interpretation of the slope is that the greater the
-value of the slope then the greater the variation is in the observed
+value of the slope times the maximum value of $\theta$,
+$\frac{2(1-aL)}{L}$, then the greater the variation is in the observed
 trait.
 
 The variables can be scaled as $b\rightarrow \bar{B}\hat{b}$,
@@ -435,7 +443,12 @@ $0\leq\theta\leq 1$. As previously noted, the slope, $m$, can be
 interpreted to indicate how much variation in the trait is present in
 a population. The larger $m$ is the greater the amount of variation.
 With respect to the PDE, Neumann boundary conditions are used in the
-subsequent numerical approximations below. A variety of initial
+subsequent numerical approximations below,
+\begin{eqnarray*}
+  \frac{\partial}{\partial\theta} b(t,\theta) \bigg|_{\theta=0} & = & 0, \\
+  \frac{\partial}{\partial\theta} b(t,\theta) \bigg|_{\theta=L} & = & 0. \\
+\end{eqnarray*}
+A variety of initial
 conditions have been explored, and they are described in the results
 section, section \ref{section:results}.
 
@@ -453,8 +466,9 @@ system, and a more complete analysis is provided in Appendices
 
 The simplified system is found by examining an ODE with a similar form
 as the distributed system. By assuming that the distribution of the
-butterflies is a constant consistent with a single value of $\theta$,
-the system is approximated by the following system of ODEs:
+butterflies is a constant, which is consistent with using a single
+value of $\theta$, the system is approximated by the following system
+of ODEs:
 \begin{eqnarray}
   \label{eq:scaledODE1}
   \frac{d}{dt} b(t) & = &
@@ -473,7 +487,7 @@ nontrivial fixed point. More details about the other fixed points is
 provided in Appendix \ref{appendix:otherFixedPoints}
 
 We first determine the nullclines for the system.
-The $b$-nullclines for the system in the $b-w$ plane are given by
+The $b$-nullclines for the system in the $b,w$ plane are given by
 \begin{eqnarray}
   \label{eq:bnullclines}
   b & = & 0, \\
@@ -486,13 +500,14 @@ $b=\frac{\hat{p}(\theta)-c}{2\hat{p}(\theta)}$. The $w$-nullclines are given by
   w & = & 0, \\
   b & = & \frac{cd}{(g-d)\hat{p}(\theta)}.
 \end{eqnarray}
-The second $w$-nullcline is a vertical line in the $b-w$ plane. In
+The second $w$-nullcline is a vertical line in the $b,w$ plane. In
 order for a fixed point to exist in the first quadrant an immediate
 restriction on the parameters requires that $g>d$.  Given the
 nullclines, the only fixed point that occurs in the first quadrant
-away from an axis is at $b=\frac{cd}{\hat{p}(\theta)(g-d)}$ and
-$w=\left(\frac{cd}{g-d}+c\right)
-\left(1-\frac{cd}{\hat{p}(\theta)(g-d)}\right)$.
+away from an axis is at $b^*=\frac{cd}{\hat{p}(\theta)(g-d)}$ and
+$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{\hat{p}(\theta)(g-d)}\right)$.
+Note that a requirement for a positive value of $w^*$ is that
+$1-\frac{cd}{\hat{p}(\theta)(g-d)}>0$.
 
 The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) at the fixed point is
@@ -508,9 +523,9 @@ The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 where
 \begin{eqnarray}
   \label{eq:jacobian}
-  J_{11} & = & \hat{p}(\theta)(1-2b) - w \hat{p}(\theta)\frac{c}{(c+\hat{p}(\theta)b)^2}, \\
-  J_{12} & = & \frac{-b\cdot \hat{p}(\theta)}{c+\hat{p}(\theta)b}, \\
-  J_{21} & = & \frac{g\cdot c \cdot w \cdot \hat{p}(\theta)}{(c+\hat{p}(\theta)b)^2}.
+  J_{11} & = & \hat{p}(\theta)(1-2b^*) - w^* \hat{p}(\theta)\frac{c}{(c+\hat{p}(\theta)b^*)^2}, \\
+  J_{12} & = & \frac{-b^*\cdot \hat{p}(\theta)}{c+\hat{p}(\theta)b^*}, \\
+  J_{21} & = & \frac{g\cdot c \cdot w^* \cdot \hat{p}(\theta)}{(c+\hat{p}(\theta)b^*)^2}.
 \end{eqnarray}
 The eigen values of the Jacobian have negative real part when the
 trace is negative,
