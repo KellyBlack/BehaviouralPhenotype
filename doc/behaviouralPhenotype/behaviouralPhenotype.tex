@@ -665,18 +665,18 @@ or
 \end{eqnarray}
 
 A feasible region that implies stability of the fixed point can be
-determined in the $u-p$ plane. If the parameters result in a point in
+determined in the $u,p$ plane. If the parameters result in a point in
 the region bounded by equation (\ref{eq:stabilityParameters}),
 equation (\ref{eq:boundFixedPoint}), and $v>0$ then the resulting
 fixed point will be linearly stable. A graphical depiction of the
-stability region in the $u-p$ plane is shown in Figure
+stability region in the $u,p$ plane is shown in Figure
 \ref{fig:uvStabilityRegion}.
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=10cm]{FIGURES/odeStability-uv-plane.pdf}
-  \caption[Stability region in the $u-p$ plane.]{Graphical view of the
-    combined feasible and stability region in the $u-p$ plane.}
+  \caption[Stability region in the $u,p$ plane.]{Graphical view of the
+    combined feasible and stability region in the $u,p$ plane.}
   \label{fig:uvStabilityRegion}
 \end{figure}
 
@@ -684,14 +684,14 @@ In the context of the full, distributed system in equation
 (\ref{eq:scaledodePDE1}) and equation (\ref{eq:scaledodePDE2}) the
 domain of $\theta$ is $0\leq\theta\leq 1$. For a given set of
 parameters the value of $u$ is fully determined. The values of $p$
-vary from $p=1$ to $p=1+m$.  The corresponding region in the $u-p$
+vary from $p=1$ to $p=1+m$.  The corresponding region in the $u,p$
 plane is along a horizontal line segment from $(1,u)$ to
 $(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}.
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=12cm]{FIGURES/odeStability-uv-plane-Line.pdf}
-  \caption[Domain of the distributed system in the $u-p$
+  \caption[Domain of the distributed system in the $u,p$
   plane.]{Domain of the parameters for the distributed system for a
     given set of parameters for $0\leq\theta\leq 1$. The dotted line
     represents the values of $p(\theta)=1+m\theta$ for all
