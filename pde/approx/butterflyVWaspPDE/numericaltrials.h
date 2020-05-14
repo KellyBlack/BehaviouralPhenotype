@@ -74,6 +74,22 @@ protected:
 
 private:
 
+    bool checkRepeating(
+            Butterflies *theButterflies,
+            double &prevButterflyDensity,
+            double &maxButterfliesDensity,
+            double &minButterfliesDensity,
+            double &prevButterflyCheck,
+            double &prevWaspDensity,
+            double &maxWaspDensity,
+            double &minWaspDensity,
+            double &prevWaspCheck,
+            int &prevCycleClose,
+            int &prevValueClose,
+            int &countButterflyIncreasing,
+            int &countWaspIncreasing
+            );
+
 
 
 };

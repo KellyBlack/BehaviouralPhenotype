@@ -63,7 +63,7 @@ results <- plotResults(a)
 #     ylab='Butterfly Density',
 #     col=2,lwd=2)
 
-ode <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/rk45.csv')
+ode <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/rk45_c1.1.csv')
 odeOrder <- sort(ode$m,index.return=TRUE)
 points(ode$m[odeOrder$ix],ode$minButterfly[odeOrder$ix],type='l',lty=3,lwd=4)
 points(ode$m[odeOrder$ix],ode$maxButterfly[odeOrder$ix],type='l',lty=3,lwd=4)
