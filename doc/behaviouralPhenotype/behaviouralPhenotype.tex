@@ -14,7 +14,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
-
+\usepackage{xcolor}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newcommand{\origB}{\hat{b}}
@@ -156,8 +156,8 @@ general phenomena.
 
 A number of authors have noted the importance of the role of variation
 in a species' habits or
-genetics\cite{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016,FARINE2015609}. We
-begin this discussion with the survey provided by Kortet, \textit{et
+genetics\cite{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016}, \textcolor{red}{sometimes referred to as group phenotypic composition \cite{FARINE2015609}, observed in many species of animals such as sheep, barnacle geese, ants, spiders, fish and wild birds among others \cite{sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1086/687235,doi:10.1098/rspb.2014.1016,doi:10.1037/0735-7036.107.3.250}}.
+We begin this discussion with the survey provided by Kortet, \textit{et
   al}\cite{doi:10.1111/j.1461-0248.2010.01536.x}. The authors note
 that within any large group of animals certain behaviours can vary
 across the population. They go on to propose that the diversity of
@@ -179,12 +179,7 @@ individuals based on the individuals' behaviours.
 % https://www.semanticscholar.org/paper/Fish-behavioral-types-and-their-ecological-Mittelbach-Ballew/a381cb0b64a8107c694454e940fd7972263a8b77
 % https://www.semanticscholar.org/paper/Are-most-samples-of-animals-systematically-biased-Biro/72eaa11f60d3b211f34ab04ff95211307978223b
 
-TODO: Need overview of source \cite{doi:10.1098/rspb.2014.1016} and
-\cite{FARINE2015609}.
-
-\textit{The first paper\cite{doi:10.1098/rspb.2014.1016} discusses the effect of personality traits (Reactive (low-risk behavior) vs proactive (high-risk behavior) on collective movements and feeding behavior of wild birds. }
-
-\textit{The second paper\cite{FARINE2015609} in particular uses a very nice term - GPC or group phenotypic composition. From my take on it, it is analogous to the population distribution with respect to theta from your model.}
+\textcolor{red}{Aplin, Lucy M., et al. \cite{doi:10.1098/rspb.2014.1016} studied the effect of individual-level personality traits on the collective movement and feeding behavior of wild birds. In particular, they investigated how patch-level behaviour changes for groups with different personality types - reactive individuals that displayed low-risk behavior and proactive individuals that displayed high-risk behavior. They found that while reactive individuals were more likely to choose a single foraging location to minimize the risk of predation, and proactive individuals were more likely to disperse, the groups that contained a combination of the two types showed both group cohesiveness and patch exploration. This result indicates that behavioral variation can lead to better overall success, as was previously found in various other animals such as ants and spiders \cite{ doi:10.1086/687235,modlmeier2011productivity,modlmeier2012diverse}.}
 
 A wide array of approaches to model the phenomena have been
 explored. The different approaches include stochastic
@@ -347,7 +342,7 @@ between the butterflies and wasps we track the population densities of
 the two populations. The interactions between the two species result
 in immediate mortality on the potential offspring, and we assume a
 predator-prey relationship rather than a disease like relationship
-modeled in other parasitic systems.
+modeled in other parasitic systems. 
 
 The system is adapted from Tewa, \textit{et al}\cite{TEWA20134825}. We
 first focus on the model as a system of ordinary differential
@@ -476,8 +471,8 @@ anti-aphrodisiac. The result is a coupled PDE and ODE system given by
 As previously noted, the function $\origP{\origTheta}$ is assumed to be an
 increasing function for $0\leq\origTheta\leq \origL$, and $\origP{0}>0$. If
 $\origP{\origTheta}$ is zero then equation (\ref{eq:initialSystem1}) will
-indicate no growth and no predation. We can assume $\origP{0}$ has a
-minimal value, $\origP{0}=a$, and the relationship has a positive slope. We
+indicate no growth and no predation. We can assume $\origP{\origTheta}$ has a
+minimal value, $a>0$,  at $\origTheta = 0$, i.e. $\origP{0}=a$, and the relationship has a positive slope. We
 examine the simplest such relationship, a linear function.
 
 This function is scaled separately in equations (\ref{eq:odePDE1}) and
@@ -492,10 +487,8 @@ and the resulting normalized form is
   \origP{\origTheta} & = & \origA + \frac{2(1-\origA\origL)}{\origL^2} \origTheta.
 \end{eqnarray}
 One immediate restriction on the parameters requires that
-$0<\origA\origL<1$. The interpretation of the slope is that the greater the
-value of the slope times the maximum value of $\origTheta$,
-$\frac{2(1-\origC\origL)}{\origL}$, then the greater the variation is in the observed
-trait.
+$0<\origA\origL<1$. The total variation in the observed trait is given by 
+$\origP{origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
 
 \begin{table}[h]
   \centering
@@ -515,7 +508,7 @@ trait.
     $m$   & $\frac{2(1-\origA\origL)}{\origA\origL}$, \\  [10pt]
     $c$   & $\frac{\origC}{\origK\origA}$ \\  [10pt]
     $d$   & $\frac{\origD}{\origAlpha\origK\origA}$ \\  [10pt]
-    $\mu$ & $\frac{\origMu}{\origAlpha\origK\origA\origL^3}$  \\  [10pt]
+    $\mu$ & $\frac{\origMu}{\origAlpha\origK\origA\origL^2}$  \\  [10pt]
     $g$   & $\frac{\hat{\origG}}{\origAlpha\origK\origA}$
   \end{tabular}
   \caption{New values of parameters after scaling}
@@ -613,7 +606,7 @@ nullclines, the only fixed point that occurs in the first quadrant
 away from an axis is at $b^*=\frac{cd}{p(\theta)(g-d)}$ and
 $w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.
 Note that a requirement for a positive value of $w^*$ is that
-$1-\frac{cd}{p(\theta)(g-d)}>0$.
+$1-\frac{cd}{p(\theta)(g-d)}>0$.  When $g>d$, this inequality gives $g-d >\frac{cd}{p(\theta)} >0$
 
 The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) at the fixed point is
@@ -633,7 +626,7 @@ where
   J_{12} & = & \frac{-b^*\cdot p(\theta)}{c+p(\theta)b^*}, \\
   J_{21} & = & \frac{g\cdot c \cdot w^* \cdot p(\theta)}{(c+p(\theta)b^*)^2}.
 \end{eqnarray}
-The eigen values of the Jacobian have negative real part when the
+The eigenvalues of the Jacobian have negative real part when the
 trace is negative,
 \begin{eqnarray}
   p(\theta)(1-2b^*) - w^* p(\theta)\frac{c}{(c+p(\theta)b^*)^2} & < & 0.
@@ -886,7 +879,7 @@ The values of the entries in the matrix are
   J_{11} & = & p(\theta)\left(1-2b\right) -
                \frac{w\cdot c \cdot p(\theta)}{\left( c + p(\theta)b \right)^2}, \\
   J_{12} & = & -\frac{p(\theta)b}{c+p(\theta)b}, \\
-  J_{21} & = & g\cdot c \cdot  p(\theta) \frac{1}{\left(c+p(\theta)b\right)^2}, \\
+  J_{21} & = & g\cdot c \cdot  p(\theta) \frac{w}{\left(c+p(\theta)b\right)^2}, \\
   J_{22} & = & -d + g\cdot b \cdot  p(\theta) \frac{1}{c+p(\theta)b}.
 \end{eqnarray*}
 

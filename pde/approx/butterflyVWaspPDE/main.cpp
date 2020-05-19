@@ -48,7 +48,8 @@ int main()
 #ifdef APPROXIMATE_MULTIPLE_M
     NumericalTrials::multipleApproximationsByM(
             mu,c,g,d,
-            0.01,1.0,0.1,
+            //0.01,1.0,0.1,
+            1.0,10.0,0.5,
             //10.5,12.0,0.5,
             //13.0,15.0,2.5,
             dt,NUMBER_TIME_LOOP,
