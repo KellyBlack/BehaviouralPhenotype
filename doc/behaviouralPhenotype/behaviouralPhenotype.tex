@@ -68,6 +68,8 @@
 %\bibliographystyle{elsarticle-num}
 %%%%%%%%%%%%%%%%%%%%%%%
 
+
+%% Available colors:  black, blue, brown, cyan, darkgray, gray, green, lightgray, %lime, magenta, olive, orange, pink, purple, red, teal, violet, white, yellow.
 \begin{document}
 
 \begin{frontmatter}
@@ -486,7 +488,7 @@ and the resulting normalized form is
 \end{eqnarray}
 One immediate restriction on the parameters requires that
 $0<\origA\origL<1$. The total variation in the observed trait is given by 
-$\origP{origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
+$\origP{\origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
 
 \begin{table}[h]
   \centering
@@ -850,7 +852,7 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
   \includegraphics[width=12cm]{FIGURES/approximation-c-1.1-mu-01-m-01.pdf}
   \caption[Approximation with $c=1.1$, $m=0.01$ and $\mu=0.01$.]{Approximation of
     the system, $m=0.01$, $\mu=0.01$, $c=1.1$, $g=0.6$, and $d=0.1$. }
-  \label{fig:approximationMMuC}
+  \label{fig:approximationM01Mu01C11}
 \end{figure}
 
 \begin{figure}[htb]
@@ -858,7 +860,7 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
   \includegraphics[width=12cm]{FIGURES/approximation-c-1.1-mu-01-m-51.pdf}
   \caption[Approximation with $c=1.1$, $m=0.51$ and $\mu=0.01$.]{Approximation of
     the system, $m=0.51$, $\mu=0.01$, $c=1.1$, $g=0.6$, and $d=0.1$. }
-  \label{fig:approximationMMuC}
+  \label{fig:approximationM51Mu01C11}
 \end{figure}
 
 
@@ -867,7 +869,7 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
   \includegraphics[width=12cm]{FIGURES/approximation-c-1.1-mu-01-m-150.pdf}
   \caption[Approximation with $c=1.1$, $m=1.50$ and $\mu=0.01$.]{Approximation of
     the system, $m=1.50$, $\mu=0.01$, $c=1.1$, $g=0.6$, and $d=0.1$. }
-  \label{fig:approximationMMuC}
+  \label{fig:approximationM150Mu01C11}
 \end{figure}
 \textcolor{red}{The oscillations seem to be sustained for a relatively small window of $m$ values (Figures 4,5) when the diffusion is small. Is this still the case for Figures 7,8 and 9? How much does $m$ have to increase for the oscillations to disappear? 
 \\Need to think of the significance of these figures and Figure 6 in the context of $\mu$ and $m$. Here are my quick thoughts on Fig 6: 1)without including variation in the trait, increases in the use of anti-aphrodisiac (larger $m$) results in the destabilization of the population (Figure 6,ode) 2) When variation is accounted for, but the change in the group phenotype composition changes slowly ($\mu$ is relatively small, and distribution of the trait doesn't change fast), the population can be sustained for higher propensities for using the anti-aphrodisiac within the population 3) As $\mu$ gets large (resulting in faster changes in the group phenotype composition and leading to more well-mixed population), the results start to resemble those of the ODE when increases in the use of anti-aphrodisiac result in the destabilization of the population.  }
