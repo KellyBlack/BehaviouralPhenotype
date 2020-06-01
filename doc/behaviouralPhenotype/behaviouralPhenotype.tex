@@ -108,18 +108,16 @@ attention \cite{doi:10.1111/j.1461-0248.2010.01536.x}.  The variation
 in animal behaviours as well as the variation in the corresponding
 genetic basis for animal personalities has a role to play in the
 broader population dynamics of the species as well as the other
-animals that interact with the species. A variety of mathematical
-models are being developed to explore this important aspect of
-interactions. The models include compartment models, stochastic
-models, agent based models, as well as combinations of these
-approaches. One difficulty, though, with such approaches is the
+animals that interact with the species.  Several techniques,  including compartment models, stochastic
+models, agent based models, and combinations of these
+approaches, are being developed to explore this important aspect of interactions. \textcolor{blue} {I think this needs a list of references} One difficulty, though, with such approaches is the
 challenge of developing appropriate analytic tools to examine the
-general properties of the resulting models.
+general properties of the resulting models. \textcolor{blue} {I don't get this last sentence, there are plenty of analytic tools available for these types of models.}
 
 We propose an approach that assumes a continuous distribution
 associated with one behavioural aspect of an animal's behaviour. In
-this initial exploration of a novel approach a relatively
-straight-forward interaction is chosen. The example chosen is based on
+this initial exploration of this approach we choose to model a relatively
+straight-forward interaction in order to demonstrate its viability. Our model is based on
 the interactions between parasitic wasps of the genus
 \textit{Trichogramma}, and the butterfly \textit{Pieris
   brasicae}\cite{10.1093/beheco/arq007}.  The propensity of
@@ -127,8 +125,8 @@ the interactions between parasitic wasps of the genus
 behaviour is modeled as a continuous distribution, and a distributed
 model is developed to approximate the resulting interactions.
 
-In this treatment we approximate the system as consisting of two
-species. Finding and parasitizing the butterflies' eggs requires a
+In this treatment we approximate the system with one  consisting of only two
+species, butterflies and wasps.  The chemical associated with mating is meant to give the fertilized eggs a benefit in survival, but paradoxically it is also an attractant to the wasp, which parasitizes the eggs. Finding and parasitizing the butterflies' eggs requires a
 relatively long interaction time, and a predator-prey relationship is
 assumed. In particular, the predation rates are approximated using a
 type II response. Due to the variation in behaviour, though, we adapt
@@ -260,7 +258,7 @@ preliminary insights into the resulting system.
 \subsection{Butterflies v. Wasps}
 \label{butterflyVWasps}
 
-The example of social spiders was briefly discussed earlier, but the
+The
 model developed here focuses on the interaction between butterflies,
 \textit{Pieris brasicae}, and \textit{Trichogramma} wasps that prey on
 the butterflies' eggs. The interactions between these populations have
@@ -650,7 +648,7 @@ $p(\theta)>0$ the relationship in equation
 \end{eqnarray}
 Note also that under this transformation, the value of the butterfly
 density at the fixed point is $\frac{u}{p}$. The scaling in the
-original model is based on the carrying capacity which presumes that
+original model is based on the carrying capacity which presumes that \textcolor{red}{for stability, we need} \textcolor{blue}{I don't really get this, I thought the condition $u/p<1$ gave ensured the critical point is in the first quadrant. Yes, it does imply that the critical $b^* <1$ so the population is below the (rescaled) carrying capacity, but I don't think that is the point.  I would just say something like:  Recall that we earlier assumed $u/p <1$ to get that this critical point exists in the first quadrant. }
 \begin{eqnarray}
   \frac{u}{p} & < & 1,
 \end{eqnarray}
@@ -659,11 +657,15 @@ or
   \label{eq:boundFixedPoint}
   u & < & p.
 \end{eqnarray}
+Combining these inequalities yields
+\begin{equation}
+  \frac{p-c}{2}  <  u  < p.
+\end{equation}
 
 A feasible region that implies stability of the fixed point can be
 determined in the $u,p$ plane. If the parameters result in a point in
 the region bounded by equation (\ref{eq:stabilityParameters}),
-equation (\ref{eq:boundFixedPoint}), and $v>0$ then the resulting
+equation (\ref{eq:boundFixedPoint}), and $p>0$ then the resulting
 fixed point will be linearly stable. A graphical depiction of the
 stability region in the $u,p$ plane is shown in Figure
 \ref{fig:uvStabilityRegion}.
@@ -682,7 +684,9 @@ domain of $\theta$ is $0\leq\theta\leq 1$. For a given set of
 parameters the value of $u$ is fully determined. The values of $p$
 vary from $p=1$ to $p=1+m$.  The corresponding region in the $u,p$
 plane is along a horizontal line segment from $(1,u)$ to
-$(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}.
+$(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}. \textcolor{red}{ I think the interpretation of the $m$ in the ODE versus the PDE should be made more clear to help interpret these results or at least hint how this may differ when the full system is considered and the variation is actually modeled explicitly. My understanding of it is that failing to include the variation in the behavioral phenotype in the model may result in the population no longer remaining stable when considering high enough propensity for using the anti-pheromone. This is in contrast with the PDE system, which can show something different when such variation is accounted for?}
+
+\textcolor{blue}  {Actually, we should say more about stability here.  In the appendix, Aladeen proved that when the critical point becomes unstable (for high values of $\theta$, a stable limit cycle persists.  So I guess the system is still stable in a generalized sense, but periodic.}
 
 \begin{figure}[htb]
   \centering
@@ -721,7 +725,7 @@ examination of the behaviour of the system of ODEs given in equations
 (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Next approximations
 of the coupled PDE and ODE from equations (\ref{eq:scaledodePDE1}) and
 (\ref{eq:scaledodePDE2}) are provided. In both sets of examples a
-numerical exploration of the existance of a stable steady state or
+numerical exploration of the existence of a stable steady state or
 limit cycles is given.
 
 The results given here rely on the numerical approximation of the two
@@ -741,7 +745,7 @@ equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Our focus
 is on the stability characteristics of the fixed points as well as the
 long term dynamics of the system. The behaviour at the non-trivial
 fixed point is explored with respect to changes in the parameter
-$m$. Because the change in $\theta$ is not relevant for the ODE we
+$m$, \textcolor{red}{reflecting changes in the propensity of the male butterflies to use the anti-aphrodisiac. }\textcolor{red}{Because the ODE model does not take into consideration the variation in the behavioral phenotype,} the change in $\theta$ is not relevant for the ODE and we 
 assume that $\theta=1$.
 
 An example of the long term behaviour is provided in Figure
@@ -761,7 +765,7 @@ change more than 1.0E-7 from a previous high or low value for over
 2000 time steps it was considered to be at a steady state. For the
 limit cycle if the minimum and maximum for both densities was within
 1.0E-7 for two full cycles then it was considered to be in a limit
-cycle.
+cycle. \textcolor{red}{Should these details be moved in the appendix and only summarized here?}
 
 After the initial approximation, the initial condition for the next
 value of $m$ was the end state of the previous approximation. This
@@ -779,7 +783,7 @@ approximation was terminated.
 
 For values of $m$ less than about 2.841 the system moved close to a
 steady state. For larger values of $m$ the system approached a limit
-cycle. (Need to check to see if this is consistent with the theory!)
+cycle. (Need to check to see if this is consistent with the theory!\textcolor{red}{Related to this, I think the Hopf bifurcation point should be derived explicitly in the section on the ODE, this would make checking these results easier.Given $\theta=1$, I got the Hopf bifurcation point $m_{0}=\frac{2cd}{g-d}-1+c$, which is 2.92 (not quite 2.841 but close)}
 
 \subsection{Approximation of the coupled PDE and ODE}
 
@@ -792,7 +796,7 @@ range is similar to that in subsection
 
 The value of the parameters in the example are $c=2.8$, $g=0.6$,
 $d=0.1$, and $\mu=0.01$. The temporal behaviour of the system is
-similar to that found in the previous subsection, subsection
+similar to that found in the previous subsection
 \ref{subsection:odeApproximation}. For example, an approximation for
 --- provide example for $m=5$. --- Need to discuss this.
 
@@ -865,7 +869,8 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
     the system, $m=1.50$, $\mu=0.01$, $c=1.1$, $g=0.6$, and $d=0.1$. }
   \label{fig:approximationMMuC}
 \end{figure}
-
+\textcolor{red}{The oscillations seem to be sustained for a relatively small window of $m$ values (Figures 4,5) when the diffusion is small. Is this still the case for Figures 7,8 and 9? How much does $m$ have to increase for the oscillations to disappear? 
+\\Need to think of the significance of these figures and Figure 6 in the context of $\mu$ and $m$. Here are my quick thoughts on Fig 6: 1)without including variation in the trait, increases in the use of anti-aphrodisiac (larger $m$) results in the destabilization of the population (Figure 6,ode) 2) When variation is accounted for, but the change in the group phenotype composition changes slowly ($\mu$ is relatively small, and distribution of the trait doesn't change fast), the population can be sustained for higher propensities for using the anti-aphrodisiac within the population 3) As $\mu$ gets large (resulting in faster changes in the group phenotype composition and leading to more well-mixed population), the results start to resemble those of the ODE when increases in the use of anti-aphrodisiac result in the destabilization of the population.  }
 \section{Conclusion}
 
 \section{Acknowledgements}
@@ -879,18 +884,18 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
 
 In subsection \ref{subsection:parameters} the stability of the
 non-trivial fixed point is examined. More details about the other
-fixed points as well as more complete description of the Jacobian of
+fixed points as well as a more complete description of the Jacobian of
 the system given in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) are provided here. In particular the other two
 fixed points are given, then the Jacobian is stated, and the linear
 stability at the other two fixed points is briefly explored.
 
-The fixed point for the he system of equations given in equations
+The fixed point for the the system of equations given in equations
 (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) has one fixed point
-where both $b>0$ and $w>0$. There are two other fixed points as
-well. One is the fixed point at the origin, $b=0$ and $w=0$.
+where both $b>0$ and $w>0$. There are two other fixed points on the boundary of the positive quadrant, i.e $b=0$ or $w=0$.  One is the fixed point at the origin, $b=0$ and $w=0$.
 The remaining fixed point occurs at $w=0$ and $b=\frac{c\cdot
-  d}{p(\theta)\left(g - d\right)}$.
+  d}{p(\theta)\left(g - d\right)}$. \textcolor{blue} {No, this fixed point is at b=1, w=0}
+  
 
 The stability at these two fixed points can be examined by first
 determining the Jacobian of the system,
@@ -935,6 +940,7 @@ expressed as
           \end{array}
           \right].
 \end{eqnarray*}
+
 As described in subsection \ref{subsection:parameters} it is assumed
 that $g>d$. In order for this fixed point to be stable in the
 direction associated with the non-zero eigenvalue then we have that
@@ -942,13 +948,25 @@ direction associated with the non-zero eigenvalue then we have that
   p(\theta) & < & \frac{2cd}{g-d}.
 \end{eqnarray*}
 
+\textcolor{blue}{Replace above with:}
 
+At the fixed point $b=1$, $w=0$, the Jacobian is given by 
+\begin{eqnarray*}
+  J & = & \left[
+          \begin{array}{rr}
+            -p(\theta) & -\frac{p(\theta)}{c+p(\theta)} \\
+            0 & -d+\frac{gp(\theta)}{c+p(\theta)}
+          \end{array}
+          \right].
+\end{eqnarray*}
+
+This fixed point is semi-stable as long as $p(\theta) >\frac{dc}{g-d}$.  This condition is equivalent to $b^* < 1$.  (If on the other hand, $p(\theta) <\frac{dc}{g-d}$, then the equilibrium $(b^*,w^*)$ moves into the fourth quadrant ($w^*<0$) and the equilibrium $(1,0)$ is a stable attractor.)
 \section{Stability of the Equilibria}
 \label{appendix:stability}
 
 The linear stability with respect to the parameters for the
 non-trivial fixed points is examined in subsection subsection
-\ref{subsection:parameters}. We now turn out attention to the
+\ref{subsection:parameters}. We now turn our attention to the
 existence of limit cycles or oscillatory behaviour of the solutions
 near the equilbria. Consider the model system, equations
 (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Can the impact
@@ -990,12 +1008,12 @@ that the solutions are bounded in the first quadrant.
 
 \begin{lemma} \label{mm} All the solutions of equations equations
   (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) which start in
-  $R_{+}^{2}$ are uniformly bounded.
+  $\mathbb R_{+}^{2}$ are uniformly bounded.
 \end{lemma}
 
 \begin{proof}
-For all $R>0$, consider the triangular regions $T_{R}=\left\{ \left(
-b(t),w(t)\right) \in R_{+}^{2}:R=b+\frac{1}{g}w\right\} $
+For all $R>0$, consider the triangular region $T_{R}=\left\{ \left(
+b,w\right) \in\mathbb R_{+}^{2}:b+\frac{1}{g}w \le R\right\}$
 
 Let's assume that $b(t),w(t)$ are any positive solution of equations
 (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Due to the
@@ -1009,7 +1027,7 @@ This immediately leads to the bound on $b(t)$,
 \end{eqnarray}
 assuming that the initial condition for $b(t)$ is less than one.  We
 claim that $T_{R}$ is forward invariant for all sufficiently large
-$R.$We need only show that solutions cannot leave $T_{R}$
+$R.$ We need only show that solutions cannot leave $T_{R}$
 
 We show that
 $\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right) =\frac{d}{dt}%
@@ -1025,7 +1043,7 @@ $\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right) =\frac{d}{dt}%
 \end{eqnarray}
 
 
-In particular, if $R$ is chosen large enough.
+In particular, if $R$ is chosen large enough. \textcolor{blue} {I guess I am missing something.  I don't think it is obvious that this is always less than or equal to zero.  If $b(0) <1$, then $b(t)  <1$ for $t>0$ so just take $R > (p+d)/d,$ but if $b(0) > 1$ it is not so obvious that the $R-b(t)$ term stays positive.  I think it is ok, since if $b(0) > 1$, then it's derivative is negative so I guess $R-b(t)$ is bounded by $R-b(0)$.  Anyway, I think this needs to be explained (unless I am missing something more obvious). }
 \end{proof}
 \begin{theorem}
   \index{3} Consider the model equations (\ref{eq:scaledODE1}) and
