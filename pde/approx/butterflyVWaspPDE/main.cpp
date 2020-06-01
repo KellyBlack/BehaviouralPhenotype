@@ -44,7 +44,7 @@ int main()
 
 #endif
 
-#define APPROXIMATE_MULTIPLE_M
+//#define APPROXIMATE_MULTIPLE_M
 #ifdef APPROXIMATE_MULTIPLE_M
     NumericalTrials::multipleApproximationsByM(
             mu,c,g,d,
@@ -67,7 +67,7 @@ int main()
     trial.approximateSystemHysteresis(
                 mu,c,g,d,
                 //0.01,15.5,120,
-                1.5,10.5,80,
+                0.1,10.5,100,
                 dt,NUMBER_TIME_LOOP,
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
@@ -76,14 +76,14 @@ int main()
 
 #endif
 
-//#define APPROXIMATE_MULTIPLE_M_MU
+#define APPROXIMATE_MULTIPLE_M_MU
 #ifdef APPROXIMATE_MULTIPLE_M_MU
     NumericalTrials trial;
     trial.approximateSystemTrackRepeating(
                 mu,4.0*mu,4,
                 c,g,d,
                 //7.01,15.5,120,
-                5.01,7.0,30,
+                0.1,15.0,160,
                 dt,NUMBER_TIME_LOOP,
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
