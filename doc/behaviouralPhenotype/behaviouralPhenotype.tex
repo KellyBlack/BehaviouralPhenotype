@@ -494,7 +494,7 @@ $\origP{\origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
   \centering
   \begin{tabular}{r|l}
     Scaling Factor & Value \\ \hline
-    $\bar{B}$ & $K$ \\ [10pt]
+    $\bar{B}$ & $\origK$ \\ [10pt]
     $\bar{W}$ & $\frac{\origAlpha \origK^2 \origA}{\origGamma}$ \\  [10pt]
     $\bar{T}$ & $\frac{1}{\origAlpha \origK \origA}$ \\  [10pt]
     $\bar{\Theta}$ & $\origL$
@@ -511,7 +511,7 @@ $\origP{\origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
     $c$   & $\frac{\origC}{\origK\origA}$ \\  [10pt]
     $d$   & $\frac{\origD}{\origAlpha\origK\origA}$ \\  [10pt]
     $\mu$ & $\frac{\origMu}{\origAlpha\origK\origA\origL^2}$  \\  [10pt]
-    $g$   & $\frac{\hat{\origG}}{\origAlpha\origK\origA}$
+    $g$   & $\frac{\hat{\origG \origL}}{\origAlpha\origK\origA}$
   \end{tabular}
   \caption{New values of parameters after scaling}
   \label{tab:newParameters}
@@ -1007,46 +1007,38 @@ So for all $t>0$ and $b\left( 0\right) ,w\left( 0\right) >0$ .
 Having established that the solutions are non-negative our attention
 now turns to whether or not the solutions are bounded. We can state
 that the solutions are bounded in the first quadrant.
-
-\begin{lemma} \label{mm} All the solutions of equations equations
-  (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) which start in
-  $\mathbb R_{+}^{2}$ are uniformly bounded.
+\begin{lemma} \label{mm}
+All the solutions of the system (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) which start in $R_{+}^{2}$ are
+uniformly bounded. Furthermore There exists $R_{0}>0$  such that for all $R\geq R_{0}$, the right
+triangle $T_{R}$ with sides $b=0, w=0$ and $R=b+\frac{1}{g}w $ is positively invariant.
 \end{lemma}
 
 \begin{proof}
-For all $R>0$, consider the triangular region $T_{R}=\left\{ \left(
-b,w\right) \in\mathbb R_{+}^{2}:b+\frac{1}{g}w \le R\right\}$
+For all $R>0$, consider the triangular regions $T_{R}=\left\{ \left(b(t),w(t)\right) \in R_{+}^{2}:R=b+\frac{1}{g}w\right\} $\\
+Let's assume that $b(t),w(t)$ are any positive solution of system (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}),
+then it is obvious that
 
-Let's assume that $b(t),w(t)$ are any positive solution of equations
-(\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Due to the
-non-negativity of the solutions it is immediately implied that
-\begin{eqnarray}
-  \frac{d}{dt}b(t) & \leq & p\left( \theta \right) b(t)\left( 1-b(t)\right) 
-\end{eqnarray}
-This immediately leads to the bound on $b(t)$,
-\begin{eqnarray}
-  0\leq b(t)\leq 1
-\end{eqnarray}
-assuming that the initial condition for $b(t)$ is less than one.  We
-claim that $T_{R}$ is forward invariant for all sufficiently large
-$R.$ We need only show that solutions cannot leave $T_{R}$
+$$\frac{d}{dt}b(t)\leq \hat{p}\left( \theta \right) b(t)\left( 1-b(t)\right) $$
 
-We show that
-$\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right) =\frac{d}{dt}%
-\left( R\right) <0$,
-\begin{eqnarray}
-  \frac{d}{dt}\left( R\right) & = & \frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right), \\
-                              & = & \left( p\left( \theta \right) b(t)
-                                    \left( 1-b(t)\right) -
-                                     \frac{d}{g}w\left( t\right) \right), \\
-                              & = & p\left( \theta \right) b(t)\left(1-b(t)\right) -
-                                    d\left( R-b(t)\right), \\
-                              & \leq & 0.
-\end{eqnarray}
+We can see from the comparison argument that
 
+$$0\leq b(t)\leq 1$$
+Now since every initial point $b(0),w(0)\in R^{+}$ satisfies $b(0),w(0)\in T_{R}$ for some $R\geq R_{0}$, this shows that all solutions starting in $R^{+}$ are bounded for $t\geq 0$.\\
+We claim that $T_{R}$ is forward invariant for all sufficiently large $R.$ We
+need only to show that solutions cannot leave $T_{R}$\\
+Since $R=b+\frac{1}{g}w $, 
+it is enough to show that $\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right)\geq 0$
 
-In particular, if $R$ is chosen large enough. \textcolor{blue} {I guess I am missing something.  I don't think it is obvious that this is always less than or equal to zero.  If $b(0) <1$, then $b(t)  <1$ for $t>0$ so just take $R > (p+d)/d,$ but if $b(0) > 1$ it is not so obvious that the $R-b(t)$ term stays positive.  I think it is ok, since if $b(0) > 1$, then it's derivative is negative so I guess $R-b(t)$ is bounded by $R-b(0)$.  Anyway, I think this needs to be explained (unless I am missing something more obvious). }
+$$\frac{d}{dt}\left( b(t)+\frac{1}{g}w(t)\right)
+=\left( \hat{p}\left( \theta \right) b(t)\left( 1-b(t)\right) -\frac{d}{g}%
+w\left( t\right) \right) $$
+
+$$ =\hat{p}\left( \theta \right) b(t)\left(
+1-b(t)\right) -d\left( R-b(t)\right) \leq 0$$
+
+if $R$ is chosen large enough.
 \end{proof}
+
 \begin{theorem}
   \index{3} Consider the model equations (\ref{eq:scaledODE1}) and
   (\ref{eq:scaledODE2}). Assume that the following condition $g>d$
