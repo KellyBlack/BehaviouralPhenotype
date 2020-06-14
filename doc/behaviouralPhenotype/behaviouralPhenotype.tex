@@ -127,8 +127,8 @@ the interactions between parasitic wasps of the genus
 behaviour is modeled as a continuous distribution, and a distributed
 model is developed to approximate the resulting interactions.
 
-In this treatment we approximate the system with one  consisting of only two
-species, butterflies and wasps.  The chemical associated with mating is meant to give the fertilized eggs a benefit in survival, but paradoxically it is also an attractant to the wasp, which parasitizes the eggs. Finding and parasitizing the butterflies' eggs requires a
+While the original system of interactions is complex, involving multiple species, in this paper we consider a simplified system using only two
+species, butterflies and wasps.  One chemical associated with mating is meant to give the butterflies a benefit in survival, but paradoxically it is also an attractant to the wasp, which parasitizes the eggs. Finding and parasitizing the butterflies' eggs requires a
 relatively long interaction time, and a predator-prey relationship is
 assumed. In particular, the predation rates are approximated using a
 type II response. Due to the variation in behaviour, though, we adapt
@@ -511,7 +511,7 @@ $\origP{\origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
     $c$   & $\frac{\origC}{\origK\origA}$ \\  [10pt]
     $d$   & $\frac{\origD}{\origAlpha\origK\origA}$ \\  [10pt]
     $\mu$ & $\frac{\origMu}{\origAlpha\origK\origA\origL^2}$  \\  [10pt]
-    $g$   & $\frac{\hat{\origG \origL}}{\origAlpha\origK\origA}$
+    $g$   & $\frac{\origL\origG}{\origAlpha\origK\origA}$
   \end{tabular}
   \caption{New values of parameters after scaling}
   \label{tab:newParameters}
@@ -608,7 +608,7 @@ nullclines, the only fixed point that occurs in the first quadrant
 away from an axis is at $b^*=\frac{cd}{p(\theta)(g-d)}$ and
 $w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.
 Note that a requirement for a positive value of $w^*$ is that
-$1-\frac{cd}{p(\theta)(g-d)}>0$.  When $g>d$, this inequality gives $g-d >\frac{cd}{p(\theta)} >0$
+$1-\frac{cd}{p(\theta)(g-d)}>0$.  When $g>d$, this inequality gives $g-d >\frac{cd}{p(\theta)} >0$.
 
 The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) at the fixed point is
@@ -661,7 +661,9 @@ or
 \end{eqnarray}
 Combining these inequalities yields
 \begin{equation}
-  \frac{p-c}{2}  <  u  < p.
+  \begin{array}{rcccl}
+  \frac{p-c}{2}  & <  & u  & < & p.
+  \end{array}
 \end{equation}
 
 A feasible region that implies stability of the fixed point can be
