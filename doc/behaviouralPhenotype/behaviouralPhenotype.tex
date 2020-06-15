@@ -105,39 +105,29 @@ behavioral phenotype, genetic variation, population dynamics, group phenotypic c
 
 \section{Introduction}
 
-The variation of animal personalities may play an important role in broader population dynamics\cite{doi:10.1111/j.1461-0248.2010.01536.x}.  The variation
-in animal behaviours as well as the variation in the corresponding
-genetic basis for animal personalities have multiple role in how they impact interactions\cite{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016,FARINE2015609,sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1086/687235,doi:10.1098/rspb.2014.1016,doi:10.1037/0735-7036.107.3.250}.  As the recognition for this important phenomena has grown several techniques,  including compartment models, stochastic
+The variation of animal personalities may play an important role in broader population dynamics \cite{doi:10.1111/j.1461-0248.2010.01536.x}.  The variation in animal behaviours as well as the variation in the corresponding genetic basis for animal personalities have multiple roles in how they impact species interactions \cite{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016,FARINE2015609,sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1037/0735-7036.107.3.250}.  As the recognition for this important phenomenon grows, several techniques,  including compartment models, stochastic
 models, agent based models, and combinations of these
-approaches, are being developed to explore this important aspect of interactions\cite{Keeling65,doi:10.1086/687235,doi:10.1098/rspb.2001.1599,SuperspreadingLloyd,doi:10.1086/687235}.  One difficulty, though, with such approaches is the
-challenge of developing appropriate analytic models at the requisite level of granularity consistent with the levels of observed variations. Related to this concern, the method available to analyze the models do not scale well. For example, increasing the levels in a compartment model or an agent based model can make it more difficult to interpret and analyze the resulting system of equations. 
+approaches, have been developed to explore this important aspect of species interactions  \cite{Keeling65,doi:10.1086/687235,doi:10.1098/rspb.2001.1599,SuperspreadingLloyd}.  One difficulty, though, with such approaches is the
+challenge of developing appropriate analytic models at the requisite granularity needed to model a wide range of behavioural manifestations. Current approaches do not scale well to address this concern. For example, refining the granularity by increasing the number of levels representing the differences in animal behavior in a compartment model or an agent based model can make it more difficult to interpret and analyze the resulting system of equations. 
 
 We propose an approach that assumes a continuous distribution
-associated with a single behavioural aspect of an animal's behaviour. The temporal dynamics of the change in the distrubtion is modeled as a diffusion process. In
-this initial exploration of this approach we choose to model a relatively
+associated with a single behavioural aspect of an animal's behaviour. The temporal dynamics of the distribution is modeled as a diffusion process. In
+this initial exploration of this approach, we choose to model a relatively
 straight-forward interaction in order to demonstrate its viability. Our model is based on
 the interactions between parasitic wasps of the genus
 \textit{Trichogramma}, and the butterfly \textit{Pieris
-  brasicae}\cite{10.1093/beheco/arq007}.  The propensity of
+  brasicae} \cite{10.1093/beheco/arq007}.  The propensity of
 \textit{Pieris brasicae} to employ a chemical associated with mating
-behaviour is modeled as a continuous distribution, and a distributed
-model is developed to approximate the resulting interactions.
+behaviour is modeled as a continuous distribution.
 
-While the original system of interactions is complex, involving multiple species, in this paper we consider a simplified system using only two
-species, butterflies and wasps.  One chemical associated with mating is meant to give the butterflies a benefit in survival, but paradoxically it is also an attractant to the wasp, which parasitizes the eggs. Finding and parasitizing the butterflies' eggs requires a
-relatively long interaction time, and a predator-prey relationship is
-assumed. In particular, the predation rates are approximated using a
-type II response. Due to the variation in behaviour, though, we adapt
-the standard Holling response function for this new situation.
+While the original system of interactions involve multiple species, in this paper we consider a simplified system using only two
+species, butterflies and wasps.  One chemical associated with mating is meant to give the butterflies a benefit in survival, but paradoxically it is also an attractant to the wasp, which parasitizes the eggs. To account for the long interaction time to find and parasitize the butterflies' eggs a predator-prey relationship  with a Holling type II response \cite{TEWA20134825} is assumed.
 
 We first provide a more detailed overview of behavioural phenotypes
 including some previous efforts to model the phenomena. Next, the
 model used to provide insight into the phenomena is developed
-including a re-derivation of a type II response assuming a continuous
-variation in one behaviour. Following the derivation of the model, the
-numerical approximation to the distributed system is briefly
-discussed. Finally, some results from our numerical explorations are
-provided.
+including an adaptation of a type II response to accommodate a continuous
+variation in one behaviour. Following the derivation of the model, an equilibrium analysis of the system is explored. Finally, some results from our numerical explorations are provided.
 
 \section{Behavioral Phenotype}
 \label{section:behaviouralPhenotype}
@@ -146,74 +136,71 @@ The primary motivation for why the distribution of how animals behave
 and interact is given in this section. We begin with a discussion of
 the basic idea of behavioural phenotype. Next, a brief overview of
 existing modeling efforts is provided. Finally a specific example of
-social spiders is discussed, and in this example the phenomena is
-directly observed and provides context for the importance of the
-general phenomena.
+social spiders is discussed. In this example the phenomenon
+is
+directly observed, providing context for the importance of the
+general phenomenon.
 
 A number of authors have noted the importance of the role of variation
 in a species' habits or
-genetics\cite{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016}, sometimes referred to as group phenotypic composition \cite{FARINE2015609}, observed in many species of animals such as sheep, barnacle geese, ants, spiders, fish and wild birds among others \cite{sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1086/687235,doi:10.1098/rspb.2014.1016,doi:10.1037/0735-7036.107.3.250}.
+genetics \cite{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016}, sometimes referred to as group phenotypic composition \cite{FARINE2015609}, observed in many species of animals such as sheep, barnacle geese, ants, spiders, fish and wild birds among others \cite{sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1086/687235,doi:10.1098/rspb.2014.1016,doi:10.1037/0735-7036.107.3.250}.
 We begin this discussion with the survey provided by Kortet, \textit{et
-  al}\cite{doi:10.1111/j.1461-0248.2010.01536.x}. The authors note
+  al} \cite{doi:10.1111/j.1461-0248.2010.01536.x}. The authors note
 that within any large group of animals certain behaviours can vary
-across the population. They go on to propose that the diversity of
-behaviours can profoundly impact the broader dynamics of the
-population of the animals as well as animals with a shared
-interdependence.
+across the population. They  propose that the diversity of
+behaviours can profoundly impact the broader dynamics of the focal population as well as the populations that interact with them.
 
-Kortet, \textit{et al}\cite{doi:10.1111/j.1461-0248.2010.01536.x} note
+Kortet, \textit{et al} \cite{doi:10.1111/j.1461-0248.2010.01536.x} note
 the impact of variation in the distribution of behaviour. They note
 some potential challenges this recognition implies, as well. One
 challenge is the difficulty to identify and quantify the distribution
-of animal personalities in a given population. A specific example
-relates to the capture of Pumpkin Seed
-Fish\cite{doi:10.1037/0735-7036.107.3.250}, and the methods used to
+of animal personalities in a given population. A specific example of this difficulty
+is seen in the capture of Pumpkin Seed
+Fish \cite{doi:10.1037/0735-7036.107.3.250}. The methods used to
 capture individuals in a population can result in a biased estimate.
 Some methods may be more or less likely to capture a subset of
-individuals based on the individuals' behaviours.
+individuals within a specific range 0f the individuals' behaviours.
 
 % https://www.semanticscholar.org/paper/Fish-behavioral-types-and-their-ecological-Mittelbach-Ballew/a381cb0b64a8107c694454e940fd7972263a8b77
 % https://www.semanticscholar.org/paper/Are-most-samples-of-animals-systematically-biased-Biro/72eaa11f60d3b211f34ab04ff95211307978223b
 
-Another example is provided by Aplin, Lucy M., et al. \cite{doi:10.1098/rspb.2014.1016} in a study of the effect of individual-level personality traits on the collective movement and feeding behavior of wild birds. In particular, they investigated how patch-level behaviour changes for groups with different personality types - reactive individuals that displayed low-risk behavior and proactive individuals that displayed high-risk behavior. They found that while reactive individuals were more likely to choose a single foraging location to minimize the risk of predation, and proactive individuals were more likely to disperse, the groups that contained a combination of the two types showed both group cohesiveness and patch exploration. This result indicates that behavioral variation can lead to better overall success, as was previously found in various other animals such as ants and spiders \cite{ doi:10.1086/687235,modlmeier2011productivity,modlmeier2012diverse}.
+Another example is provided by Aplin, Lucy M., et al. \cite{doi:10.1098/rspb.2014.1016} in a study of the effect of individual-level personality traits on the collective movement and feeding behavior of wild birds. In particular, they investigated how patch-level behaviour changes for groups with different personality types - reactive individuals that displayed low-risk behavior and proactive individuals that displayed high-risk behavior. They found that  reactive individuals were more likely to choose a single foraging location to minimize the risk of predation, and proactive individuals were more likely to disperse. The groups that contained a combination of the two types showed both group cohesiveness and patch exploration, indicating that behavioral variation can lead to better overall success, as was previously found in  other animals such as ants and spiders \cite{ doi:10.1086/687235,modlmeier2011productivity,modlmeier2012diverse}.
 
 A wide array of approaches to model the phenomena have been
-explored. The different approaches include stochastic
-models\cite{Keeling65}, agent based models\cite{doi:10.1086/687235},
+explored, including stochastic
+models \cite{Keeling65}, agent based models \cite{doi:10.1086/687235},
 hybrid models employing compartment models based on a stochastic
-distribution\cite{doi:10.1098/rspb.2001.1599}, and statistical
-models\cite{SuperspreadingLloyd}. A brief description of some of these
+distribution \cite{doi:10.1098/rspb.2001.1599}, and statistical
+models \cite{SuperspreadingLloyd}. A brief description of some of these
 approaches is provided below.
 
 An example of a stochastic model is provided by Keeling and
-Grenfel\cite{Keeling65}. They note that the dynamics of the incidence
+Grenfel \cite{Keeling65}. They note that the dynamics of the incidence
 of measles is influenced by how the incubation time varies across
 individuals. In response to this observation they modified standard
-disease modeling by adding a convolution of a time delay.
+disease model by adding a convolution of a time delay.
 
 
 Another adaptation for a similar problem was proposed by
-Lloyd\cite{doi:10.1098/rspb.2001.1599}. In this case the rates that
+Lloyd \cite{doi:10.1098/rspb.2001.1599}. In this case the rates that
 infected individuals leave the infected class is based on a stochastic
 distribution. The phenomena was modeled by making use of a large
-number of compartments, and entry into the different classes is
+number of compartments representing infected classes with different removal rates, where the entry into the different classes is
 governed by the underlying probability distribution.
 
 An example of a statistical approach that highlights the importance of
 the phenomena is given by Lloyd-Smith \textit{et
-  al}\cite{SuperspreadingLloyd}. In their work the transmission of
+  al} \cite{SuperspreadingLloyd}, where they investigate the influence of individual variation in infectiousness on disease emergence. In their work the transmission of
 disease is examined using a branching process. The varying
-transmission rates between individuals is treated as a given
-probability distribution, and the variation in the differences can
-result in large differences in the estimation of transmission rates.
+transmission rates between individuals are treated as a given
+probability distribution. They find out that model predictions accounting for the individual variation differ sharply from average-based approaches for the estimation of transmission rates.
 
 A mathematical model examining the interactions within a colony of
 social spiders, \textit{Stegodyphus dumicola}, is provided by
-Pinter-Wollman, \textit{et al}\cite{doi:10.1086/687235}. The focus of
-their work is in examining the impact of different boldness levels of
-a key individual.  They note that a small number of individuals within
+Pinter-Wollman, \textit{et al} \cite{doi:10.1086/687235}. They  examine the impact of different boldness levels of
+ key individuals on the success of the colony.  They note that a small number of individuals within
 a colony may exhibit different levels of aggression, and a small
-number of individuals can have a disproportionate impact in the
+number of individuals can have a disproportionate impact on the
 broader success of the colony.
 
 As a means to model this important aspect of a colony, Pinter-Wollman,
@@ -226,11 +213,11 @@ stochastic decision making. The external interactions are approximated
 using an ordinary differential equation model.
 
 In the resulting statistical analyses, Pinter-Wollman, \textit{et
-  al}\cite{doi:10.1086/687235} found that different levels of boldness
+  al} \cite{doi:10.1086/687235} found that different levels of boldness
 within key individuals resulted in a difference in the mean boldness
 levels of a broader group. For example, they found the differences in
-boldness impacted the rate of capture of prey. They also found that
-the rules themselves also impacted the disease dynamics within the
+boldness impacted the prey capture rate. They also found that
+the rules governing the distribution impacted the disease dynamics within the
 population.
 
 We note that many of the existing mathematical models have been
@@ -243,15 +230,12 @@ such approaches and offers a novel deterministic method.
 
 \section{Modeling Genetic Variance As a Continuous Distribution}
 
-Rather than construct a compartmental model or an agent based model, a
-continuous, distributed parameter model is proposed. The resulting
-model for the example system is a coupled partial differential
-equation and an ordinary differential equation. Prior to the
-derivation itself an overview of the specific system, the interactions
-between butterflies and a parasitic wasp, are discussed. Next the
-model is derived. Finally, and analysis of a simplified system of
+Rather than  a compartmental model or an agent based model, a
+coupled partial differential equation model with a continuous, distributed parameter representing individual variation  is proposed. First, an overview of the specific system, the interactions
+between butterflies and a parasitic wasp, is given. Next, the
+model is derived. Finally, the analysis of a simplified system of
 ordinary differential equations is examined as a way to gain some
-preliminary insights into the resulting system.
+preliminary insights into the partial differential equation model.
 
 \subsection{Butterflies v. Wasps}
 \label{butterflyVWasps}
@@ -263,7 +247,7 @@ the butterflies' eggs. The interactions between these populations have
 received a good deal of attention
 \cite{PMC2797620,doi:10.1111/j.1439-0418.1986.tb00834.x,Figueroa2010AttractionOT,10.3389/fpls.2019.01768}. We
 focus on the results of one source in particular Huigens \textit{et
-  al}\cite{10.1093/beheco/arq007}. In their work, the authors state
+  al} \cite{10.1093/beheco/arq007}. In their work, the authors state
 that the pressure placed on the butterfly population due to the wasps'
 interactions results in a change in the long term behaviour of the
 butterfly population.
@@ -279,19 +263,19 @@ reduce the effectiveness of the original pheromone emitted by the
 female.
 
 The downside to the use of the pheromone is that it exposes the eggs
-to a greater risk of predation. Some species of \textit{Trichogramma}
+to a greater risk of predation, as some species of \textit{Trichogramma}
 wasps parasitize the eggs of the butterflies. Sometimes they
 physically attach themselves to a butterfly and ride it until the
 butterfly begins to attach their eggs in a preferable location. The
 wasps are able to detect the presence of the anti-aphrodisiac which is
-correlated with an increased probability that a butterfly with the
+a useful strategy, as a butterfly with the
 anti-aphrodisiac is more likely to lay eggs. In response, the wasps
 are more likely to ride on a butterfly if they detect the
-anti-aphrodisiac. It is important to note this method of predation on
+anti-aphrodisiac. It is important to note that this method of predation on
 a butterfly's eggs requires a non-trivial time commitment with respect
 to handling and detecting the presence of the eggs.
 
-The authors\cite{10.1093/beheco/arq007} note that the probability that
+The authors \cite{10.1093/beheco/arq007} note that the probability that
 a male will make use of the anti-aphrodisiac varies between
 individuals. There are different trade-offs in the use of the
 anti-aphrodisiac, but the authors found that the wasps' actions are
@@ -305,7 +289,7 @@ number of butterflies are less likely to engage in the behaviour.
   Distribution}
 
 As mentioned in section \ref{section:behaviouralPhenotype}, a number
-of options have been employed to model a distribution of behavioural
+of options have been employed to model the distribution of behavioural
 preferences in a given population. These methods include compartmental
 models, agent based models, and hybrids of these two models. One
 potential issue, though, is that the number of variations can be quite
@@ -780,7 +764,7 @@ given along the vertical axis. The values of the maximum and the
 minimum values of the butterfly densities are plotted after the
 approximation was terminated.
 
-The value of $\theta$ is fixed at 1 for these approximations, and the Hopf biforcation occurs at $m=2.92$. With respect to the numerical approximations, the system moved close to a steady state for values of $m$ less than about 2.841. For larger values of $m$ the system approached a limit
+The value of $\theta$ is fixed at 1 for these approximations, and the Hopf bifurcation occurs at $m=2.92$. With respect to the numerical approximations, the system moved close to a steady state for values of $m$ less than about 2.841. For larger values of $m$ the system approached a limit
 cycle. The resulting numerical simulations provide a close estimate of the location of the bifurcation.
 
 \subsection{Approximation of the coupled PDE and ODE}
@@ -1037,8 +1021,8 @@ if $R$ is chosen large enough.
 
 \begin{theorem}
   \index{3} Consider the model equations (\ref{eq:scaledODE1}) and
-  (\ref{eq:scaledODE2}). Assume that the following condition $g>d$
-  hold
+  (\ref{eq:scaledODE2}). Assume that  $g>d$.
+ 
 \end{theorem}
 
 \begin{description}
