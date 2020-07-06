@@ -1,4 +1,4 @@
-\documentclass[review]{elsarticle}
+\documentclass[review,authoryear]{elsarticle}
 %\documentclass[12pt]{article}
 \usepackage{lineno,hyperref}
 \usepackage{graphicx}
@@ -105,9 +105,9 @@ behavioral phenotype, genetic variation, population dynamics, group phenotypic c
 
 \section{Introduction}
 
-The variation of animal personalities may play an important role in broader population dynamics \cite{doi:10.1111/j.1461-0248.2010.01536.x}.  The variation in animal behaviours as well as the variation in the corresponding genetic basis for animal personalities have multiple roles in how they impact species interactions \cite{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016,FARINE2015609,sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1037/0735-7036.107.3.250}.  As the recognition for this important phenomenon grows, several techniques,  including compartment models, stochastic
+The variation of animal personalities may play an important role in broader population dynamics \citep{doi:10.1111/j.1461-0248.2010.01536.x}.  The variation in animal behaviours as well as the variation in the corresponding genetic basis for animal personalities have multiple roles in how they impact species interactions \citep{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016,FARINE2015609,sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1037/0735-7036.107.3.250}.  As the recognition for this important phenomenon grows, several techniques,  including compartment models, stochastic
 models, agent based models, and combinations of these
-approaches, have been developed to explore this important aspect of species interactions  \cite{Keeling65,doi:10.1086/687235,doi:10.1098/rspb.2001.1599,SuperspreadingLloyd}.  One difficulty, though, with such approaches is the
+approaches, have been developed to explore this important aspect of species interactions  \citep{Keeling65,doi:10.1086/687235,doi:10.1098/rspb.2001.1599,SuperspreadingLloyd}.  One difficulty, though, with such approaches is the
 challenge of developing appropriate analytic models at the requisite granularity needed to model a wide range of behavioural manifestations. Current approaches do not scale well to address this concern. For example, refining the granularity by increasing the number of levels representing the differences in animal behavior in a compartment model or an agent based model can make it more difficult to interpret and analyze the resulting system of equations. 
 
 We propose an approach that assumes a continuous distribution
@@ -116,18 +116,18 @@ this initial exploration of this approach, we choose to model a relatively
 straight-forward interaction in order to demonstrate its viability. Our model is based on
 the interactions between parasitic wasps of the genus
 \textit{Trichogramma}, and the butterfly \textit{Pieris
-  brasicae} \cite{10.1093/beheco/arq007}.  The propensity of
+  brasicae} \citep{10.1093/beheco/arq007}.  The propensity of
 \textit{Pieris brasicae} to employ a chemical associated with mating
 behaviour is modeled as a continuous distribution.
 
-While the original system of interactions involve multiple species, in this paper we consider a simplified system using only two
-species, butterflies and wasps.  One chemical associated with mating is meant to give the butterflies a benefit in survival, but paradoxically it is also an attractant to the wasp, which parasitizes the eggs. To account for the long interaction time to find and parasitize the butterflies' eggs a predator-prey relationship  with a Holling type II response \cite{TEWA20134825} is assumed.
+While the original system of interactions involves multiple species, we consider a simplified system consisting of two
+species, butterflies and wasps.  The interaction between the two species depends on a pheromone that can be used by the males of the butterfly population. The pheromone associated with mating is meant to give the butterflies a benefit in survival, but paradoxically it is also an attractant for the wasp, which parasitizes the eggs. The two opposing pressures on the butterflies' use of the chemical provide an interesting question of determining the optimal level for the expression of this behavior.
 
-We first provide a more detailed overview of behavioural phenotypes
+Our discussion of these interactions is organized as follows. We first provide a more detailed overview of behavioural phenotypes
 including some previous efforts to model the phenomena. Next, the
-model used to provide insight into the phenomena is developed
-including an adaptation of a type II response to accommodate a continuous
-variation in one behaviour. Following the derivation of the model, an equilibrium analysis of the system is explored. Finally, some results from our numerical explorations are provided including notes of the ecological implications. Separate appendices are included with a more detailed analysis of the model as well as details on the numerical approximation of the full model.
+model used to provide insight into the phenomena is developed.
+To account for the long interaction time to find and parasitize the butterflies' eggs a predator-prey relationship  with a Holling type II response \citep{TEWA20134825,holling_1959A,holling_1959B} is assumed. We adapt the type II response to accommodate a continuous
+variation in one behaviour.  Following the derivation of the model, an equilibrium analysis of the system is explored. Finally, some results from our numerical explorations are provided including notes of the ecological implications. Separate appendices are included with a more detailed analysis of the model as well as details on the numerical approximation of the full model.
 
 \section{Behavioral Phenotype}
 \label{section:behaviouralPhenotype}
@@ -141,81 +141,64 @@ is
 directly observed, providing context for the importance of the
 general phenomenon.
 
-A number of authors have noted the importance of the role of variation
+A number of authors have noted the importance of variation
 in a species' habits or
-genetics \cite{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016}, sometimes referred to as group phenotypic composition \cite{FARINE2015609}, observed in many species of animals such as sheep, barnacle geese, ants, spiders, fish and wild birds among others \cite{sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1086/687235,doi:10.1098/rspb.2014.1016,doi:10.1037/0735-7036.107.3.250}.
-We begin this discussion with the survey provided by Kortet, \textit{et
-  al} \cite{doi:10.1111/j.1461-0248.2010.01536.x}. The authors note
-that within any large group of animals certain behaviours can vary
-across the population. They  propose that the diversity of
+genetics \citep{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016}. This variation is sometimes referred to as group phenotypic composition \citep{FARINE2015609}, and it is observed in many species of animals such as sheep, barnacle geese, ants, spiders, fish and wild birds among others \citep{sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1086/687235,doi:10.1098/rspb.2014.1016,doi:10.1037/0735-7036.107.3.250}.
+A broad discussion by  \citep{doi:10.1111/j.1461-0248.2010.01536.x} includes a description of variation in behavioural trains and includes multiple examples of the different ways it can impact a population. For example, varying levels of boldness result in different levels of exposure. Also, varying levels of social interaction result in different rates of transmissions between individuals. They go on to  propose that the diversity of
 behaviours can profoundly impact the broader dynamics of the focal population as well as the populations that interact with them.
 
-A direct call for more attention to the role of variation in behavioural phenotype is given by Kortet, \textit{et al} \cite{doi:10.1111/j.1461-0248.2010.01536.x}. Their discussion is focused on the potential impact of variation in specific behaviour and provide a number of examples to motivate the importance of the phenomenon. They also discuss
-some of the potential challenges to directly observing this variation. One specific example they give is the difficulty
-seen in the capture of Pumpkin Seed
-Fish \cite{doi:10.1037/0735-7036.107.3.250}. The methods used to
-capture individuals in a population can result in a biased estimate.
-Some methods may be more or less likely to capture a subset of
-individuals based on an individual's level of boldness.
 
 % https://www.semanticscholar.org/paper/Fish-behavioral-types-and-their-ecological-Mittelbach-Ballew/a381cb0b64a8107c694454e940fd7972263a8b77
 % https://www.semanticscholar.org/paper/Are-most-samples-of-animals-systematically-biased-Biro/72eaa11f60d3b211f34ab04ff95211307978223b
 
-Another example is provided by Aplin, Lucy M., et al. \cite{doi:10.1098/rspb.2014.1016} in a study of the effect of individual-level personality traits on the collective movement and feeding behavior of wild birds. In particular, they investigated how patch-level behaviour changes for groups with different personality types - reactive individuals that displayed low-risk behavior and proactive individuals that displayed high-risk behavior. They found that  reactive individuals were more likely to choose a single foraging location to minimize the risk of predation, and proactive individuals were more likely to disperse. The groups that contained a combination of the two types showed both group cohesiveness and patch exploration, indicating that behavioral variation can lead to better overall success, as was previously found in other animals such as ants and spiders \cite{ doi:10.1086/687235,modlmeier2011productivity,modlmeier2012diverse}.
+Another example is provided by \cite{doi:10.1098/rspb.2014.1016} in a study of the effect of individual-level personality traits on the collective movement and feeding behavior of wild birds. In particular, they investigated how patch-level behaviour changes for groups with different personality types - reactive individuals that displayed low-risk behavior and proactive individuals that displayed high-risk behavior. They found that  reactive individuals were more likely to choose a single foraging location to minimize the risk of predation, and proactive individuals were more likely to disperse. The groups that contained a combination of the two types showed both group cohesiveness and patch exploration, indicating that behavioral variation can lead to better overall success, as was previously found in other animals such as ants and spiders \citep{ doi:10.1086/687235,modlmeier2011productivity,modlmeier2012diverse}.
 
-A wide array of approaches to model the phenomena have been
-explored, including stochastic
-models \cite{Keeling65}, agent based models \cite{doi:10.1086/687235},
+A wide array of approaches to model the population responses to behaviour variation have been explored, including stochastic
+models \citep{Keeling65}, agent based models \citep{doi:10.1086/687235},
 hybrid models employing compartment models based on a stochastic
-distribution \cite{doi:10.1098/rspb.2001.1599}, and statistical
-models \cite{SuperspreadingLloyd}. A brief description of some of these
+distribution \citep{doi:10.1098/rspb.2001.1599}, and statistical
+models \citep{SuperspreadingLloyd}. A brief description of some of these
 approaches is provided below.
 
-An example of a stochastic model is provided by Keeling and
-Grenfel \cite{Keeling65}. They note that the dynamics of the incidence
+An example of a stochastic model is provided by \cite{Keeling65}. They note that the dynamics of the incidence
 of measles is influenced by how the incubation time varies across
-individuals. In response to this observation they modified standard
-disease model by adding a convolution with a time delay.
+individuals. In response to this observation they modified a standard
+disease model by incorporating a time delay of the infected class using a convolution. They examine the impact of variation and the distribution associated with the variation in incubation times for the frequency of infectious outbreaks. They note that the distribution associated with the variation plays an important role in determining the frequency of outbreaks.
 
 
-Another adaptation for a similar problem was proposed by
-Lloyd \cite{doi:10.1098/rspb.2001.1599}. In this case the rates that
+Another adaptation for a similar problem was proposed by \cite{doi:10.1098/rspb.2001.1599}. In this case the rates that
 infected individuals leave the infected class is based on a stochastic
 distribution. The phenomena was modeled by making use of a large
 number of compartments representing infected classes with different removal rates, where the entry into the different classes is
 governed by the underlying probability distribution.
 
 An example of a statistical approach that highlights the importance of
-the phenomena is given by Lloyd-Smith \textit{et
-  al} \cite{SuperspreadingLloyd}, where they investigate the influence of individual variation in infectiousness on disease emergence. In their work the transmission of
+responses to individual variation is given by \cite{SuperspreadingLloyd}, where they investigate the influence of individual variation in infectiousness on disease emergence. In their work the transmission of
 disease is examined using a branching process. The varying
 transmission rates between individuals are treated as a given
 probability distribution. They find out that model predictions accounting for the individual variation differ sharply from average-based approaches for the estimation of transmission rates.
 
 A mathematical model examining the interactions within a colony of
-social spiders, \textit{Stegodyphus dumicola}, is provided by
-Pinter-Wollman, \textit{et al} \cite{doi:10.1086/687235}. They  examine the impact of different boldness levels of
- key individuals on the success of the colony.  They note that a small number of individuals within
-a colony may exhibit different levels of aggression, and a small
+social spiders, \textit{Stegodyphus dumicola}, is provided by \cite{doi:10.1086/687235}. They  examine the impact of different boldness levels of
+ key individuals on the success of the colony.  They note a small number of individuals within
+a colony may exhibit different levels of aggression, and this small
 number of individuals can have a disproportionate impact on the
 broader success of the colony.
 
-As a means to model this important aspect of a colony, Pinter-Wollman,
-\textit{et al}\cite{doi:10.1086/687235} provide a computational model
+As a means to model this important aspect of a colony, \cite{doi:10.1086/687235} provide a computational model
 consisting of an agent based model with a stochastically generated
 population. Their approach is based on a small number of rules that
 result in a distribution of behaviours. The temporal interactions
 within the colony are approximated via discrete time steps and
 stochastic decision making. The external interactions are approximated
 using an ordinary differential equation model.
+In the resulting statistical analyses, \cite{doi:10.1086/687235} found that different levels of boldness
+within key individuals resulted in broader impacts across the colony. One difference that was noted is differences in
+boldness impacted the prey capture rate for the colony. Another difference noted is
+the rules governing the distribution of aggression also impacted the spread of disease across the broader population.
 
-In the resulting statistical analyses, Pinter-Wollman, \textit{et
-  al} \cite{doi:10.1086/687235} found that different levels of boldness
-within key individuals resulted in broader impacts across the colony. For example, they found the differences in
-boldness impacted the prey capture rate for the colony. They also found that
-the rules governing the distribution of aggression impacted the spread of disease across the broader population.
-
-We note that many of the existing mathematical models have been
+The differences noted above represent a challenge with respect to measuring and detecting individual variation experimentally \cite{doi:10.1037/0735-7036.107.3.250}. In addition, 
+many of the existing mathematical models have been
 developed in the context of the spread of an infectious disease. Only
 a few approaches have been described for predator-prey systems, and
 the majority of such models have been derived from statistical or
@@ -225,7 +208,7 @@ such approaches and offers a novel deterministic method.
 
 \section{Modeling Genetic Variance As a Continuous Distribution}
 
-Rather than  a compartmental model or an agent based model, a
+Rather than a discrete or a continuous compartmental model or an agent based model, a
 coupled partial differential equation model with a continuous, distributed parameter representing individual variation  is proposed. First, an overview of the specific system, the interactions
 between butterflies and a parasitic wasp, is given. Next, the
 model is derived. Finally, the analysis of a simplified system of
@@ -240,9 +223,8 @@ model developed here focuses on the interaction between butterflies,
 \textit{Pieris brasicae}, and \textit{Trichogramma} wasps that prey on
 the butterflies' eggs. The interactions between these populations have
 received a good deal of attention
-\cite{PMC2797620,doi:10.1111/j.1439-0418.1986.tb00834.x,Figueroa2010AttractionOT,10.3389/fpls.2019.01768}. We
-focus on the results of one source in particular Huigens \textit{et
-  al} \cite{10.1093/beheco/arq007}. In their work, the authors state
+\citep{PMC2797620,doi:10.1111/j.1439-0418.1986.tb00834.x,Figueroa2010AttractionOT,10.3389/fpls.2019.01768}. We
+focus on the results of one source in particular  \cite{10.1093/beheco/arq007}. In their work, the authors state
 that the pressure placed on the butterfly population due to the wasps'
 interactions results in a change in the long term behaviour of the
 butterfly population.
@@ -288,9 +270,9 @@ of options have been employed to model the distribution of behavioural
 preferences in a given population. These methods include compartmental
 models, agent based models, and hybrids of these two models. One
 potential issue, though, is that the number of variations can be quite
-high. For example Abolins-Abols \textit{et al} examined a system in
+high. For example \cite{doi:10.1111/mec.14878} examined a system in
 which over 120 genetic sites determine a given animal's
-propensity\cite{doi:10.1111/mec.14878}. The resulting number of
+propensity. The resulting number of
 combinations of such sites can be extremely high.
 
 Rather than treat the possible behaviours as a discrete distribution
@@ -302,7 +284,7 @@ function that will vary as the independent variable varies.
 
 At first glance, this is akin to a Bayesian statistical approach that
 is often used to estimate the value of a
-parameter\cite{doi:10.1111/j.1467-9868.2007.00610.x,Fitzpatrick_1991}. In
+parameter\citep{doi:10.1111/j.1467-9868.2007.00610.x,Fitzpatrick_1991}. In
 these approaches a probability distribution is assumed to describe the
 likelihood that a parameter takes on a given range of values. In our
 case, though, we turn this around and assume that the population
@@ -315,11 +297,11 @@ employ the simplest option and assume a linear impact with respect to
 the new independent variable. In particular, for the interactions
 between the butterflies and wasps we track the population densities of
 the two populations. The interactions between the two species result
-in immediate mortality on the potential offspring, and we assume a
+in direct mortality on the potential offspring, and therefore we assume a
 predator-prey relationship rather than a disease like relationship
 modeled in other parasitic systems. 
 
-The system is adapted from Tewa, \textit{et al}\cite{TEWA20134825}. We
+The system is adapted from \cite{TEWA20134825}. We
 first focus on the model as a system of ordinary differential
 equations and later adapt it for the distributed system described
 above. The basic assumption is that in the absence of predation the
@@ -330,7 +312,7 @@ wasps are generalist predators, and this is an assumption that should
 be revisited beyond this initial investigation.  To account for the
 substantial time the wasps require to follow the butterflies and allow
 them to oviposit their eggs, we assume the rate of predation to be
-approximated as a type II Holling response\cite{TEWA20134825}.  The
+approximated as a type II Holling response\citep{TEWA20134825}.  The
 resulting ordinary differential equation is given by
 \begin{eqnarray}
   \label{eq:initialSystem1}
@@ -342,8 +324,8 @@ resulting ordinary differential equation is given by
 The density of butterflies is modeled by the function
 $\origB(\origT)$, the density of wasps is modeled by the function
 $\origW(\origT)$, and the parameters $\origA$, $\origK$, $\origC$,
-$\origGamma$, $\origD$, and $\origG$ are positive constants.
-
+$\origGamma$, $\origD$, and $\origG$ are positive constants. (The variables are denoted with hats so that when we rescale the parameters and variables to a dimensionless model we can remove the hats for the remainder of the exposition.)
+ 
 The butterflies do not behave uniformly with respect to their decision
 to make use of the anti-pheromone, and different butterflies have a
 different propensity to use the anti-pheromone. In this treatment, we
@@ -364,9 +346,9 @@ Our first task is to determine how the Holling type II response,
 should be expressed in this new context. Formal derivations of the
 response function for the case given in equations
 (\ref{eq:initialSystem1}) and (\ref{eq:initialSystem2}) are provided
-bye Dawes and Sousa\cite{DAWES201311}.  In the derivation here,
+by \cite{DAWES201311}.  In the derivation here,
 however, we follow the approach in Holling's original
-discussion\cite{holling_1959A,holling_1959B}. We begin by finding an
+discussion\citep{holling_1959A,holling_1959B}. We begin by finding an
 expression that relates the number of eggs parasitized by a single
 wasp, $Y(\origTheta)$, which is assumed to be a linear relationship,
 \begin{eqnarray}
@@ -426,7 +408,7 @@ butterfly population,
 We are almost ready to put these terms together for the current
 model. It is assumed that the mixing and interactions within the
 butterfly population are uniform, and the diffusion of the trait
-roughly follows Fick's law\cite{logan2006applied}. Here, a second
+roughly follows Fick's law\citep{logan2006applied}. Here, a second
 order derivative term approximates the sharing of the genetic
 information relative to the propensity to use the
 anti-aphrodisiac. The result is a coupled PDE and ODE system given by
@@ -576,7 +558,7 @@ $b=\frac{p(\theta)-c}{2p(\theta)}$. The $w$-nullclines are given by
   w & = & 0, \\
   b & = & \frac{cd}{(g-d)p(\theta)}.
 \end{eqnarray}
-The second $w$-nullcline is a vertical line in the $b,w$ plane. In
+The second $w$-nullcline is a vertical line in the $b,w$ plane. (The second $w$-nullcline does not exist if $g=d$.) In
 order for a fixed point to exist in the first quadrant an immediate
 restriction on the parameters requires that $g>d$.  Given the
 nullclines, the only fixed point that occurs in the first quadrant
@@ -603,13 +585,13 @@ where
   J_{12} & = & \frac{-b^*\cdot p(\theta)}{c+p(\theta)b^*}, \\
   J_{21} & = & \frac{g\cdot c \cdot w^* \cdot p(\theta)}{(c+p(\theta)b^*)^2}.
 \end{eqnarray}
-The value of $J_{12}$ is always negative, and the value of $J_{21}$ is always positive. The determinant must be positive, and the case of one negative and one positive real valued eigen value will not occur.
+The value of $J_{12}$ is always negative, and the value of $J_{21}$ is always positive. Thus the determinant must be positive, and so both eigenvalues have the same sign.
 Additionally, the eigenvalues of the Jacobian have negative real part when the
 trace is negative,
 \begin{eqnarray}
   p(\theta)(1-2b^*) - w^* p(\theta)\frac{c}{(c+p(\theta)b^*)^2} & < & 0.
 \end{eqnarray}
-Substituting the values of $b$ and $w$ for the non-trivial fixed point
+Substituting the values of $b^*$ and $w^*$ for the non-trivial fixed point
 yields
 \begin{eqnarray}
   \label{eqn:traceNegative}
@@ -732,7 +714,7 @@ equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) was
 approximated using a Runga-Kutta Fehlberg method with a minimum step
 size of 1.0E-5.  The value of the parameters in the example are
 $c=2.8$, $g=0.6$, $d=0.1$. Approximations were constructed for values
-of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
+of $m$ starting at $m=0.1$ and ending at $m=15.0$.
 
 The approximation for the initial value of $m$ was started near the
 non-trivial steady state, but the values of the butterflies and wasps
@@ -743,7 +725,7 @@ change more than 1.0E-7 from a previous high or low value for over
 2000 time steps it was considered to be at a steady state. For the
 limit cycle if the minimum and maximum for both densities was within
 1.0E-7 for two full cycles then it was considered to be in a limit
-cycle. \textcolor{red}{Should these details be moved in the appendix and only summarized here?}
+cycle. \textcolor{red}{Should these details be moved in the appendix and only summarized here?}\textcolor{blue}{Yes.  we should just be discussing how figure 3 gives information about the butterfly population ... the details of how fig 3 was constructed go in an appendix.}
 
 After the initial approximation, the initial condition for the next
 value of $m$ was the end state of the previous approximation. This
@@ -764,9 +746,8 @@ cycle. The resulting numerical simulations provide a close estimate of the locat
 
 \subsection{Approximation of the coupled PDE and ODE}
 
-The numerical exploration of the full, coupled system of the PDE and
-ODE, equations (\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2}),
-is examined. The details of the full approximation method are
+In this section we provide a  numerical exploration of the full, coupled system of the PDE and
+ODE, equations (\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2}). The details of the full approximation method are
 described in appendix \ref{numericalApproximation}. The parameter
 range is similar to that in subsection
 \ref{subsection:odeApproximation}.
@@ -910,7 +891,7 @@ $b=\frac{c\cdot d}{p(\theta)\left(g - d\right)}$, the Jacobian can be
 expressed as 
 \begin{eqnarray*}
   J & = & \left[
-          \begin{array}{rr}
+          \begin{array}{cc}
             p(\theta)\left( 1 -
             \frac{2c\cdot d}{p(\theta)(g-d)} \right) & -\frac{d}{g} \\
             0 & 0
@@ -930,7 +911,7 @@ direction associated with the non-zero eigenvalue then we have that
 At the fixed point $b=1$, $w=0$, the Jacobian is given by 
 \begin{eqnarray*}
   J & = & \left[
-          \begin{array}{rr}
+          \begin{array}{cc}
             -p(\theta) & -\frac{p(\theta)}{c+p(\theta)} \\
             0 & -d+\frac{gp(\theta)}{c+p(\theta)}
           \end{array}
@@ -942,7 +923,7 @@ This fixed point is semi-stable as long as $p(\theta) >\frac{dc}{g-d}$.  This co
 \label{appendix:stability}
 
 The linear stability with respect to the parameters for the
-non-trivial fixed points is examined in subsection subsection
+non-trivial fixed points is examined in subsection 
 \ref{subsection:parameters}. We now turn our attention to the
 existence of limit cycles or oscillatory behaviour of the solutions
 near the equilbria. Consider the model system, equations
@@ -1107,7 +1088,7 @@ then the system possesses at least one closed loop in the first quadrant.
   $E^{\ast }=(b^{\ast },w^{\ast })$ of equations (\ref{eq:scaledODE1})
   and (\ref{eq:scaledODE2}) is an unstable node or focus. The
   existence of a closed loop now follows from Lemma \ref{mm} and
-  Poincair'e--Bendixson theorem \cite{nonlinearChaos}.
+  Poincair'e--Bendixson theorem \citep{nonlinearChaos}.
 \end{proof}
 
 \begin{figure}[!htp]
@@ -1123,14 +1104,14 @@ then the system possesses at least one closed loop in the first quadrant.
 \end{figure}
 
 
-\section{Numerical Approximation}
+\section{Numerical Approximation of the Coupled PDE and ODE system}
 \label{numericalApproximation}
 
 We introduce the method for the numerical approximation of the coupled
 PDE and ODE system in equations (\ref{eq:scaledodePDE1}) and
 (\ref{eq:scaledodePDE2}). For the full system, we make use of a
 Legendre pseudo-spectral collocation
-method\cite{spectralMethodsFluids,hesthaven_gottlieb_gottlieb_2007,gottlieb1977numerical}. First,
+method\citep{spectralMethodsFluids,hesthaven_gottlieb_gottlieb_2007,gottlieb1977numerical}. First,
 the butterfly density is discretized in $\theta$ as
 \begin{eqnarray}
   \label{eqn:spatialDiscretization}
@@ -1138,7 +1119,7 @@ the butterfly density is discretized in $\theta$ as
 \end{eqnarray}
 where $\phi_i(\theta)$ is the Lagrange interpolant on the
 $i$\textsuperscript{th} abscissa of the Legendre-Gauss-Lobatto
-quadrature\cite{hesthaven_gottlieb_gottlieb_2007}.
+quadrature\citep{hesthaven_gottlieb_gottlieb_2007}.
 
 The abscissa of the Legendre-Gauss-Lobatto quadrature are the zeroes
 of the function
@@ -1146,12 +1127,12 @@ of the function
   \psi(\theta) & = & \left(1-\theta^2\right) L_{N}'(\theta),
 \end{eqnarray}
 where $L_N(\theta)$ is the $n$\textsuperscript{th} Legendre
-polynomial\cite{davis2007methods}.  The weights, $w_n$, associated
+polynomial\citep{davis2007methods}.  The weights, $w_n$, associated
 with the quadrature are identical to those described in
-Davis\cite{davis2007methods} as well as Golub and
-Welsch\cite{gaussQuadratureRules}. In our examples the quadrature is
+Davis\citep{davis2007methods} as well as Golub and
+Welsch\citep{gaussQuadratureRules}. In our examples the quadrature is
 approximated using the methods described by Golub and
-Welsch\cite{gaussQuadratureRules}.  Given $\psi(\theta)$ the Lagrange
+Welsch\citep{gaussQuadratureRules}.  Given $\psi(\theta)$ the Lagrange
 interpolants can be calculated
 \begin{eqnarray}
   \phi_i(\theta) & = & \frac{\psi(\theta)}{\psi'(\theta)(\theta-\theta_i)}.
@@ -1171,7 +1152,7 @@ Gauss-Lobatto quadrature is exact for polynomials up to degree
 $N$. The integral is approximated using the Gauss-Lobatto quadrature,
 and the resulting sum results in an equivalent norm compared to the
 Gauss quadrature which is exact for polynomials up to degree
-$N$\cite{SobolevCanutoQuarteroni}.
+$N$\citep{SobolevCanutoQuarteroni}.
 
 The resulting variational form for Neumann boundary conditions using a
 Galerkin approximation and a discrete inner product for equation
@@ -1193,7 +1174,7 @@ equations can be reduced to
         -  w(t) \frac{p(\theta_k) \hat{b}_k(t)) }{c+p(\theta_k)  \hat{b}_k(t) }  
    - \frac{\mu}{w_k} \sum_{i=0}^N \hat{b}_i(t) \left( \sum_{j=0}^N  \phi_i'(\theta_j) \phi_k'(\theta_j)  w_j \right).
 \end{eqnarray}
-The corresponding discretization of the equation for the wasps is can be simplified because the moth population is defined on the Gauss-Labotto points,and the integral can be approximated as described above. A similar approach has been described by Parend \textit{et al}\cite{doi:10.1002/mma.1318}.
+The corresponding discretization of the equation for the wasps is can be simplified because the moth population is defined on the Gauss-Labotto points,and the integral can be approximated as described above. A similar approach has been described by \cite{doi:10.1002/mma.1318}.
 
 Combined with equation (\ref{eq:scaledodePDE2}) the approximation
 consists of a system of $N+2$ ordinary differential equations. The
@@ -1201,7 +1182,7 @@ integral in equation (\ref{eq:scaledodePDE2}) is approximated using
 the Legendre-Gauss-Lobatto quadrature. The temporal discretization of
 the resulting system is constructed using a second order, implicit
 multi-step scheme. The scheme is implemented as a fully implicit
-second order Adams-Moulton scheme\cite{ascher2011first}. At each time
+second order Adams-Moulton scheme\citep{ascher2011first}. At each time
 step the resulting non-linear system is approximated using Newton's
 method.
 
@@ -1209,7 +1190,7 @@ method.
 
 \clearpage
 %\bibliographystyle{siam}
-\bibliographystyle{elsarticle-num}
+\bibliographystyle{elsarticle-harv}
 \bibliography{animalBehaviour}
 
 
