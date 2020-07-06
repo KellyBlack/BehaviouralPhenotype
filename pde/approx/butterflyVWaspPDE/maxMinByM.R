@@ -32,8 +32,11 @@ plotResults <- function(a)
     
 }
 
-##a <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/changingM-multipleMu.csv')
-a <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_1.csv')
+filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingM-multipleMu.csv'
+filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_1.csv'
+filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=1.1.csv'
+#filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMHysteresisReverse.csv'
+a <- read.csv(filename)
 
 plot.new()
 plot.window(xlim=c(0,1.05*max(a$m)),
