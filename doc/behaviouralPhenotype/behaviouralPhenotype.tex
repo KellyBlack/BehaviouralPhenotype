@@ -17,23 +17,40 @@
 \usepackage{xcolor}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
-\newcommand{\origB}{\hat{b}}
-\newcommand{\origW}{\hat{w}}
-\newcommand{\origAlpha}{\hat{\alpha}}
-\newcommand{\origK}{\hat{K}}
-\newcommand{\origGamma}{\hat{\gamma}}
-\newcommand{\origA}{\hat{a}}
-\newcommand{\origC}{\hat{c}}
-\newcommand{\origD}{\hat{d}}
-\newcommand{\origG}{\hat{g}}
-\newcommand{\origL}{\hat{L}}
-\newcommand{\origP}[1]{\hat{p}(#1)}
-\newcommand{\origTheta}{\hat{\theta}}
-\newcommand{\origT}{\hat{t}}
-\newcommand{\origMu}{\hat{\mu}}
+\newcommand{\origB}{{b}}
+\newcommand{\origW}{{w}}
+\newcommand{\origAlpha}{{\alpha}}
+\newcommand{\origK}{{K}}
+\newcommand{\origGamma}{{\gamma}}
+\newcommand{\origA}{{a}}
+\newcommand{\origC}{{c}}
+\newcommand{\origD}{{d}}
+\newcommand{\origG}{{g}}
+\newcommand{\origL}{{L}}
+\newcommand{\origP}[1]{{p}(#1)}
+\newcommand{\origTheta}{{\theta}}
+\newcommand{\origT}{{t}}
+\newcommand{\origMu}{{\mu}}
+
+\newcommand{\scaledB}{\hat{b}}
+\newcommand{\scaledW}{\hat{w}}
+\newcommand{\scaledAlpha}{\hat{\alpha}}
+\newcommand{\scaledK}{\hat{K}}
+\newcommand{\scaledGamma}{\hat{\gamma}}
+\newcommand{\scaledA}{\hat{a}}
+\newcommand{\scaledC}{\hat{c}}
+\newcommand{\scaledD}{\hat{d}}
+\newcommand{\scaledG}{\hat{g}}
+\newcommand{\scaledL}{\hat{L}}
+\newcommand{\scaledP}[1]{\hat{p}(#1)}
+\newcommand{\scaledTheta}{\hat{\theta}}
+\newcommand{\scaledT}{\hat{t}}
+\newcommand{\scaledMu}{\hat{\mu}}
+\newcommand{\scaledM}{\hat{m}}
+
 
 \modulolinenumbers[5]
-
+% https://www.overleaf.com/project/5eb9da10e929ab0001816b1e
 \journal{Ecological Modeling}
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -475,40 +492,41 @@ $\origP{\origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
 \end{table}
 
 
-The variables can be scaled as $\origB\rightarrow \bar{B}b$,
-$\origW\rightarrow \bar{W}w$, $\origT\rightarrow \bar{T}t$, and
-$\origTheta\rightarrow \bar{\Theta}\theta$. The choices made for our
+The variables can be scaled as $\origB\rightarrow \bar{B}\scaledB$,
+$\origW\rightarrow \bar{W}\scaledW$, $\origT\rightarrow \bar{T}\scaledT$, and
+$\origTheta\rightarrow \bar{\Theta}\scaledTheta$. The choices made for our
 scalings can be found in Table \ref{tab:scalingChoices}, and the
 corresponding transformations for the new parameters can be found in
 Table \ref{tab:newParameters}.  The resulting system can be reduced to
 the following form
 \begin{eqnarray}
   \label{eq:scaledodePDE1}
-  \frac{\partial}{\partial t} b & = &
-      p(\theta) b (1 - b)
-      -  w \frac{p(\theta) b}{c+p(\theta)b}
-      + \mu \frac{\partial^2}{\partial \theta^2} b , \\
+  \frac{\partial}{\partial \scaledT} \scaledB & = &
+      p(\theta) \scaledB (1 - \scaledB)
+      -  \scaledW \frac{\scaledP{\theta} \scaledB}{\scaledC+\scaledP{\scaledTheta}\scaledB}
+      + \scaledMu \frac{\partial^2}{\partial \scaledTheta^2} \scaledB , \\
   \label{eq:scaledodePDE2}
-  \frac{d}{dt} w & = & -d \cdot w +
-      \int^1_{\theta=0} g \cdot w \frac{p(\theta) b }{c + p(\theta) b} ~ d\theta,
+  \frac{d}{d\scaledT} \scaledW & = & -\scaledD \cdot \scaledW +
+      \int^1_{\scaledTheta=0} \scaledG \cdot \scaledW \frac{\scaledP{\scaledTheta} \scaledB }{\scaledC + \scaledP{\scaledTheta} \scaledB} ~ d\scaledTheta,
 \end{eqnarray}
 where
 \begin{eqnarray}
-  p(\theta) & = & 1 + m \cdot \theta.
+  \scaledP{\scaledTheta} & = & 1 + \scaledM \cdot \scaledTheta.
 \end{eqnarray}
-The domain for the scaled independent variable, $\theta$, is
-$0\leq\theta\leq 1$. As previously noted, the slope, $m$, can be
+The domain for the scaled independent variable, $\scaledTheta$, is
+$0\leq\scaledTheta\leq 1$. As previously noted, the slope, $\scaledM$, can be
 interpreted to indicate how much variation in the trait is present in
-a population. The larger $m$ is the greater the amount of variation.
+a population. The larger $\scaledM$ is the greater the amount of variation.
 With respect to the PDE, Neumann boundary conditions are used in the
 subsequent numerical approximations below,
 \begin{eqnarray*}
-  \frac{\partial}{\partial\theta} b(t,\theta) \bigg|_{\theta=0} & = & 0, \\
-  \frac{\partial}{\partial\theta} b(t,\theta) \bigg|_{\theta=1} & = & 0. \\
+  \frac{\partial}{\partial\scaledTheta} \scaledB(\scaledT,\scaledTheta) \bigg|_{\scaledTheta=0} & = & 0, \\
+  \frac{\partial}{\partial\scaledTheta} \scaledB(\scaledT,\scaledTheta) \bigg|_{\scaledTheta=1} & = & 0. \\
 \end{eqnarray*}
-A variety of initial
-conditions have been explored, and they are described in the results
-section, section \ref{section:results}.
+We have not yet defined the initial conditions, and
+a variety of initial
+conditions have been explored. More details are  described in the results
+section, section \ref{section:results}. For the sake of clarity, the notation for the scaled variables will revert to a cleaner notation similar to that originally stated. For the subsequent sections we will focus on these scaled equations.
 
 
 \subsection{Parameter Dependence on Stability of the System}
@@ -533,8 +551,8 @@ of ODEs:
       p(\theta) b(t) (1 - b(t))
       -  w(t) \frac{p(\theta) b(t)}{c+p(\theta)b(t)}, \\
   \label{eq:scaledODE2}
-  \frac{d}{dt} w(t) & = & -d \cdot w(t) +
-       g \cdot w(t) \frac{p(\theta) b(t) }{c + p(\theta) b(t)}.
+  \frac{d}{dt} w(t) & = & -d \; w(t) +
+       g \; w(t) \frac{p(\theta) b(t) }{c + p(\theta) b(t)}.
 \end{eqnarray}
 
 By focusing on the system of ODEs, we can examine an approximation to
@@ -565,7 +583,11 @@ nullclines, the only fixed point that occurs in the first quadrant
 away from an axis is at $b^*=\frac{cd}{p(\theta)(g-d)}$ and
 $w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.
 Note that a requirement for a positive value of $w^*$ is that
-$1-\frac{cd}{p(\theta)(g-d)}>0$.  When $g>d$, this inequality gives $g-d >\frac{cd}{p(\theta)} >0$.
+\begin{eqnarray}
+\label{eqn:positivityRequirement}
+\frac{c\,d}{g-d}<p(\theta).
+\end{eqnarray}
+When $g>d$, this inequality gives $g-d >\frac{cd}{p(\theta)} >0$.
 
 The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) at the fixed point is
@@ -595,37 +617,33 @@ Substituting the values of $b^*$ and $w^*$ for the non-trivial fixed point
 yields
 \begin{eqnarray}
   \label{eqn:traceNegative}
-  \frac{p(\theta)-c}{2} & < & \frac{cd}{g-d}.
+  \frac{p(\theta)-c}{2} & < & \frac{c\,d}{g-d}.
 \end{eqnarray}
 This expression can be viewed through another substitution. Let
-$u=\frac{cd}{g-d}=\frac{c}{\frac{g}{d}-1}$, and since
+$u=\frac{c\,d}{g-d}$, and since
 $p(\theta)>0$ the relationship in equation
 (\ref{eqn:traceNegative}) is now
 \begin{eqnarray}
   \label{eq:stabilityParameters}
-  u & > & \frac{p-c}{2}.
+  u & > & \frac{p(\theta)-c}{2}.
 \end{eqnarray}
 Note also that under this transformation, the value of the butterfly
-density at the fixed point is $\frac{u}{p}$. From our earlier assumptions we required that the fixed point occurs in the first quadrant which implies that
-\begin{eqnarray}
-  \frac{u}{p} & < & 1,
-\end{eqnarray}
-or 
+density at the fixed point is $\frac{u}{p(\theta)}$. From our earlier assumptions, equation (\ref{eqn:positivityRequirement}), we required that the fixed point occurs in the first quadrant which implies that
 \begin{eqnarray}
   \label{eq:boundFixedPoint}
-  u & < & p.
+  u & < & p(\theta).
 \end{eqnarray}
 Combining these inequalities yields
 \begin{equation}
   \begin{array}{rcccl}
-  \frac{p-c}{2}  & <  & u  & < & p.
+  \frac{p(\theta)-c}{2}  & <  & u  & < & p(\theta).
   \end{array}
 \end{equation}
 
 A feasible region that implies stability of the fixed point can be
-determined in the $u,p$ plane. If the parameters result in a point in
+determined in the $u,p$ plane. Note that for the case of the ODE, $\theta$ is a fixed parameter, and $p(\theta)$ is a constant. If the parameters result in a point in
 the region bounded by equation (\ref{eq:stabilityParameters}),
-equation (\ref{eq:boundFixedPoint}), and $p>0$ then the resulting
+equation (\ref{eq:boundFixedPoint}), and $p(\theta)>0$ then the resulting
 fixed point will be linearly stable. A graphical depiction of the
 stability region in the $u,p$ plane is shown in Figure
 \ref{fig:uvStabilityRegion}.
@@ -829,6 +847,17 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
 \end{figure}
 \textcolor{red}{The oscillations seem to be sustained for a relatively small window of $m$ values (Figures 4,5) when the diffusion is small. Is this still the case for Figures 7,8 and 9? How much does $m$ have to increase for the oscillations to disappear? 
 \\Need to think of the significance of these figures and Figure 6 in the context of $\mu$ and $m$. Here are my quick thoughts on Fig 6: 1)without including variation in the trait, increases in the use of anti-aphrodisiac (larger $m$) results in the destabilization of the population (Figure 6,ode) 2) When variation is accounted for, but the change in the group phenotype composition changes slowly ($\mu$ is relatively small, and distribution of the trait doesn't change fast), the population can be sustained for higher propensities for using the anti-aphrodisiac within the population 3) As $\mu$ gets large (resulting in faster changes in the group phenotype composition and leading to more well-mixed population), the results start to resemble those of the ODE when increases in the use of anti-aphrodisiac result in the destabilization of the population.  }
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=12cm]{FIGURES/maxMinByM-c-1.1.pdf}
+  \caption[Maximum and minimum values of the butterfly
+  density with $c=1.1$]{Maximum and minimum values of the butterfly densities after
+    a long time period as the parameter $m$ varies. The value of $c$ for these approximations is 1.1.}
+  \label{fig:maxMinButterflySmallMu-c-1.1}
+\end{figure}
+
+
 \section{Conclusion}
 
 \section{Acknowledgements}
@@ -919,6 +948,61 @@ At the fixed point $b=1$, $w=0$, the Jacobian is given by
 \end{eqnarray*}
 
 This fixed point is semi-stable as long as $p(\theta) >\frac{dc}{g-d}$.  This condition is equivalent to $b^* < 1$.  (If on the other hand, $p(\theta) <\frac{dc}{g-d}$, then the equilibrium $(b^*,w^*)$ moves into the fourth quadrant ($w^*<0$) and the equilibrium $(1,0)$ is a stable attractor.)
+
+\textcolor{blue}{I suggest replacing Appendix B with the following}
+
+\textbf{NEW TITLE:  Limit Cycles}
+
+In section 3.3 we showed that there is an equilibrium solution $(b^*,w^*)$ for the ODE system under the conditions:  1.)  $g-d>0$, and 2.) $\frac{cd}{g-d}<p$.   Here, the values of  $p$ are constrained by $1<p<1+m$.   We also showed in that section that this 
+equilibrium is stable under the condition that $\frac{p-c}{2} < \frac{cd}{g-d}.$   In this appendix, we prove the existence of a limit cycle when this latter inequality fails, i.e. the equilibrium becomes unstable.
+
+We begin by remarking that the positive quadrant of the $(b,w)$-plane is invariant under the flow of the ODE system.
+
+\begin{lemma}
+
+
+All solutions of equations (\ref{eq:scaledODE1}) and
+  (\ref{eq:scaledODE2}) with initial values
+  $b\left( 0\right) > 0 ,w\left( 0\right) >0$ remain in the positive quadrant, $\mathbb R_+^2$, for all time.
+\end{lemma}
+
+\begin{proof}
+  This follows by noticing that the non-negative axes, $\{(b,w):\  b \ge 0\}$ and $\{(b,w):\  w\ge 0\}$ are invariant under the flow.  Then, by uniqueness, we conclude that no flow line can pass from the positive quadrant through these axes.
+\end{proof}
+
+We next show that all solutions in the positive quadrant are bounded for all positive time.  
+
+\begin{lemma}
+There exists $R_{0}>0$  such that for all $R\geq R_{0}$, the right
+triangle, 
+$$T_{R}=\left\{ \left(b,w\right) \in \mathbb R^{2}:\  b\ge 0, w\ge 0, \ {\rm and}\  b+\frac{1}{g}w\le R\right\}, $$  
+is positively invariant.
+\end{lemma}
+
+\begin{proof}
+  We first note that if for some $t_0$, $b(t_0)< 1,$ then $b(t) < 1$ for all $t>t_0$.  This follows from the fact that equation (\ref{eq:scaledODE1}) shows that 
+  $$\frac{d}{dt}b(t) < 0,\  \  {\rm when}\ \ b(t)\ge 1.$$
+  
+  Now, since we have already discussed that solutions in the positive quadrant cannot cross the axes, it is only left to show that we can choose $R_0$ large enough so that if $R>R_0$, we have
+  $$\frac{d}{dt}(b(t)+\frac{1}{g}w(t)) <0,\  {\rm when}\  b(t)+\frac{1}{g}w(t) =R.$$
+  
+  But from equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}), we have
+  $$\frac{d}{dt}(b(t)+\frac{1}{g}w(t))  =\left( p\left( \theta \right) b(t)\left( 1-b(t)\right) -\frac{d}{g}
+w\left( t\right) \right). $$
+
+If $b(t) \ge 1$, the right hand side in negative.  On the other hand, if $b(t) < 1$, we use $\frac{d}{g}w(t) = R-b(t)$ to get
+$$\frac{d}{dt}(b(t)+\frac{1}{g}w(t)) =p\left( \theta \right) b(t)\left(
+1-b(t)\right) -d\left( R-b(t)\right),$$
+which is negative if $R>R_0= \frac{p(\theta)}{d} +1.$
+\end{proof}
+
+Finally, applying the Poincair'e--Bendixson theorem \citep{nonlinearChaos}, together with the above lemma, we have
+
+\begin{theorem}
+  If $0 < \frac{cd}{g-d} < \frac{p(\theta) -c}{2}$, then all positive solutions to equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) limit to a periodic solution (limit cycle).
+\end{theorem}
+
+\textbf{To finish this off, I will write a summarizing statement, much like the one below}
 \section{Stability of the Equilibria}
 \label{appendix:stability}
 
