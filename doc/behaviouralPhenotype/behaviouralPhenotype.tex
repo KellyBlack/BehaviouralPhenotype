@@ -137,8 +137,7 @@ the interactions between parasitic wasps of the genus
 \textit{Pieris brasicae} to employ a chemical associated with mating
 behaviour is modeled as a continuous distribution.
 
-While the original system of interactions involves multiple species, we consider a simplified system consisting of two
-species, butterflies and wasps.  The interaction between the two species depends on a pheromone that can be used by the males of the butterfly population. The pheromone associated with mating is meant to give the butterflies a benefit in survival, but paradoxically it is also an attractant for the wasp, which parasitizes the eggs. The two opposing pressures on the butterflies' use of the chemical provide an interesting question of determining the optimal level for the expression of this behavior.
+While the original system of interactions involves multiple species, we consider a simplified system consisting of two species, butterflies and wasps.  The interaction between the two species depends on a pheromone that can be used by the males of the butterfly population. The pheromone associated with mating is meant to give the butterflies a benefit in survival, but paradoxically it is also an attractant for the wasp, which parasitizes the eggs. The two opposing pressures on the butterflies' use of the chemical provide an interesting question of determining the optimal level for the expression of this behavior.
 
 Our discussion of these interactions is organized as follows. We first provide a more detailed overview of behavioural phenotypes
 including some previous efforts to model the phenomena. Next, the
@@ -425,21 +424,21 @@ butterfly population,
 We are almost ready to put these terms together for the current
 model. It is assumed that the mixing and interactions within the
 butterfly population are uniform, and the diffusion of the trait
-roughly follows Fick's law\citep{logan2006applied}. Here, a second
+roughly follows Fick's law\citep{logan2006applied}. This diffusion term is not with respect to a spatial variable as is normally seen, rather it is with respect to the introduced variable for the propensity to make use of the pheromone. Here, a second
 order derivative term approximates the sharing of the genetic
 information relative to the propensity to use the
 anti-aphrodisiac. The result is a coupled PDE and ODE system given by
 \begin{eqnarray}
   \label{eq:odePDE1}
   \frac{\partial}{\partial \origT} \origB(\origT,\origTheta) & = &
-     \underbrace{ \left[ \origAlpha \cdot \origP{\origTheta} \origB(\origT,\origTheta) (\origK - \origB(\origT,\origTheta)) \right]}_\text{trait dependent logistic growth}
-      -  \underbrace{\left[ \origGamma \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta)}{\origC+\origP{\origTheta}\origB(\origT,\origTheta)} \right]}_\text{trait dependent predation by wasps}
-      +  \underbrace{\left[ \origMu \frac{\partial^2}{\partial \origTheta^2} \origB(\origT,\origTheta)\right]}_\text{diffusion of trait within population}, \\
+     \underbrace{  \origAlpha \cdot \origP{\origTheta} \origB(\origT,\origTheta) (\origK - \origB(\origT,\origTheta)) }_\text{trait dependent logistic growth}
+      -  \underbrace{\origGamma \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta)}{\origC+\origP{\origTheta}\origB(\origT,\origTheta)} }_\text{trait dependent predation by wasps}
+      +  \underbrace{\origMu \frac{\partial^2}{\partial \origTheta^2} \origB(\origT,\origTheta)}_\text{diffusion of trait within population}, \\
   \label{eq:odePDE2}
-  \frac{d}{d\origT} \origW(\origT) & = & - \underbrace{\left[ \origD \cdot \origW(\origT) \right]}_\text{natural death}  +
-        \underbrace{\left[
+  \frac{d}{d\origT} \origW(\origT) & = & - \underbrace{ \origD \cdot \origW(\origT) }_\text{natural death}  +
+        \underbrace{
           \int^{\origL}_{\origTheta=0} \origG \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta) }{\origC + \origP{\origTheta} \origB(\origT,\origTheta)} ~ d\origTheta
-       \right]}_\text{net impact of feeding on butterflies across different trait levels }.
+       }_\text{net impact of feeding on butterflies across different trait levels }.
 \end{eqnarray}
 
 As previously noted, the function $\origP{\origTheta}$ is assumed to be an
@@ -464,7 +463,7 @@ One immediate restriction on the parameters requires that
 $0<\origA\origL<1$. The total variation in the observed trait is given by 
 $\origP{\origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
 
-\begin{table}[h]
+\begin{table}[ht]
   \centering
   \begin{tabular}{r|l}
     Scaling Factor & Value \\ \hline
@@ -477,7 +476,7 @@ $\origP{\origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
   \label{tab:scalingChoices}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[ht]
   \centering
   \begin{tabular}{r|l}
   Original Parameter & Scaled Value \\ \hline
@@ -628,7 +627,7 @@ $p(\theta)>0$ the relationship in equation
   u & > & \frac{p(\theta)-c}{2}.
 \end{eqnarray}
 Note also that under this transformation, the value of the butterfly
-density at the fixed point is $\frac{u}{p(\theta)}$. Our earlier assumption, equation (\ref{eqn:positivityRequirement}), requiring that the fixed point occurs in the first quadrant,  implies that
+density at the fixed point is $\frac{u}{p(\theta)}$. Our earlier assumption, equation (\ref{eqn:positivityRequirement}), requiring that the fixed point occurs in the first quadrant,  implying that
 \begin{eqnarray}
   \label{eq:boundFixedPoint}
   u & < & p(\theta).
