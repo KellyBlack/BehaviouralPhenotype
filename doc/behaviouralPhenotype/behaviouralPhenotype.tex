@@ -333,10 +333,10 @@ approximated as a type II Holling response\citep{TEWA20134825}.  The
 resulting ordinary differential equation is given by
 \begin{eqnarray}
   \label{eq:initialSystem1}
-  \frac{d}{d\origT} \origB(\origT) & = & \origAlpha \cdot \origB(\origT) (\origK - \origB(\origT))
-                               - \origGamma \cdot \origW(\origT) \frac{\origB(\origT)}{\origC+\origB(\origT)}, \\
+  \frac{d}{d\origT} \origB(\origT) & = & \underbrace{\origAlpha \cdot \origB(\origT) (\origK - \origB(\origT))}_\text{logistic growth}
+                               - \underbrace{\origGamma \cdot \origW(\origT) \frac{\origB(\origT)}{\origC+\origB(\origT)}}_\text{predation by wasps}, \\
   \label{eq:initialSystem2}
-  \frac{d}{d\origT} \origW(\origT) & = & -\origD \cdot \origW(\origT) + \origG \cdot \origW(\origT) \frac{\origB(\origT)}{\origC+\origB(\origT)}.
+  \frac{d}{d\origT} \origW(\origT) & = & -\underbrace{\origD \cdot \origW(\origT)}_\text{natural death} + \underbrace{\origG \cdot \origW(\origT) \frac{\origB(\origT)}{\origC+\origB(\origT)}}_\text{feeding}.
 \end{eqnarray}
 The density of butterflies is modeled by the function
 $\origB(\origT)$, the density of wasps is modeled by the function
@@ -432,14 +432,14 @@ anti-aphrodisiac. The result is a coupled PDE and ODE system given by
 \begin{eqnarray}
   \label{eq:odePDE1}
   \frac{\partial}{\partial \origT} \origB(\origT,\origTheta) & = &
-      \left[ \origAlpha \cdot \origP{\origTheta} \origB(\origT,\origTheta) (\origK - \origB(\origT,\origTheta)) \right]
-      - \left[ \origGamma \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta)}{\origC+\origP{\origTheta}\origB(\origT,\origTheta)} \right]
-      + \left[ \origMu \frac{\partial^2}{\partial \origTheta^2} \origB(\origT,\origTheta)\right], \\
+     \underbrace{ \left[ \origAlpha \cdot \origP{\origTheta} \origB(\origT,\origTheta) (\origK - \origB(\origT,\origTheta)) \right]}_\text{trait dependent logistic growth}
+      -  \underbrace{\left[ \origGamma \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta)}{\origC+\origP{\origTheta}\origB(\origT,\origTheta)} \right]}_\text{trait dependent predation by wasps}
+      +  \underbrace{\left[ \origMu \frac{\partial^2}{\partial \origTheta^2} \origB(\origT,\origTheta)\right]}_\text{diffusion of trait within population}, \\
   \label{eq:odePDE2}
-  \frac{d}{d\origT} \origW(\origT) & = & - \left[ \origD \cdot \origW(\origT) \right]  +
-       \left[
+  \frac{d}{d\origT} \origW(\origT) & = & - \underbrace{\left[ \origD \cdot \origW(\origT) \right]}_\text{natural death}  +
+        \underbrace{\left[
           \int^{\origL}_{\origTheta=0} \origG \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta) }{\origC + \origP{\origTheta} \origB(\origT,\origTheta)} ~ d\origTheta
-       \right].
+       \right]}_\text{net impact of feeding on butterflies across different trait levels }.
 \end{eqnarray}
 
 As previously noted, the function $\origP{\origTheta}$ is assumed to be an
@@ -537,7 +537,7 @@ equations \ref{eq:odePDE1} and \ref{eq:odePDE2}, the potential
 restrictions on the parameters are explored. We first examine a
 simplified system based on a system of ordinary differential
 equations.  The focus is on the impact of the parameters of the
-system, and a more complete analysis is provided in Appendices
+system, and a more complete analysis is provided in 
 \ref{appendix:otherFixedPoints} and \ref{appendix:stability}.
 
 The simplified system is found by examining an ODE with a similar form
@@ -559,8 +559,8 @@ By focusing on the system of ODEs, we can examine an approximation to
 the system by treating the variable $\theta$ as a fixed parameter and
 can gain some insight into the distributed system. The analysis in
 this section focuses on the stability of the linearized system at the
-nontrivial fixed point. More details about the other fixed points is
-provided in Appendix \ref{appendix:otherFixedPoints}
+nontrivial fixed point. More details about the other fixed points are
+provided in  \ref{appendix:otherFixedPoints} and  B.
 
 We first determine the nullclines for the system.
 The $b$-nullclines for the system in the $b,w$ plane are given by
@@ -579,16 +579,16 @@ $b=\frac{p(\theta)-c}{2p(\theta)}$. The $w$-nullclines are given by
 The second $w$-nullcline is a vertical line in the $b,w$ plane. (The second $w$-nullcline does not exist if $g=d$.) In
 order for a fixed point to exist in the first quadrant an immediate
 restriction on the parameters requires that $g>d$.  Given the
-nullclines, the only fixed point that occurs in the first quadrant
-away from an axis is at $b^*=\frac{cd}{p(\theta)(g-d)}$ and
-$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.
-Note that a requirement for a positive value of $w^*$ is that
+nullclines, there are three fixed points (as long as $g\ne d$), at $(0,0), (1,0)$ and $(b^*,w^*)$ with $b^*=\frac{cd}{p(\theta)(g-d)}$ and
+$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.  This last fixed point is in the positive quadrant only if $g-d>0$ and
+
 \begin{eqnarray}
 \label{eqn:positivityRequirement}
 \frac{c\,d}{g-d}<p(\theta).
 \end{eqnarray}
 When $g>d$, this inequality gives $g-d >\frac{cd}{p(\theta)} >0$.
 
+We now focus on the fixed point $(b^*,w^*)$ assuming it lies in the positive quadrant.
 The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) at the fixed point is
 \begin{eqnarray}
@@ -609,7 +609,7 @@ where
 \end{eqnarray}
 The value of $J_{12}$ is always negative, and the value of $J_{21}$ is always positive. Thus the determinant must be positive, and so both eigenvalues have the same sign.
 Additionally, the eigenvalues of the Jacobian have negative real part when the
-trace is negative,
+trace is negative, i.e.,
 \begin{eqnarray}
   p(\theta)(1-2b^*) - w^* p(\theta)\frac{c}{(c+p(\theta)b^*)^2} & < & 0.
 \end{eqnarray}
@@ -628,7 +628,7 @@ $p(\theta)>0$ the relationship in equation
   u & > & \frac{p(\theta)-c}{2}.
 \end{eqnarray}
 Note also that under this transformation, the value of the butterfly
-density at the fixed point is $\frac{u}{p(\theta)}$. From our earlier assumptions, equation (\ref{eqn:positivityRequirement}), we required that the fixed point occurs in the first quadrant which implies that
+density at the fixed point is $\frac{u}{p(\theta)}$. Our earlier assumption, equation (\ref{eqn:positivityRequirement}), requiring that the fixed point occurs in the first quadrant,  implies that
 \begin{eqnarray}
   \label{eq:boundFixedPoint}
   u & < & p(\theta).
@@ -640,13 +640,19 @@ Combining these inequalities yields
   \end{array}
 \end{equation}
 
-A feasible region that implies stability of the fixed point can be
-determined in the $u,p$ plane. Note that for the case of the ODE, $\theta$ is a fixed parameter, and $p(\theta)$ is a constant. If the parameters result in a point in
+The feasible region that implies stability of the fixed point can be
+determined in the $(u,p)$-plane. Note that for the case of the ODE, $\theta$ is a fixed parameter, and $p(\theta)$ is a constant. If the parameters result in a point in
 the region bounded by equation (\ref{eq:stabilityParameters}),
 equation (\ref{eq:boundFixedPoint}), and $p(\theta)>0$ then the resulting
 fixed point will be linearly stable. A graphical depiction of the
 stability region in the $u,p$ plane is shown in Figure
-\ref{fig:uvStabilityRegion}.
+\ref{fig:uvStabilityRegion}. For the region above the line $u=p$, there is no fixed point in the positive quadrant, but for the region below the line $u = \frac{p-c}{2}$ there is still  a fixed point in the positive quadrant, however, it is unstable.  In the appendix, we will prove that this instability leads to the existence of a \emph{limit cycle}, implying oscillatory behavior of the butterfly and wasp populations. We summarize these results in 
+
+\begin{theorem}  The system of ordinary differential equations given by equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) (with $g\ne d)$ has fixed points in the $(b,w)$-plane at the points $(0,0), (1,0),$ and $(b^*,w^*)$, where $b^*=\frac{cd}{p(\theta)(g-d)}$ and
+$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.  The latter fixed point lies in the positive quadrant if $g-d>0$ and $u<p$, where $u=\frac{cd}{g-d}.$
+Furthermore, this fixed point is asymptotically stable when $u>\frac{p-c}{2}$ and is unstable if $u<\frac{p-c}{2}.$ However, when this fixed point is unstable, there exists at least one  limit cycle in the positive quadrant.
+
+\end{theorem}
 
 \begin{figure}[htb]
   \centering
@@ -659,10 +665,10 @@ stability region in the $u,p$ plane is shown in Figure
 In the context of the full, distributed system in equation
 (\ref{eq:scaledodePDE1}) and equation (\ref{eq:scaledodePDE2}) the
 domain of $\theta$ is $0\leq\theta\leq 1$. For a given set of
-parameters the value of $u$ is fully determined. The values of $p$
+parameters the value of $u$ is fully determined. The values of $p=p(\theta)$
 vary from $p=1$ to $p=1+m$.  The corresponding region in the $u,p$
 plane is along a horizontal line segment from $(1,u)$ to
-$(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}. \textcolor{red}{ I think the interpretation of the $m$ in the ODE versus the PDE should be made more clear to help interpret these results or at least hint how this may differ when the full system is considered and the variation is actually modeled explicitly. My understanding of it is that failing to include the variation in the behavioral phenotype in the model may result in the population no longer remaining stable when considering high enough propensity for using the anti-pheromone. This is in contrast with the PDE system, which can show something different when such variation is accounted for?}
+$(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}. We note that if the propensity for using the anti-pheromone within the butterfly population is high enough (corresponding to large values of $m$), the population may be destabilized (see Figure \ref{fig:distributedLineSegment}). As this result comes from the ODE system and does not take into consideration the differences in the individual behavior ($\theta$ is fixed), it is of interest how this can change once we allow for behavioral differences within the butterfly population. This will be explored in the next section where we summarize our findings for both the ODE and PDE systems and discuss how taking variation into account can give more insight into the dynamics of the population. 
 
 \textcolor{blue}  {Actually, we should say more about stability here.  In the appendix, Aladeen proved that when the critical point becomes unstable (for high values of $\theta$, a stable limit cycle persists.  So I guess the system is still stable in a generalized sense, but periodic.}
 
@@ -723,7 +729,7 @@ equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Our focus
 is on the stability characteristics of the fixed points as well as the
 long term dynamics of the system. The behaviour at the non-trivial
 fixed point is explored with respect to changes in the parameter
-$m$, \textcolor{red}{reflecting changes in the propensity of the male butterflies to use the anti-aphrodisiac. }\textcolor{red}{Because the ODE model does not take into consideration the variation in the behavioral phenotype,} the change in $\theta$ is not relevant for the ODE and we 
+$m$, reflecting changes in the propensity of the male butterflies to use the anti-aphrodisiac. Because the ODE model does not take into consideration the variation in the behavioral phenotype, the change in $\theta$ is not relevant for the ODE and we 
 assume that $\theta=1$.
 
 An example of the long term behaviour is provided in Figure
@@ -870,16 +876,16 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
 \label{appendix:otherFixedPoints}
 
 In subsection \ref{subsection:parameters} the stability of the
-non-trivial fixed point is examined. More details about the other
+non-trivial fixed point in the positive quadrant was examined. More details about the other
 fixed points as well as a more complete description of the Jacobian of
 the system given in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) are provided here. In particular the other two
-fixed points are given, then the Jacobian is stated, and the linear
+fixed points are given,  the Jacobian is stated, and the linear
 stability at the other two fixed points is briefly explored.
 
-The fixed point for the the system of equations given in equations
-(\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) has one fixed point
-where both $b>0$ and $w>0$. There are two other fixed points on the boundary of the positive quadrant, i.e $b=0$ or $w=0$.  One is the fixed point at the origin, $b=0$ and $w=0$.
+The the system of equations given in by
+(\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) has (at most) one fixed point
+with both $b>0$ and $w>0$. There are two other fixed points on the boundary of the positive quadrant, i.e $b=0$ or $w=0$.  One is the fixed point at the origin, $b=0$ and $w=0$.
 The remaining fixed point occurs at $w=0$ and $b=\frac{c\cdot
   d}{p(\theta)\left(g - d\right)}$. \textcolor{blue} {No, this fixed point is at b=1, w=0}
   
@@ -905,15 +911,14 @@ The values of the entries in the matrix are
 
 For the fixed point at the origin, the Jacobian can be expressed as 
 \begin{eqnarray*}
-  J & = & \left[
+  J~\bigg|_{(0,0)} & = & \left[
           \begin{array}{rr}
             p(\theta) & 0 \\
             0 & -d
           \end{array}
           \right].
 \end{eqnarray*}
-it is assumed that both $p(\theta)$ and $d$ are non-negative, so the
-linear stability at the origin is semi-stable.
+Since it is assumed that both $p(\theta)$ and $d$ are non-negative, this fixed point  is unstable  (saddle point).
 
 For the fixed point at $w=0$ and
 $b=\frac{c\cdot d}{p(\theta)\left(g - d\right)}$, the Jacobian can be
@@ -939,7 +944,7 @@ direction associated with the non-zero eigenvalue then we have that
 
 At the fixed point $b=1$, $w=0$, the Jacobian is given by 
 \begin{eqnarray*}
-  J & = & \left[
+  J~\bigg|_{(1,0)} & = & \left[
           \begin{array}{cc}
             -p(\theta) & -\frac{p(\theta)}{c+p(\theta)} \\
             0 & -d+\frac{gp(\theta)}{c+p(\theta)}
@@ -947,13 +952,13 @@ At the fixed point $b=1$, $w=0$, the Jacobian is given by
           \right].
 \end{eqnarray*}
 
-This fixed point is semi-stable as long as $p(\theta) >\frac{dc}{g-d}$.  This condition is equivalent to $b^* < 1$.  (If on the other hand, $p(\theta) <\frac{dc}{g-d}$, then the equilibrium $(b^*,w^*)$ moves into the fourth quadrant ($w^*<0$) and the equilibrium $(1,0)$ is a stable attractor.)
+This fixed point is unstable as long as $p(\theta) >\frac{dc}{g-d}$.  This condition is equivalent to $b^* < 1$.  (If on the other hand, $p(\theta) <\frac{dc}{g-d}$, then the equilibrium $(b^*,w^*)$ moves into the fourth quadrant ($w^*<0$) and the equilibrium $(1,0)$ is a stable attractor.)
 
 \textcolor{blue}{I suggest replacing Appendix B with the following}
 
 \textbf{NEW TITLE:  Limit Cycles}
 
-In section 3.3 we showed that there is an equilibrium solution $(b^*,w^*)$ for the ODE system under the conditions:  1.)  $g-d>0$, and 2.) $\frac{cd}{g-d}<p$.   Here, the values of  $p$ are constrained by $1<p<1+m$.   We also showed in that section that this 
+In section 3.3 we showed that there is an equilibrium solution $(b^*,w^*)$ in the positive quadrant for the ODE system under the conditions:  1.)  $g-d>0$, and 2.) $\frac{cd}{g-d}<p(\theta)$.   Here, the values of  $p(\theta)$ are constrained by $1<p(\theta)<1+m$.   We also showed in that section that this 
 equilibrium is stable under the condition that $\frac{p-c}{2} < \frac{cd}{g-d}.$   In this appendix, we prove the existence of a limit cycle when this latter inequality fails, i.e. the equilibrium becomes unstable.
 
 We begin by remarking that the positive quadrant of the $(b,w)$-plane is invariant under the flow of the ODE system.
@@ -967,7 +972,7 @@ All solutions of equations (\ref{eq:scaledODE1}) and
 \end{lemma}
 
 \begin{proof}
-  This follows by noticing that the non-negative axes, $\{(b,w):\  b \ge 0\}$ and $\{(b,w):\  w\ge 0\}$ are invariant under the flow.  Then, by uniqueness, we conclude that no flow line can pass from the positive quadrant through these axes.
+  This follows by noticing that the non-negative axes, $\{(b,0):\  b \ge 0\}$ and $\{(0,w):\  w\ge 0\}$ are invariant under the flow.  Then, by uniqueness, we conclude that no flow line can pass from the positive quadrant through these axes.
 \end{proof}
 
 We next show that all solutions in the positive quadrant are bounded for all positive time.  
@@ -990,7 +995,7 @@ is positively invariant.
   $$\frac{d}{dt}(b(t)+\frac{1}{g}w(t))  =\left( p\left( \theta \right) b(t)\left( 1-b(t)\right) -\frac{d}{g}
 w\left( t\right) \right). $$
 
-If $b(t) \ge 1$, the right hand side in negative.  On the other hand, if $b(t) < 1$, we use $\frac{d}{g}w(t) = R-b(t)$ to get
+If $b(t) \ge 1$, the right hand side in negative.  On the other hand, if $b(t) < 1$, we use $\frac{d}{g}w(t) = d(R-b(t))$ to get
 $$\frac{d}{dt}(b(t)+\frac{1}{g}w(t)) =p\left( \theta \right) b(t)\left(
 1-b(t)\right) -d\left( R-b(t)\right),$$
 which is negative if $R>R_0= \frac{p(\theta)}{d} +1.$
@@ -999,10 +1004,18 @@ which is negative if $R>R_0= \frac{p(\theta)}{d} +1.$
 Finally, applying the Poincair'e--Bendixson theorem \citep{nonlinearChaos}, together with the above lemma, we have
 
 \begin{theorem}
-  If $0 < \frac{cd}{g-d} < \frac{p(\theta) -c}{2}$, then all positive solutions to equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) limit to a periodic solution (limit cycle).
+  If $0 < \frac{cd}{g-d} < \frac{p(\theta) -c}{2}$, then there exists at least one  limit cycle solution to equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) in the positive quadrant.
 \end{theorem}
 
-\textbf{To finish this off, I will write a summarizing statement, much like the one below}
+Summarizing the results of Apendices A and B, we have
+
+\begin{theorem}
+  The system of ordinary differential equations given by equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) (with $g\ne d)$ has fixed points in the $(b,w)$-plane at the points $(0,0), (1,0),$ and $(b^*,w^*)$, where $b^*=\frac{cd}{p(\theta)(g-d)}$ and
+$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$. 
+ The  fixed point $(b^*,w^*)$ lies in the positive quadrant if $g-d>0$ and $u<p$, where $u=\frac{cd}{g-d}.$
+Furthermore, this fixed point is asymptotically stable when $u>\frac{p-c}{2}$ and is unstable if $u<\frac{p-c}{2}.$ However, all positive solutions to the system are bounded, and when this fixed point is unstable, there exists at least one  limit cycle in the positive quadrant.
+Finally, the fixed point $(0,0)$ is always an unstable saddle point, and the fixed point $(1,0)$ is unstable when $u<p$, otherwise it is stable.
+\end{theorem}
 \section{Stability of the Equilibria}
 \label{appendix:stability}
 
