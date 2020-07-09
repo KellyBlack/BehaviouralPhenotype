@@ -510,6 +510,7 @@ the following form
 \end{eqnarray}
 where
 \begin{eqnarray}
+    \label{eq:definitionP}
   \scaledP{\scaledTheta} & = & 1 + \scaledM \cdot \scaledTheta.
 \end{eqnarray}
 The domain for the scaled independent variable, $\scaledTheta$, is
@@ -536,12 +537,12 @@ equations \ref{eq:odePDE1} and \ref{eq:odePDE2}, the potential
 restrictions on the parameters are explored. We first examine a
 simplified system based on a system of ordinary differential
 equations.  The focus is on the impact of the parameters of the
-system, and a more complete analysis is provided in 
+system prior to examining the fully distributed system, and a more complete analysis is provided in 
 \ref{appendix:otherFixedPoints} and \ref{appendix:stability}.
 
 The simplified system is found by examining an ODE with a similar form
 as the distributed system. By assuming that the distribution of the
-butterflies is a constant, which is consistent with using a single
+butterflies is a constant, and the entire population is concentrated on a single, constant 
 value of $\theta$, the system is approximated by the following system
 of ODEs:
 \begin{eqnarray}
@@ -553,10 +554,11 @@ of ODEs:
   \frac{d}{dt} w(t) & = & -d \; w(t) +
        g \; w(t) \frac{p(\theta) b(t) }{c + p(\theta) b(t)}.
 \end{eqnarray}
+In the subsequent examination of the approximation of the fully distributed system (the coupled PDE and ODE), the distribution of the butterflies is a function of $\theta$. The net effect is to produce a population whose characteristics extend along a distribution for $0\leq\theta\leq 1$.
 
-By focusing on the system of ODEs, we can examine an approximation to
+By focusing on the system of ODEs, we can more easily examine an approximation to
 the system by treating the variable $\theta$ as a fixed parameter and
-can gain some insight into the distributed system. The analysis in
+can gain some insight into the distributed system which will incorporate the full domain of possible values of $\theta$. The analysis in
 this section focuses on the stability of the linearized system at the
 nontrivial fixed point. More details about the other fixed points are
 provided in  \ref{appendix:otherFixedPoints} and  B.
@@ -566,26 +568,26 @@ The $b$-nullclines for the system in the $b,w$ plane are given by
 \begin{eqnarray}
   \label{eq:bnullclines}
   b & = & 0, \\
-  w & = & (1-b)(c+b\cdot p(\theta)).
+  w & = & (1-b)(c+b\cdot(1+m\theta))
 \end{eqnarray}
+where the definition of $p(\theta)$ from equation (\ref{eq:definitionP}) has been substituted.
 The second $b$-nullcline is a parabola opening downward, and the vertex is located at
-$b=\frac{p(\theta)-c}{2p(\theta)}$. The $w$-nullclines are given by
+$b=\frac{1+m\theta-c}{2(1+m\theta)}$. The $w$-nullclines are given by
 \begin{eqnarray}
   \label{eq:wnullclines}
   w & = & 0, \\
-  b & = & \frac{cd}{(g-d)p(\theta)}.
+  b & = & \frac{cd}{(g-d)(1+m\theta)}.
 \end{eqnarray}
 The second $w$-nullcline is a vertical line in the $b,w$ plane. (The second $w$-nullcline does not exist if $g=d$.) In
 order for a fixed point to exist in the first quadrant an immediate
 restriction on the parameters requires that $g>d$.  Given the
-nullclines, there are three fixed points (as long as $g\ne d$), at $(0,0), (1,0)$ and $(b^*,w^*)$ with $b^*=\frac{cd}{p(\theta)(g-d)}$ and
-$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.  This last fixed point is in the positive quadrant only if $g-d>0$ and
-
+nullclines, there are three fixed points (as long as $g\ne d$), at $(0,0), (1,0)$ and $(b^*,w^*)$ with $b^*=\frac{cd}{(1+m\theta)(g-d)}$ and
+$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{(1+m\theta)(g-d)}\right)$.  This last fixed point is in the positive quadrant only if $g-d>0$ and
 \begin{eqnarray}
 \label{eqn:positivityRequirement}
-\frac{c\,d}{g-d}<p(\theta).
+\frac{c\,d}{g-d}<1+m\theta.
 \end{eqnarray}
-When $g>d$, this inequality gives $g-d >\frac{cd}{p(\theta)} >0$.
+
 
 We now focus on the fixed point $(b^*,w^*)$ assuming it lies in the positive quadrant.
 The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
@@ -610,75 +612,75 @@ The value of $J_{12}$ is always negative, and the value of $J_{21}$ is always po
 Additionally, the eigenvalues of the Jacobian have negative real part when the
 trace is negative, i.e.,
 \begin{eqnarray}
-  p(\theta)(1-2b^*) - w^* p(\theta)\frac{c}{(c+p(\theta)b^*)^2} & < & 0.
+  (1+m\theta)(1-2b^*) - w^* p(\theta)\frac{c}{(c+(1+m\theta)b^*)^2} & < & 0.
 \end{eqnarray}
 Substituting the values of $b^*$ and $w^*$ for the non-trivial fixed point
 yields
 \begin{eqnarray}
   \label{eqn:traceNegative}
-  \frac{p(\theta)-c}{2} & < & \frac{c\,d}{g-d}.
+  \frac{1+m\theta-c}{2} & < & \frac{c\,d}{g-d}.
 \end{eqnarray}
 This expression can be viewed through another substitution. Let
 $u=\frac{c\,d}{g-d}$, and since
-$p(\theta)>0$ the relationship in equation
+$1+m\theta>0$ the relationship in equation
 (\ref{eqn:traceNegative}) is now
 \begin{eqnarray}
   \label{eq:stabilityParameters}
-  u & > & \frac{p(\theta)-c}{2}.
+  u & > & \frac{1+m\theta-c}{2}.
 \end{eqnarray}
 Note also that under this transformation, the value of the butterfly
-density at the fixed point is $\frac{u}{p(\theta)}$. Our earlier assumption, equation (\ref{eqn:positivityRequirement}), requiring that the fixed point occurs in the first quadrant,  implying that
+density at the fixed point is $\frac{u}{1+m\theta}$. Our earlier assumption, equation (\ref{eqn:positivityRequirement}), requiring that the fixed point occurs in the first quadrant,  implying that
 \begin{eqnarray}
   \label{eq:boundFixedPoint}
-  u & < & p(\theta).
+  u & < & 1+m\theta.
 \end{eqnarray}
 Combining these inequalities yields
 \begin{equation}
   \begin{array}{rcccl}
-  \frac{p(\theta)-c}{2}  & <  & u  & < & p(\theta).
+  \frac{1+m\theta-c}{2}  & <  & u  & < & 1+m\theta.
   \end{array}
 \end{equation}
 
 The feasible region that implies stability of the fixed point can be
-determined in the $(u,p)$-plane. Note that for the case of the ODE, $\theta$ is a fixed parameter, and $p(\theta)$ is a constant. If the parameters result in a point in
+determined in the $(u,\theta)$-plane. Note that for the case of the ODE, $\theta$ is a fixed parameter. If the parameters result in a point in
 the region bounded by equation (\ref{eq:stabilityParameters}),
-equation (\ref{eq:boundFixedPoint}), and $p(\theta)>0$ then the resulting
+equation (\ref{eq:boundFixedPoint}) then the resulting
 fixed point will be linearly stable. A graphical depiction of the
-stability region in the $u,p$ plane is shown in Figure
-\ref{fig:uvStabilityRegion}. For the region above the line $u=p$, there is no fixed point in the positive quadrant, but for the region below the line $u = \frac{p-c}{2}$ there is still  a fixed point in the positive quadrant, however, it is unstable.  In the appendix, we will prove that this instability leads to the existence of a \emph{limit cycle}, implying oscillatory behavior of the butterfly and wasp populations. We summarize these results in 
+stability region in the $u,\theta$ plane is shown in Figure
+\ref{fig:uvStabilityRegion}. For the region above the line $u=1+m\theta$, there is no fixed point in the positive quadrant, but for the region below the line $u = \frac{1+m\theta-c}{2}$ there is still  a fixed point in the positive quadrant, however, it is unstable.  In the appendix, we will prove that this instability leads to the existence of a \emph{limit cycle}, implying oscillatory behavior of the butterfly and wasp populations. We summarize these results in 
 
-\begin{theorem}  The system of ordinary differential equations given by equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) (with $g\ne d)$ has fixed points in the $(b,w)$-plane at the points $(0,0), (1,0),$ and $(b^*,w^*)$, where $b^*=\frac{cd}{p(\theta)(g-d)}$ and
-$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.  The latter fixed point lies in the positive quadrant if $g-d>0$ and $u<p$, where $u=\frac{cd}{g-d}.$
-Furthermore, this fixed point is asymptotically stable when $u>\frac{p-c}{2}$ and is unstable if $u<\frac{p-c}{2}.$ However, when this fixed point is unstable, there exists at least one  limit cycle in the positive quadrant.
+\begin{theorem}  The system of ordinary differential equations given by equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) (with $g\ne d)$ has fixed points in the $(b,w)$-plane at the points $(0,0), (1,0),$ and $(b^*,w^*)$, where $b^*=\frac{cd}{(1+m\theta)(g-d)}$ and
+$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{(1+m\theta)(g-d)}\right)$.  The latter fixed point lies in the positive quadrant if $g-d>0$ and $u<1+m\theta$, where $u=\frac{cd}{g-d}.$
+Furthermore, this fixed point is asymptotically stable when $u>\frac{1+m\theta-c}{2}$ and is unstable if $u<\frac{1+m\theta-c}{2}.$ However, when this fixed point is unstable, there exists at least one  limit cycle in the positive quadrant.
 
 \end{theorem}
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=10cm]{FIGURES/odeStability-uv-plane.pdf}
-  \caption[Stability region in the $u,p$ plane.]{Graphical view of the
-    combined feasible and stability region in the $u,p$ plane.}
+  \caption[Stability region in the $u,\theta$ plane.]{Graphical view of the
+    combined feasible and stability region in the $u,\theta$ plane.}
   \label{fig:uvStabilityRegion}
 \end{figure}
 
 In the context of the full, distributed system in equation
 (\ref{eq:scaledodePDE1}) and equation (\ref{eq:scaledodePDE2}) the
 domain of $\theta$ is $0\leq\theta\leq 1$. For a given set of
-parameters the value of $u$ is fully determined. The values of $p=p(\theta)$
-vary from $p=1$ to $p=1+m$.  The corresponding region in the $u,p$
-plane is along a horizontal line segment from $(1,u)$ to
-$(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}. We note that if the propensity for using the anti-pheromone within the butterfly population is high enough (corresponding to large values of $m$), the population may be destabilized (see Figure \ref{fig:distributedLineSegment}). As this result comes from the ODE system and does not take into consideration the differences in the individual behavior ($\theta$ is fixed), it is of interest how this can change once we allow for behavioral differences within the butterfly population. This will be explored in the next section where we summarize our findings for both the ODE and PDE systems and discuss how taking variation into account can give more insight into the dynamics of the population. 
+parameters the value of $u$ is fully determined. The possible values of $\theta$
+are from $\theta=0$ to $\theta=1$.  The corresponding region in the $u,\theta$
+plane is along a horizontal line segment from $(0,u)$ to
+$(1,u)$ as shown in Figure \ref{fig:distributedLineSegment}. We note that if the propensity for using the anti-pheromone within the butterfly population is high enough (corresponding to large values of $m$), the population may be destabilized (see Figure \ref{fig:distributedLineSegment}). As this result comes from the ODE system and does not take into consideration the differences in the individual behavior ($\theta$ is fixed), it is of interest how this can change once we allow for behavioral differences within the butterfly population. This will be explored in the next section where we summarize our findings for both the ODE and PDE systems and discuss how taking variation into account can give more insight into the dynamics of the population. 
 
 \textcolor{blue}  {Actually, we should say more about stability here.  In the appendix, Aladeen proved that when the critical point becomes unstable (for high values of $\theta$, a stable limit cycle persists.  So I guess the system is still stable in a generalized sense, but periodic.}
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=12cm]{FIGURES/odeStability-uv-plane-Line.pdf}
-  \caption[Domain of the distributed system in the $u,p$
+  \caption[Domain of the distributed system in the $u,\theta$
   plane.]{Domain of the parameters for the distributed system for a
     given set of parameters for $0\leq\theta\leq 1$. The dotted line
-    represents the values of $p(\theta)=1+m\theta$ for all
-    values of $\theta$. The figure on the left is an example of a
+    represents the possible points in the plane
+    for all values of $\theta$ between 0 and 1. The figure on the left is an example of a
     smaller value of $m$ while the figure on the right is an example
     of a larger value of $m$. The whole population shown in the figure
     on the left lie in a stable region, while part of the population
