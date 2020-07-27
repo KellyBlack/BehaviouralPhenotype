@@ -7,8 +7,14 @@ import matplotlib.pyplot as plt
 def makeStabilityRegionPlot(c,m,largeU,largeP,p,axes,
                             title="Stability Region For The ODEs"):
     
-    axes.set_xlabel(r"$p=1+m\theta$", fontsize=25)
-    axes.set_ylabel(r"$u=\frac{cd}{g-d}$",labelpad=-20, fontsize=25)
+    #axes.set_xlabel(r"$p=1+m\theta$", fontsize=25)
+    #axes.set_ylabel(r"$u=\frac{cd}{g-d}$",labelpad=-20, fontsize=25)
+    axes.annotate(r"$p=1+m\theta$", xy=(0.85,0.22), 
+                  ha='left', va='top', fontsize=25,
+                  xycoords='axes fraction', textcoords='offset points')
+    axes.annotate(r"$u=\frac{cd}{g-d}$", xy=(-0.07,0.95), 
+                  ha='left', va='top', fontsize=25, rotation=90,
+                  xycoords='axes fraction', textcoords='offset points')
     axes.set_title(title, fontsize=35)
     #axes.ticklabel_format(axis='y', style='sci', scilimits=(-1,1))
     
