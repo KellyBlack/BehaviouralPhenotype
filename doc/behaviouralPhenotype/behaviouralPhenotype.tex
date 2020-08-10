@@ -667,11 +667,11 @@ Combining these inequalities yields
 
 The feasible region that implies stability of the fixed point can be
 determined in the $(p,u)$-plane. Note that for the case of the ODE, $p$ is a fixed parameter. If the parameters result in a point in
-the region bounded by equations (\ref{eq:stabilityParameters}) and
+the region bounded by equation (\ref{eq:stabilityParameters}) and
 equation (\ref{eq:boundFixedPoint}) then the resulting
 fixed point will be linearly stable. A graphical depiction of the
 stability region in the $(p,u)$ plane is shown in Figure
-\ref{fig:uvStabilityRegion}. For the region above the line $u=p$, there is no fixed point in the positive quadrant, but for the region below the line $u = \frac{p-c}{2}$ there is still  a fixed point in the positive quadrant, however, it is unstable.  In the appendix, we will prove that this instability leads to the existence of a \emph{limit cycle}, implying oscillatory behavior of the butterfly and wasp populations. We summarize these results in 
+\ref{fig:uvStabilityRegion}. For the region above the line $u=p$, there is no fixed point in the positive quadrant, but for the region below the line $u = \frac{p-c}{2}$ there is still  a fixed point in the positive quadrant, however, it is not linearly stable.  In the appendix, we will prove that this situation leads to the existence of a \emph{limit cycle}, implying oscillatory behavior of the butterfly and wasp populations. We summarize these results in 
 
 \begin{theorem}  The system of ordinary differential equations given by equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) (with $g\ne d)$ has fixed points in the $(b,w)$-plane at the points $(0,0), (1,0),$ and $(b^*,w^*)$, where $b^*=\frac{cd}{p\cdot (g-d)}$ and
 $w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p\cdot (g-d)}\right)$.  The latter fixed point lies in the positive quadrant if $g-d>0$ and $u<p$, where $u=\frac{cd}{g-d}.$
@@ -681,7 +681,7 @@ Furthermore, this fixed point is asymptotically stable when $u>\frac{p-c}{2}$ an
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=10cm]{FIGURES/odeStability-uv-plane.pdf}
+  \includegraphics[width=10cm]{FIGURES/odeStability-up-plane.pdf}
   \caption[Stability region in the $(p,u)$ plane.]{Graphical view of the
     combined feasible and stability region in the $(p,u)$ plane.}
   \label{fig:uvStabilityRegion}
@@ -691,24 +691,28 @@ In the context of the full, distributed system in equation
 (\ref{eq:scaledodePDE1}) and equation (\ref{eq:scaledodePDE2}) the
 domain of $\theta$ is $0\leq\theta\leq 1$. For a given set of
 parameters the value of $u$ is fully determined. The possible values of $p$
-vary from $p=1$ to $p=1+m$.  The corresponding region in the $p,u$
+vary from $p=1$ to $p=1+m$.  The corresponding region in the $(p,u)$
 plane is along a horizontal line segment from $(1,u)$ to
 $(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}. We note that if the propensity for using the anti-pheromone within the butterfly population is high enough (corresponding to large values of $m$), the population may be destabilized (see Figure \ref{fig:distributedLineSegment}). As this result comes from the ODE system and does not take into consideration the differences in the individual behavior ($\theta$ is fixed), it is of interest how this can change once we allow for behavioral differences within the butterfly population. This will be explored in the next section where we summarize our findings for both the ODE and PDE systems and discuss how taking variation into account can give more insight into the dynamics of the population. 
 
 \textcolor{blue}  {Actually, we should say more about stability here.  In the appendix, Aladeen proved that when the critical point becomes unstable (for high values of $\theta$, a stable limit cycle persists.  So I guess the system is still stable in a generalized sense, but periodic.}
 
 \begin{figure}[htb]
-  \centering
-  \includegraphics[width=12cm]{FIGURES/odeStability-uv-plane-Line.pdf}
+   \begin{tabular}{p{0.3\textwidth}p{0.3\textwidth}p{0.3\textwidth}}
+   \includegraphics[width=5cm]{FIGURES/odeStability-up-plane-Line-A.pdf} &
+   \includegraphics[width=5cm]{FIGURES/odeStability-up-plane-Line-B.pdf} &
+   \includegraphics[width=5cm]{FIGURES/odeStability-up-plane-Line-C.pdf} \\ [-10pt]
+   \multicolumn{1}{c}{(A)} &
+   \multicolumn{1}{c}{(B)}  &
+   \multicolumn{1}{c}{(C)}
+   \end{tabular}
   \caption[Domain of the distributed system in the $(p,u)$
-  plane.]{Domain of the parameters for the distributed system for a
+  plane.]{Stability region for the $(p,u)$ plane. The
     given set of parameters for $0\leq\theta\leq 1$. The dotted line
     represents the possible points in the plane
-    for all values of $p$ between 1 and $1+m$. The figure on the left is an example of a
-    smaller value of $m$ while the figure on the right is an example
-    of a larger value of $m$. The whole population shown in the figure
-    on the left lie in a stable region, while part of the population
-    shown in the figure on the right lie in an unstable region.}
+    for all values of $p$ between 1 and $1+m$. Panel A, on the left, is an example of a
+    smaller value of $m$, and the full range of values of $\theta$ are in a stable region. Panel B, in the middle, is an example where the possible values of $\theta$ extend into a region that may admit limit cycles for some of the
+    larger value of $m$. Likewise, Panel C, on the right, is an example where the value of $c$ is less than 1, and most of the possible values of $\theta$ extend into a region that may admit limit cycles.}
   \label{fig:distributedLineSegment}
 \end{figure}
 
@@ -1008,7 +1012,7 @@ $$\frac{d}{dt}(b(t)+\frac{1}{g}w(t)) =p\left( \theta \right) b(t)\left(
 which is negative if $R>R_0= \frac{p(\theta)}{d} +1.$
 \end{proof}
 
-Finally, applying the Poincair'e--Bendixson theorem \citep{nonlinearChaos}, together with the above lemma, we have
+Finally, applying the Poincair\'{e}--Bendixson theorem \citep{nonlinearChaos}, together with the above lemma, we have
 
 \begin{theorem}
   If $0 < \frac{cd}{g-d} < \frac{p(\theta) -c}{2}$, then there exists at least one  limit cycle solution to equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) in the positive quadrant.
@@ -1023,6 +1027,7 @@ $w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$.
 Furthermore, this fixed point is asymptotically stable when $u>\frac{p-c}{2}$ and is unstable if $u<\frac{p-c}{2}.$ However, all positive solutions to the system are bounded, and when this fixed point is unstable, there exists at least one  limit cycle in the positive quadrant.
 Finally, the fixed point $(0,0)$ is always an unstable saddle point, and the fixed point $(1,0)$ is unstable when $u<p$, otherwise it is stable.
 \end{theorem}
+
 \section{Stability of the Equilibria}
 \label{appendix:stability}
 
@@ -1047,7 +1052,7 @@ the following lemma,
   (\ref{eq:scaledODE2}) have the form
 \begin{eqnarray}
   b^{\prime}\left( t \right) & = & b(t)X\left( b,w\right), \\
-  w^{\prime}\left( t \right) & = & w(t)Y\left( b,w\right)
+  w^{\prime}\left( t \right) & = & w(t)Y\left( b,w\right).
 \end{eqnarray}
 
 
@@ -1192,7 +1197,7 @@ then the system possesses at least one closed loop in the first quadrant.
   $E^{\ast }=(b^{\ast },w^{\ast })$ of equations (\ref{eq:scaledODE1})
   and (\ref{eq:scaledODE2}) is an unstable node or focus. The
   existence of a closed loop now follows from Lemma \ref{mm} and
-  Poincair'e--Bendixson theorem \citep{nonlinearChaos}.
+  Poincair{\`e}--Bendixson theorem \citep{nonlinearChaos}.
 \end{proof}
 
 \begin{figure}[!htp]
