@@ -1,11 +1,13 @@
 ode <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/rk45_c1.1.csv')
 #ode <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/rk45.csv')
 odeOrder <- sort(ode$m,index.return=TRUE)
+cCoef = min(ode$c)
 
 plot.new()
 plot.window(xlim=c(0,1.05*max(ode$m)),
             ylim=c(0,1.16*max(ode$maxButterfly)))
-title(main="Max and Min Of The Butterfly Density After A Long Time Span",
+title(main=
+        paste("Max and Min Of The Butterfly Density\nAfter A Long Time Span, c=",cCoef),
       xlab='m',
       ylab='Butterfly Density')
 axis(1)
