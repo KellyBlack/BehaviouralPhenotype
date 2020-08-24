@@ -160,7 +160,7 @@ general phenomenon.
 A number of authors have noted the importance of variation
 in a species' habits or
 genetics \citep{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016}. This variation is sometimes referred to as group phenotypic composition \citep{FARINE2015609}, and it is observed in many species of animals such as sheep, barnacle geese, ants, spiders, fish and wild birds among others \citep{sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1086/687235,doi:10.1098/rspb.2014.1016,doi:10.1037/0735-7036.107.3.250}.
-A broad discussion by  \citep{doi:10.1111/j.1461-0248.2010.01536.x} includes a description of variation in behavioural trains and includes multiple examples of the different ways it can impact a population. For example, varying levels of boldness result in different levels of exposure. Also, varying levels of social interaction result in different rates of transmissions between individuals. They go on to  propose that the diversity of
+A broad discussion by  \citep{doi:10.1111/j.1461-0248.2010.01536.x} includes a description of variation in behavioural trains and includes multiple examples of the different ways it can impact a population. For example, varying levels of boldness result in different dlevels of exposure. Also, varying levels of social interaction result in different rates of transmissions between individuals. They go on to  propose that the diversity of
 behaviours can profoundly impact the broader dynamics of the focal population as well as the populations that interact with them.
 
 
@@ -240,7 +240,7 @@ model developed here focuses on the interaction between butterflies,
 the butterflies' eggs. The interactions between these populations have
 received a good deal of attention
 \citep{PMC2797620,doi:10.1111/j.1439-0418.1986.tb00834.x,Figueroa2010AttractionOT,10.3389/fpls.2019.01768}. We
-focus on the results of one source in particular  \cite{10.1093/beheco/arq007}. In their work, the authors state
+focus on the results of  \cite{10.1093/beheco/arq007}. In their work, the authors state
 that the pressure placed on the butterfly population due to the wasps'
 interactions results in a change in the long term behaviour of the
 butterfly population.
@@ -268,7 +268,7 @@ anti-aphrodisiac. It is important to note that this method of predation on
 a butterfly's eggs requires a non-trivial time commitment with respect
 to handling and detecting the presence of the eggs.
 
-The authors \cite{10.1093/beheco/arq007} note that the probability that
+ \cite{10.1093/beheco/arq007} note that the probability that
 a male will make use of the anti-aphrodisiac varies between
 individuals. There are different trade-offs in the use of the
 anti-aphrodisiac, but the authors found that the wasps' actions are
@@ -532,7 +532,7 @@ subsequent numerical approximations below,
 We have not yet defined the initial conditions, and
 a variety of initial
 conditions have been explored. More details are  described in the results
-section, section \ref{section:results}. For the sake of clarity, the notation for the scaled variables will revert to a cleaner notation similar to that originally stated. For the subsequent sections we will focus on these scaled equations.
+section, section \ref{section:results}. For the sake of clarity, the notation for the scaled variables will revert to a cleaner notation similar to that originally stated. For example we will express $\scaledB(\scaledT,\scaledTheta)$ as $b(t,\theta)$. For the subsequent sections we will focus on these scaled equations.
 
 \section{Results}
 \label{section:results}
@@ -559,14 +559,12 @@ Appendix \ref{numericalApproximation}.
 \label{subsection:parameters}
 
 Prior to examining the behaviour of the distributed system given in
-equations \ref{eq:odePDE1} and \ref{eq:odePDE2}, the potential
-restrictions on the parameters are explored. We first examine a
-simplified system based on a system of ordinary differential
+equations \ref{eq:odePDE1} and \ref{eq:odePDE2}, we explore potential restrictions on the parameters by studying  a closely related system of ordinary differential
 equations.  The focus is on the impact of the parameters of the
-system prior to examining the fully distributed system, and a more complete analysis is provided in 
+system, and a more complete analysis is provided in 
 \ref{appendix:otherFixedPoints} and \ref{appendix:stability}.
 
-The simplified system is found by examining an ODE with a similar form
+The simplified system is found by examining a pair of ODEs with a similar form
 as the distributed system. By assuming that the distribution of the
 butterflies is a constant, and the entire population is concentrated on a single, constant 
 value of $\theta$, the system is approximated by the following system
@@ -671,9 +669,9 @@ the region bounded by equation (\ref{eq:stabilityParameters}) and
 equation (\ref{eq:boundFixedPoint}) then the resulting
 fixed point will be linearly stable. A graphical depiction of the
 stability region in the $(p,u)$ plane is shown in Figure
-\ref{fig:uvStabilityRegion}. For the region above the line $u=p$, there is no fixed point in the positive quadrant, but for the region below the line $u = \frac{p-c}{2}$ there is still  a fixed point in the positive quadrant, however, it is not linearly stable.  In the appendix, we will prove that this situation leads to the existence of a \emph{limit cycle}, implying oscillatory behavior of the butterfly and wasp populations. We summarize these results in 
+\ref{fig:uvStabilityRegion}. For the region above the line $u=p$, there is no fixed point in the positive quadrant, but for the region below the line $u = \frac{p-c}{2}$ there is still  a fixed point in the positive quadrant, however, it is not stable.  In the appendix, we will prove that this situation leads to the existence of a \emph{limit cycle}, implying oscillatory behavior of the butterfly and wasp populations.  In addition, it is proven in the appendix that all solutions to the system of ODEs in the first quadrant remain bounded for all future times.  We summarize these results in 
 
-\begin{theorem}  The system of ordinary differential equations given by equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) (with $g\ne d)$ has fixed points in the $(b,w)$-plane at the points $(0,0), (1,0),$ and $(b^*,w^*)$, where $b^*=\frac{cd}{p\cdot (g-d)}$ and
+\begin{theorem}  Solutions to the  system of ordinary differential equations given by equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) in the first quadrant remain bounded for all positive time.  The system (with $g\ne d)$ has fixed points in the $(b,w)$-plane at the points $(0,0), (1,0),$ and $(b^*,w^*)$, where $b^*=\frac{cd}{p\cdot (g-d)}$ and
 $w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p\cdot (g-d)}\right)$.  The latter fixed point lies in the positive quadrant if $g-d>0$ and $u<p$, where $u=\frac{cd}{g-d}.$
 Furthermore, this fixed point is asymptotically stable when $u>\frac{p-c}{2}$ and is unstable if $u<\frac{p-c}{2}.$ However, when this fixed point is unstable, there exists at least one  limit cycle in the positive quadrant.
 
@@ -695,7 +693,7 @@ vary from $p=1$ to $p=1+m$.  The corresponding region in the $(p,u)$
 plane is along a horizontal line segment from $(1,u)$ to
 $(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}. We note that if the propensity for using the anti-pheromone within the butterfly population is high enough (corresponding to large values of $m$), the population may be destabilized (see Figure \ref{fig:distributedLineSegment}). As this result comes from the ODE system and does not take into consideration the differences in the individual behavior ($\theta$ is fixed), it is of interest how this can change once we allow for behavioral differences within the butterfly population. This will be explored in the next section where we summarize our findings for both the ODE and PDE systems and discuss how taking variation into account can give more insight into the dynamics of the population. 
 
-\textcolor{blue}  {Actually, we should say more about stability here.  In the appendix, Aladeen proved that when the critical point becomes unstable (for high values of $\theta$, a stable limit cycle persists.  So I guess the system is still stable in a generalized sense, but periodic.}
+
 
 \begin{figure}[htb]
    \begin{tabular}{p{0.3\textwidth}p{0.3\textwidth}p{0.3\textwidth}}
@@ -717,22 +715,26 @@ $(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}. We note that if t
 \end{figure}
 
 \begin{figure}[htb]
-  \centering
-  \includegraphics[width=12cm]{FIGURES/ODEButterflyBounds.pdf}
+  \begin{tabular}{p{0.5\textwidth}p{0.5\textwidth}}
+  \includegraphics[height=8cm]{FIGURES/maxMinByM-c-1.1.pdf} 
+  &
+  \includegraphics[height=8cm]{FIGURES/maxMinByM-mu-01-04.pdf} \\
+  \multicolumn{1}{c}{(A)} & 
+  \multicolumn{1}{c}{(B)} \\
+  \end{tabular}
   \caption[Upper and lower bounds of the butterfly density.]{The upper
     and lower bounds of the long term density of the butterfly
     population. The population was approximated for different values
     of $m$. The approximation was stopped if it either became close to
-    a steady state or a limit cycle.}
-  \label{fig:odeButterflyBifurcation}
+    a steady state or a limit cycle.  The value of $g$ is 0.6, $d$ is 0.1. The value of $c$ for the graph on the left (A) is 1.1, and the value of $c$ for the graph on the right (B) is 2.8.}
+  \label{fig:odeButterflyMaxMin}
 \end{figure}
 
 
 
 
 
-
-\subsection{Numerical Approximation of solutions of the system of ODEs}
+\subsection{Numerical Approximation of the solutions of the system of ODEs}
 \label{subsection:odeApproximation}
 
 We first examine the behaviour of the system of ODEs given in
@@ -744,12 +746,12 @@ $m$, reflecting changes in the propensity of the male butterflies to use the ant
 assume that $\theta=1$.
 
 An example of the long term behaviour is provided in Figure
-\ref{fig:odeButterflyBifurcation}. The system of ODEs given in
+\ref{fig:odeButterflyMaxMin}. The system of ODEs given in
 equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) was
 approximated using a Runga-Kutta Fehlberg method with a minimum step
 size of 1.0E-5.  The value of the parameters in the example are
 $c=2.8$, $g=0.6$, $d=0.1$. Approximations were constructed for values
-of $m$ starting at $m=0.1$ and ending at $m=15.0$.
+of $m$ starting at $m=0.1$ and ending at $m=15.0$. The graph on the left, (A), represents the maximum and minimum values of limit cycles for $c=1.1$. The graph on the right, (B), represents the maximum values of limit cycles for $c=2.8$. The impact of increasing the value of $c$ is to shift to a smaller value of $m$ where limit cycles first appear.
 
 The approximation for the initial value of $m$ was started near the
 non-trivial steady state, but the values of the butterflies and wasps
@@ -769,12 +771,7 @@ and increasing. the process was then repeated for the value of $m$
 starting at the highest value and decreasing. The results were nearly
 identical, and no hysteresis was detected.
 
-The results of the series of approximations are shown in Figure
-\ref{fig:odeButterflyBifurcation}. The values of $m$ are given along
-the horizontal axis, and the values of the butterfly densities are
-given along the vertical axis. The values of the maximum and the
-minimum values of the butterfly densities are plotted after the
-approximation was terminated.
+
 
 The value of $\theta$ is fixed at 1 for these approximations, and the Hopf bifurcation occurs at $m=2.92$. With respect to the numerical approximations, the system moved close to a steady state for values of $m$ less than about 2.841. For larger values of $m$ the system approached a limit
 cycle. The resulting numerical simulations provide a close estimate of the location of the bifurcation.
@@ -834,7 +831,7 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
   \includegraphics[width=12cm]{FIGURES/maxMinByM-mu-01-04.pdf}
   \caption[Maximum and minimum values of the butterfly
   density]{Maximum and minimum values of the butterfly densities after
-    a long time period as the parameter $m$ varies.}
+    a long time period as the parameter $m$ varies.  The value of $c$ is 2.8, the value of $g$ is 0.6, and the value of $d$ is 0.1. }
   \label{fig:maxMinButterflySmallMu}
 \end{figure}
 
@@ -864,15 +861,6 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
 \end{figure}
 \textcolor{red}{The oscillations seem to be sustained for a relatively small window of $m$ values (Figures 4,5) when the diffusion is small. Is this still the case for Figures 7,8 and 9? How much does $m$ have to increase for the oscillations to disappear? 
 \\Need to think of the significance of these figures and Figure 6 in the context of $\mu$ and $m$. Here are my quick thoughts on Fig 6: 1)without including variation in the trait, increases in the use of anti-aphrodisiac (larger $m$) results in the destabilization of the population (Figure 6,ode) 2) When variation is accounted for, but the change in the group phenotype composition changes slowly ($\mu$ is relatively small, and distribution of the trait doesn't change fast), the population can be sustained for higher propensities for using the anti-aphrodisiac within the population 3) As $\mu$ gets large (resulting in faster changes in the group phenotype composition and leading to more well-mixed population), the results start to resemble those of the ODE when increases in the use of anti-aphrodisiac result in the destabilization of the population.  }
-
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=12cm]{FIGURES/maxMinByM-c-1.1.pdf}
-  \caption[Maximum and minimum values of the butterfly
-  density with $c=1.1$]{Maximum and minimum values of the butterfly densities after
-    a long time period as the parameter $m$ varies. The value of $c$ for these approximations is 1.1.}
-  \label{fig:maxMinButterflySmallMu-c-1.1}
-\end{figure}
 
 
 \section{Conclusion}
