@@ -34,13 +34,17 @@ plotResults <- function(a)
 
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingM-multipleMu.csv'
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_1.csv'
-filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=1.1.csv'
+#filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=1.1.csv'
 #filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMHysteresisReverse.csv'
 a <- read.csv(filename)
 
+odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c1.1.csv'
+odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45.csv'
+ode <- read.csv(odeFilename)
+
 plot.new()
 plot.window(xlim=c(0,1.05*max(a$m)),
-            ylim=c(0,1.16*max(a$maxButterfly)))
+            ylim=c(0,1.05*max(ode$maxButterfly)))
 title(main="Max and Min Of The Butterfly Density After A Long Time Span",
       xlab='m',
       ylab='Butterfly Density')
@@ -66,7 +70,7 @@ results <- plotResults(a)
 #     ylab='Butterfly Density',
 #     col=2,lwd=2)
 
-ode <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/rk45_c1.1.csv')
+
 odeOrder <- sort(ode$m,index.return=TRUE)
 points(ode$m[odeOrder$ix],ode$minButterfly[odeOrder$ix],type='l',lty=3,lwd=4)
 points(ode$m[odeOrder$ix],ode$maxButterfly[odeOrder$ix],type='l',lty=3,lwd=4)
@@ -75,7 +79,7 @@ results$plotTypes <- c(results$plotTypes,3)
 results$pchTypes <- c(results$pchTypes,-1)
 results$colours <- c(results$colours,1)
 
-legend(0.1,0.8,results$labels,lty=results$plotTypes,
+legend(max(ode$m)*0.85,0.5,results$labels,lty=results$plotTypes,
        pch=results$pchTypes,col=results$colours,lwd=2)
 #legend(0.2,1.1,
 #       c(expression(paste(mu,'=0.2')),
@@ -86,5 +90,5 @@ legend(0.1,0.8,results$labels,lty=results$plotTypes,
 #       lwd=c(2,2,2)
 #       )
 #dev.off()
-#dev.copy(pdf,'maxMinByM-mu-01-04.pdf')
+#dev.copy(pdf,'maxMinByM-c-1.1-mu-01-04.pdf')
 #dev.off()
