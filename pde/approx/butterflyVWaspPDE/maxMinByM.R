@@ -36,10 +36,12 @@ filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingM-multipleMu.csv'
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_1.csv'
 #filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=1.1.csv'
 #filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMHysteresisReverse.csv'
+filename <- '/tmp/changingMResults_1.csv'
 a <- read.csv(filename)
 
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c1.1.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45.csv'
+odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.1.csv'
 ode <- read.csv(odeFilename)
 
 plot.new()

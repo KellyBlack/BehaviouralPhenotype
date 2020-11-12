@@ -9,7 +9,7 @@
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
-#define NUMBER_THREADS 4
+#define NUMBER_THREADS 7
 
 int main()
 {
@@ -20,14 +20,14 @@ int main()
 
     // Define the default values of the parameters.
     double mu = 0.01;
-    double c  = 1.1;
+    double c  = 2.7;
     double g  = 0.6;
     double d  = 0.1;
     double m  = 0.2;
 
     std::cout << "Starting" << std::endl;
 
-//#define ODE_APPROXIMATION
+#define ODE_APPROXIMATION
 #ifdef ODE_APPROXIMATION
 
     double theta = 1.0;
@@ -40,7 +40,7 @@ int main()
                                0.1,15.0,300,
                                0.0,500.0,dt,1.0E-5,
                                initialCond,1.0E-6,
-                               "rk45_c1.1.csv",false,NUMBER_THREADS);
+                               "rk45_c2.7.csv",false,NUMBER_THREADS);
 
 #endif
 
@@ -88,7 +88,8 @@ int main()
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
                 -SKIP_PRINT_UPDATE,NUMBER_THREADS,
-                false);
+                false,
+                "/tmp/changingMResults_c=2.7.csv");
 #endif
 
     std::cout << "Done" << std::endl;

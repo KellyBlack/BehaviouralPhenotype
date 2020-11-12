@@ -1,4 +1,4 @@
-ode <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/rk45_c1.1.csv')
+ode <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.1.csv')
 #ode <- read.csv('../build-butterflyVWaspPDE-Desktop-Debug/rk45.csv')
 odeOrder <- sort(ode$m,index.return=TRUE)
 cCoef = min(ode$c)

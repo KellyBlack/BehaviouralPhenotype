@@ -318,7 +318,8 @@ int NumericalTrials::approximateSystemTrackRepeating(
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
         int skipPrint, int numProcesses,
-        bool appendFile)
+        bool appendFile,
+        std::string filename)
 {
 
     // Create an ID and then create a message queue that will be associated with the ID
@@ -329,11 +330,11 @@ int NumericalTrials::approximateSystemTrackRepeating(
     std::fstream csvFile;
     if(appendFile)
     {
-        csvFile.open("/tmp/changingMResults_1.csv", std::ios::out | std::ios::app);
+        csvFile.open(filename, std::ios::out | std::ios::app);
     }
     else
     {
-        csvFile.open("/tmp/changingMResults_1.csv", std::ios::out);
+        csvFile.open(filename, std::ios::out);
         csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     }
 

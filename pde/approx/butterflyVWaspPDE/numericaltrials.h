@@ -36,14 +36,13 @@ public:
             int skipPrint,
             int skipFileSave);
 
-    int approximateSystemTrackRepeating(
-            double muLow, double muHigh, int numberMu,
+    int approximateSystemTrackRepeating(double muLow, double muHigh, int numberMu,
             double c, double g, double d,
             double mLow, double mHigh, int numberM,
-            double dt,unsigned long maxTimeLupe,
+            double dt, unsigned long maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
-            int skipPrint, int numProcesses, bool appendFile);
+            int skipPrint, int numProcesses, bool appendFile, std::string filename);
 
     int approximateSystemQuietResponse(
             double mu, double c, double g, double d, double m,
