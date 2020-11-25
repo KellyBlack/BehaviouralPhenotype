@@ -5,8 +5,8 @@
 #include "rungakutta45.h"
 
 #define SKIP_PRINT_UPDATE 40000
-#define SKIP_FILE_SAVE 150
-#define NUMBER_TIME_LOOP 300000000
+#define SKIP_FILE_SAVE 1500
+#define NUMBER_TIME_LOOP 3000000000
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
@@ -15,12 +15,12 @@
 int main()
 {
     // Set up the temporal variables.
-    double dt = 0.00001;
+    double dt = 0.000001;
 
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double mu = 0.005;
+    double mu = 0.0095;
     double c  = 2.75;
     double g  = 0.6;
     double d  = 0.1;
@@ -31,7 +31,7 @@ int main()
     std::cout << "Starting" << std::endl;
 
 
-#define ODE_APPROXIMATION
+//#define ODE_APPROXIMATION
 #ifdef ODE_APPROXIMATION
 
     filename.str("");
@@ -55,12 +55,12 @@ int main()
 
 #endif
 
-//#define APPROXIMATE_MULTIPLE_M
+#define APPROXIMATE_MULTIPLE_M
 #ifdef APPROXIMATE_MULTIPLE_M
     NumericalTrials::multipleApproximationsByM(
             mu,c,g,d,
             //0.01,1.0,0.1,
-            1.0,10.0,0.5,
+            6.5,13.1,3.25,
             //10.5,12.0,0.5,
             //13.0,15.0,2.5,
             dt,NUMBER_TIME_LOOP,
@@ -87,7 +87,7 @@ int main()
 
 #endif
 
-#define APPROXIMATE_MULTIPLE_M_MU
+//#define APPROXIMATE_MULTIPLE_M_MU
 #ifdef APPROXIMATE_MULTIPLE_M_MU
 
     filename.str("");

@@ -10,7 +10,7 @@
 #include "util.h"
 
 //#define OUTPUTFILE "approximation.csv"
-#define BINARYOUTPUTFILE "approximation"
+#define BINARYOUTPUTFILE "approximation-TRIAL-"
 
 
 // Constructor for the numerical trials class.
