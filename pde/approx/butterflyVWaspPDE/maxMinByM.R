@@ -36,12 +36,21 @@ filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingM-multipleMu.csv'
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_1.csv'
 #filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=1.1.csv'
 #filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMHysteresisReverse.csv'
-filename <- '/tmp/changingMResults_1.csv'
+
+filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.5.csv'
+filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.6.csv'
+filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.7500.csv'
+filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.7500_smallMu.csv'
 a <- read.csv(filename)
 
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c1.1.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.1.csv'
+
+odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.5.csv'
+odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.6.csv'
+odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c-2.7500.csv'
+odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c-2.7500.csv'
 ode <- read.csv(odeFilename)
 
 plot.new()
@@ -76,12 +85,14 @@ results <- plotResults(a)
 odeOrder <- sort(ode$m,index.return=TRUE)
 points(ode$m[odeOrder$ix],ode$minButterfly[odeOrder$ix],type='l',lty=3,lwd=4)
 points(ode$m[odeOrder$ix],ode$maxButterfly[odeOrder$ix],type='l',lty=3,lwd=4)
-results$labels <- c(results$labels,'ODE')
+results$labels <- c(results$labels,as.expression('ODE'))
 results$plotTypes <- c(results$plotTypes,3)
 results$pchTypes <- c(results$pchTypes,-1)
 results$colours <- c(results$colours,1)
 
-legend(max(ode$m)*0.85,0.5,results$labels,lty=results$plotTypes,
+#legend(max(ode$m)*0.85,0.5,results$labels,lty=results$plotTypes,
+#       pch=results$pchTypes,col=results$colours,lwd=2)
+legend(0.2,1.0,as.character(results$labels),lty=results$plotTypes,
        pch=results$pchTypes,col=results$colours,lwd=2)
 #legend(0.2,1.1,
 #       c(expression(paste(mu,'=0.2')),

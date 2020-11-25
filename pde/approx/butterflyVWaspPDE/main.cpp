@@ -20,7 +20,7 @@ int main()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double mu = 0.01;
+    double mu = 0.005;
     double c  = 2.75;
     double g  = 0.6;
     double d  = 0.1;
@@ -99,7 +99,7 @@ int main()
 
     NumericalTrials trial;
     trial.approximateSystemTrackRepeating(
-                mu,4.0*mu,4,
+                mu,2.5*mu,6,
                 c,g,d,
                 //7.01,15.5,120,
                 0.1,15.0,160,
