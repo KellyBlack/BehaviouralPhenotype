@@ -122,54 +122,46 @@ behavioral phenotype, genetic variation, population dynamics, group phenotypic c
 
 \section{Introduction}
 
-The variation of animal personalities may play an important role in broader population dynamics \citep{doi:10.1111/j.1461-0248.2010.01536.x}.  The variation in animal behaviours as well as the variation in the corresponding genetic basis for animal personalities have multiple roles in how they impact species interactions \citep{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016,FARINE2015609,sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1037/0735-7036.107.3.250}.  As the recognition for this important phenomenon grows, several techniques,  including compartment models, stochastic
+A wide variation in animal behaviours as well as the variation in the corresponding genetic basis for animal personalities play a large role in species interactions \citep{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016,FARINE2015609,sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1037/0735-7036.107.3.250}.   Recognition for this important phenomenon continues to growa, and several techniques, including compartment models, stochastic
 models, agent based models, and combinations of these
-approaches, have been developed to explore this important aspect of species interactions  \citep{Keeling65,doi:10.1086/687235,doi:10.1098/rspb.2001.1599,SuperspreadingLloyd}.  One difficulty, though, with such approaches is the
-challenge of developing appropriate analytic models at the requisite granularity needed to model a wide range of behavioural manifestations. Current approaches do not scale well to address this concern. For example, refining the granularity by increasing the number of levels representing the differences in animal behavior in a compartment model or an agent based model can make it more difficult to interpret and analyze the resulting system of equations. 
+approaches, have been developed to explore this important aspect of species interactions  \citep{Keeling65,doi:10.1086/687235,doi:10.1098/rspb.2001.1599,SuperspreadingLloyd}.  One difficulty, though, with these approaches is the challenge of developing appropriate analytic models that feature a wide range of behavioural manifestations with fine resolution. Refining the resolution by increasing the number of levels representing the differences in animal behavior in a compartment model or an agent based model can make it more difficult to interpret and analyze the resulting system of equations. 
 
-We propose an approach that assumes a continuous distribution
-associated with a single behavioural aspect of an animal's behaviour. The temporal dynamics of the distribution is modeled as a diffusion process. In
+We propose a novel approach that assumes a continuous distribution
+associated with a single behavioural aspect of an animal's behaviour. The temporal dynamics of the distribution is modeled as a diffusion process. In contrast to the widespread use of diffusion to model animal movement in space, the presented model uses diffusion to model the evolutionary processes that maintain the variation in animal behavior. In
 this initial exploration of this approach, we choose to model a relatively
-straight-forward interaction in order to demonstrate its viability. Our model is based on
+straight-forward interaction in order to explore its viability. Our model is based on
 the interactions between parasitic wasps of the genus
 \textit{Trichogramma}, and the butterfly \textit{Pieris
   brasicae} \citep{10.1093/beheco/arq007}.  The propensity of
 \textit{Pieris brasicae} to employ a chemical associated with mating
 behaviour is modeled as a continuous distribution.
 
-While the original system of interactions involves multiple species, we consider a simplified system consisting of two species, butterflies and wasps.  The interaction between the two species depends on a pheromone that can be used by the males of the butterfly population. The pheromone associated with mating is meant to give the butterflies a benefit in survival, but paradoxically it is also an attractant for the wasp, which parasitizes the eggs. The two opposing pressures on the butterflies' use of the chemical provide an interesting question of determining the optimal level for the expression of this behavior.
+While the original system of interactions involves multiple species, we consider a simplified system consisting of two species, butterflies and wasps. The interaction between the two species depends on a pheromone that can be used by the males of the butterfly population. The pheromone associated with mating is meant to give the butterflies a benefit in survival, but paradoxically it is also an attractant for the wasp, which parasitizes the eggs. The two opposing pressures on the butterflies' use of the chemical provide a context to examine how the expression of this behavior can evolve in time. Modeling the use of pheromone as a continuous diffusion process provides the opportunity to investigate the interaction between the distribution of this behavior and population dynamics at a fine resolution.
 
 Our discussion of these interactions is organized as follows. In section 2 we  provide a more detailed overview of behavioural phenotypes
-including some previous efforts to model the phenomena. Next, in section 3, the
-model used to provide insight into the phenomena is developed.
-To account for the long interaction time to find and parasitize the butterflies' eggs a predator-prey relationship  with a Holling type II response \citep{TEWA20134825,holling_1959A,holling_1959B} is assumed. We adapt the type II response to accommodate a continuous
-variation in one behaviour.  Following the derivation of the model, an equilibrium analysis of the system is explored. Finally, some results from our numerical explorations are provided including notes of the ecological implications. Separate appendices are included with a more detailed analysis of the model as well as details on the numerical approximation of the full model.
+including some previous efforts to model the phenomena. Next, in section 3, a model composed of a coupled partial differential equation (PDE) and ordinary differential equation (ODE) is derived. 
+In section 4, a related, simplified ODE model is introduced to help provide insight into the
+long term behaviour of the solution to the model. Following the introduction of the ODE model, an equilibrium analysis of the new system is explored. Finally, some results from our numerical explorations are provided including notes of the ecological implications. Separate appendices are included with a more detailed analysis of the model as well as details on the numerical approximation of the full model.
 
 \section{Behavioral Phenotype}
 \label{section:behaviouralPhenotype}
 
-The primary motivation for why the distribution of how animals behave
-and interact is given in this section. We begin with a discussion of
-the basic idea of behavioural phenotype. Next, a brief overview of
-existing modeling efforts is provided. Finally a specific example of
-social spiders is discussed. In this example the phenomenon
-is
-directly observed, providing context for the importance of the
-general phenomenon.
+In this section we begin with a discussion of the basic idea of behavioural phenotype and its importance in population dynamics. A number of examples from the literature of observed behavioural variation are discussed and several modeling efforts from the literature are briefly described.
+
 
 A number of authors have noted the importance of variation
 in a species' habits or
 genetics \citep{doi:10.1111/j.1461-0248.2010.01536.x,doi:10.1086/687235,mierzejewski_horn_luong_2019,SANTICCHIA20191,doi:10.1098/rspb.2014.1016}. This variation is sometimes referred to as group phenotypic composition \citep{FARINE2015609}, and it is observed in many species of animals such as sheep, barnacle geese, ants, spiders, fish and wild birds among others \citep{sibbald2009individual,kurvers2011effect,modlmeier2012diverse,doi:10.1086/687235,doi:10.1098/rspb.2014.1016,doi:10.1037/0735-7036.107.3.250}.
-A broad discussion by  \citep{doi:10.1111/j.1461-0248.2010.01536.x} includes a description of variation in behavioural trains and includes multiple examples of the different ways it can impact a population. For example, varying levels of boldness result in different dlevels of exposure. Also, varying levels of social interaction result in different rates of transmissions between individuals. They go on to  propose that the diversity of
-behaviours can profoundly impact the broader dynamics of the focal population as well as the populations that interact with them.
+A broad discussion by  \citep{doi:10.1111/j.1461-0248.2010.01536.x} includes a description of variation in behavioural traits with multiple examples of the different ways it can impact a population. An example of variation in behaviours includes varying levels of boldness which can result in different levels of exposure to potential predation. Another example is the varying levels of social interaction within a colony of result in different rates of transmissions of disease or parasites between individuals. It is proposed that the diversity of
+behaviours can profoundly impact the broader dynamics of the local populations as well as external populations that interact with them.
 
 
 % https://www.semanticscholar.org/paper/Fish-behavioral-types-and-their-ecological-Mittelbach-Ballew/a381cb0b64a8107c694454e940fd7972263a8b77
 % https://www.semanticscholar.org/paper/Are-most-samples-of-animals-systematically-biased-Biro/72eaa11f60d3b211f34ab04ff95211307978223b
 
-Another example is provided by \cite{doi:10.1098/rspb.2014.1016} in a study of the effect of individual-level personality traits on the collective movement and feeding behavior of wild birds. In particular, they investigated how patch-level behaviour changes for groups with different personality types - reactive individuals that displayed low-risk behavior and proactive individuals that displayed high-risk behavior. They found that  reactive individuals were more likely to choose a single foraging location to minimize the risk of predation, and proactive individuals were more likely to disperse. The groups that contained a combination of the two types showed both group cohesiveness and patch exploration, indicating that behavioral variation can lead to better overall success, as was previously found in other animals such as ants and spiders \citep{ doi:10.1086/687235,modlmeier2011productivity,modlmeier2012diverse}.
+Another example is provided by \cite{doi:10.1098/rspb.2014.1016} in a study of the effect of individual-level personality traits on the collective movement and feeding behavior of wild birds. In particular, they investigated the effects of patch-level behaviour variations of two different personality types - reactive individuals that displayed low-risk behavior and proactive individuals that displayed high-risk behavior. They found that patches of reactive individuals were more likely to choose a single foraging location to minimize the risk of predation, and patches of proactive individuals were more likely to disperse. The groups that contained a combination of the two types showed both group cohesiveness and patch exploration, indicating that behavioral variation can lead to better overall success, as was previously found in other animals such as ants and spiders \citep{ doi:10.1086/687235,modlmeier2011productivity,modlmeier2012diverse}.
 
-A wide array of approaches to model the population responses to behaviour variation have been explored, including stochastic
+A wide array of approaches to model the population responses to behaviour variation has been explored.  These include stochastic
 models \citep{Keeling65}, agent based models \citep{doi:10.1086/687235},
 hybrid models employing compartment models based on a stochastic
 distribution \citep{doi:10.1098/rspb.2001.1599}, and statistical
@@ -178,13 +170,15 @@ approaches is provided below.
 
 An example of a stochastic model is provided by \cite{Keeling65}. They note that the dynamics of the incidence
 of measles is influenced by how the incubation time varies across
-individuals. In response to this observation they modified a standard
-disease model by incorporating a time delay of the infected class using a convolution. They examine the impact of variation and the distribution associated with the variation in incubation times for the frequency of infectious outbreaks. They note that the distribution associated with the variation plays an important role in determining the frequency of outbreaks.
+individuals. 
+They examine the impact of variation and the distribution associated with the variation in incubation times for the frequency of infectious outbreaks.
+In response to this observation, they modify a standard
+disease model by incorporating a time delay of the infected class using a convolution.  They note that the distribution associated with the variation plays an important role in determining the frequency of outbreaks.
 
 
-Another adaptation for a similar problem was proposed by \cite{doi:10.1098/rspb.2001.1599}. In this case the rates that
+Another adaptation for a similar problem was proposed by \cite{doi:10.1098/rspb.2001.1599}. In this case the rate at which
 infected individuals leave the infected class is based on a stochastic
-distribution. The phenomena was modeled by making use of a large
+distribution. The phenomenon was modeled by making use of a large
 number of compartments representing infected classes with different removal rates, where the entry into the different classes is
 governed by the underlying probability distribution.
 
@@ -192,14 +186,14 @@ An example of a statistical approach that highlights the importance of
 responses to individual variation is given by \cite{SuperspreadingLloyd}, where they investigate the influence of individual variation in infectiousness on disease emergence. In their work the transmission of
 disease is examined using a branching process. The varying
 transmission rates between individuals are treated as a given
-probability distribution. They find out that model predictions accounting for the individual variation differ sharply from average-based approaches for the estimation of transmission rates.
+probability distribution. They find that model predictions accounting for the individual variation differ sharply from average-based approaches for the estimation of transmission rates, which is often the case for models containing non-linear interactions such as the butterfly-wasp model presented in this paper, and predator-prey systems in general.
 
 A mathematical model examining the interactions within a colony of
 social spiders, \textit{Stegodyphus dumicola}, is provided by \cite{doi:10.1086/687235}. They  examine the impact of different boldness levels of
  key individuals on the success of the colony.  They note a small number of individuals within
 a colony may exhibit different levels of aggression, and this small
 number of individuals can have a disproportionate impact on the
-broader success of the colony.
+broader success of the colony. This observation is a strong motivator for analyzing the interplay between the shape of the distribution of animal behavior and population dynamics, and how they affect each other. These observations provide additional motivation for our PDE model, which would offer unlimited resolution for both temporal dynamics and animal behavior for detailed analysis.
 
 As a means to model this important aspect of a colony, \cite{doi:10.1086/687235} provide a computational model
 consisting of an agent based model with a stochastically generated
@@ -209,12 +203,12 @@ within the colony are approximated via discrete time steps and
 stochastic decision making. The external interactions are approximated
 using an ordinary differential equation model.
 In the resulting statistical analyses, \cite{doi:10.1086/687235} found that different levels of boldness
-within key individuals resulted in broader impacts across the colony. One difference that was noted is differences in
-boldness impacted the prey capture rate for the colony. Another difference noted is
+within key individuals resulted in broad impacts across the colony. For example, one difference that was noted is that the variation in
+boldness across indviduals impacted the prey capture rate for the whole colony. Another difference noted is that
 the rules governing the distribution of aggression also impacted the spread of disease across the broader population.
 
-The differences noted above represent a challenge with respect to measuring and detecting individual variation experimentally \cite{doi:10.1037/0735-7036.107.3.250}. In addition, 
-many of the existing mathematical models have been
+The differences noted above represent a challenge with respect to measuring and detecting individual variation experimentally \citep{doi:10.1037/0735-7036.107.3.250}. In addition, 
+many of the existing mathematical models that account for individual variation have been
 developed in the context of the spread of an infectious disease. Only
 a few approaches have been described for predator-prey systems, and
 the majority of such models have been derived from statistical or
@@ -225,22 +219,21 @@ such approaches and offers a novel deterministic method.
 \section{Modeling Genetic Variance As a Continuous Distribution}
 
 Rather than a discrete or a continuous compartmental model or an agent based model, a
-coupled partial differential equation model with a continuous, distributed parameter representing individual variation  is proposed. First, an overview of the specific system, the interactions
-between butterflies and a parasitic wasp, is given. Next, the
-model is derived. Finally, the analysis of a simplified system of
-ordinary differential equations is examined as a way to gain some
-preliminary insights into the partial differential equation model.
+coupled partial differential equation model with a continuous, distributed parameter representing individual variation is proposed. First, an overview of the specific system, the interactions
+between butterflies and parasitic wasps, is given. Next, the
+model is derived, and the analysis of a simplified system of
+ordinary differential equations (ODE) is examined as a way to gain some
+preliminary insights into the coupled partial differential equation model. Finally, numerical results of the coupled partial differential equation (PDE) model are presented in parameter ranges informed by the ODE model.
 
 \subsection{Butterflies v. Wasps}
 \label{butterflyVWasps}
 
-The
-model developed here focuses on the interaction between butterflies,
+The model developed here focuses on the interaction between butterflies,
 \textit{Pieris brasicae}, and \textit{Trichogramma} wasps that prey on
 the butterflies' eggs. The interactions between these populations have
 received a good deal of attention
 \citep{PMC2797620,doi:10.1111/j.1439-0418.1986.tb00834.x,Figueroa2010AttractionOT,10.3389/fpls.2019.01768}. We
-focus on the results of  \cite{10.1093/beheco/arq007}. In their work, the authors state
+focus on the results of \cite{10.1093/beheco/arq007}. In their work, the authors state
 that the pressure placed on the butterfly population due to the wasps'
 interactions results in a change in the long term behaviour of the
 butterfly population.
@@ -254,14 +247,12 @@ butterflies. In response, the male butterflies have a propensity to
 apply another pheromone, referred to as an anti-aphrodisiac, that will
 reduce the effectiveness of the original pheromone emitted by the
 female.
-
 The downside to the use of the pheromone is that it exposes the eggs
 to a greater risk of predation, as some species of \textit{Trichogramma}
 wasps parasitize the eggs of the butterflies. Sometimes they
 physically attach themselves to a butterfly and ride it until the
 butterfly begins to attach their eggs in a preferable location. The
-wasps are able to detect the presence of the anti-aphrodisiac which is
-a useful strategy, as a butterfly with the
+wasps are able to detect the presence of the anti-aphrodisiac which benefits the wasp, as a butterfly with the
 anti-aphrodisiac is more likely to lay eggs. In response, the wasps
 are more likely to ride on a butterfly if they detect the
 anti-aphrodisiac. It is important to note that this method of predation on
@@ -276,25 +267,23 @@ applying direct evolutionary pressure with respect to the habits of
 the butterflies. In particular they provide evidence that the
 distribution of the propensity of the male butterflies to make use of
 the anti-aphrodisiac is changing in time, and over time a growing
-number of butterflies are less likely to engage in the behaviour.
+number of butterflies are less likely to engage in the behaviour. However, the model presented here demonstrates more complex dynamics when taking into account a distribution of behaviours, and the portion of the population making greater use of the anti-aphrodisiac pheromone benefits in the long run.
 
 \subsection{Modeling Behavioural Phenotype As a Continuous
   Distribution}
 
 As mentioned in section \ref{section:behaviouralPhenotype}, a number
-of options have been employed to model the distribution of behavioural
+of options have been employed to model the distribution of differing behavioural
 preferences in a given population. These methods include compartmental
 models, agent based models, and hybrids of these two models. One
-potential issue, though, is that the number of variations can be quite
+potential issue, though, is that the number of possible levels associated with a given behaviour can be quite
 high. For example \cite{doi:10.1111/mec.14878} examined a system in
-which over 120 genetic sites determine a given animal's
-propensity. The resulting number of
-combinations of such sites can be extremely high.
+which over 120 genetic sites determine a given animal's 
+propensity to display a certain behaviour. The resulting number of
+combinations of such sites can greatly increase the computational complexity of a mathematical model.
 
-Rather than treat the possible behaviours as a discrete distribution
-we instead treat it as a continuous distribution. The way in which
-this manifests itself within a model is to treat the population as a
-distribution with respect to the new parameter. This new independent
+Rather than treat the possible behaviours as a discrete distribution, 
+we treat it as a continuous distribution. The impact or range of a behaviour is expressed in terms of a function of a new variable. This new independent
 variable is introduced within the model, and the parameter is now a
 function that will vary as the independent variable varies.
 
@@ -304,8 +293,8 @@ parameter\citep{doi:10.1111/j.1467-9868.2007.00610.x,Fitzpatrick_1991}. In
 these approaches a probability distribution is assumed to describe the
 likelihood that a parameter takes on a given range of values. In our
 case, though, we turn this around and assume that the population
-itself varies, and the relative population density depends on the
-underlying variable.
+itself varies, and the relative population density depends on the newly introduced
+variable.
 
 A question arises about how to translate the impact of this parameter
 within a given model. In this initial examination of the approach we
@@ -317,18 +306,18 @@ in direct mortality on the potential offspring, and therefore we assume a
 predator-prey relationship rather than a disease like relationship
 modeled in other parasitic systems. 
 
-The system is adapted from \cite{TEWA20134825}. We
-first focus on the model as a system of ordinary differential
-equations and later adapt it for the distributed system described
-above. The basic assumption is that in the absence of predation the
+We first develop a model adapted from a system described in \cite{TEWA20134825}. We begin with a general ODE model and develop a PDE model with a continuous distribution of the behaviour. Our analysis then
+focuses on a simplified system of ordinary differential
+equations and later the distributed system described
+above is examined. The basic assumption is that in the absence of predation the
 butterfly population will act in a way consistent with the logistic
 equation. In the absence of any butterflies the wasps will slowly die
-out. For this particular system, however, the \textit{Trichogramma}
+out. For the actual ecological system, however, the \textit{Trichogramma}
 wasps are generalist predators, and this is an assumption that should
 be revisited beyond this initial investigation.  To account for the
 substantial time the wasps require to follow the butterflies and allow
 them to oviposit their eggs, we assume the rate of predation to be
-approximated as a type II Holling response\citep{TEWA20134825}.  The
+approximated as a type II Holling response\citep{TEWA20134825,holling_1959A,holling_1959B}.  The
 resulting ordinary differential equation is given by
 \begin{eqnarray}
   \label{eq:initialSystem1}
@@ -340,12 +329,10 @@ resulting ordinary differential equation is given by
 The density of butterflies is modeled by the function
 $\origB(\origT)$, the density of wasps is modeled by the function
 $\origW(\origT)$, and the parameters $\origA$, $\origK$, $\origC$,
-$\origGamma$, $\origD$, and $\origG$ are positive constants. (The variables are denoted with hats so that when we rescale the parameters and variables to a dimensionless model we can remove the hats for the remainder of the exposition.)
+$\origGamma$, $\origD$, and $\origG$ are positive constants. 
  
-The butterflies do not behave uniformly with respect to their decision
-to make use of the anti-pheromone, and different butterflies have a
-different propensity to use the anti-pheromone. In this treatment, we
-do not model the male and female populations separately, but treat
+The butterflies do not behave uniformly across their population, rather individuals vary with respect to the likelihood that the individual will make use of the anti-pheromone. 
+Note that un this treatment, we do not model the male and female populations separately, but treat
 them as a single population that intermingles in a relatively uniform
 fashion. The propensity for a butterfly to make use of the
 anti-pheromone depends on a new parameter, $\origTheta$. The value of
@@ -364,9 +351,7 @@ response function for the case given in equations
 (\ref{eq:initialSystem1}) and (\ref{eq:initialSystem2}) are provided
 by \cite{DAWES201311}.  In the derivation here,
 however, we follow the approach in Holling's original
-discussion\citep{holling_1959A,holling_1959B}. We begin by finding an
-expression that relates the number of eggs parasitized by a single
-wasp, $Y(\origTheta)$, which is assumed to be a linear relationship,
+discussion\citep{holling_1959A,holling_1959B}. The number of eggs parasitized is given by $Y(\origTheta)$ which is now a distribution in the independent variable $\theta$.  The underlying assumption is that the number is proportional to the butterfly density multiplied by the propensity, $\origP{\origTheta}$, to use the anti-pheromone,
 \begin{eqnarray}
   \label{eq:processingTime}
   Y(\origTheta) & = & r T_{\mathrm{search}}(\origTheta) \origB(\origT,\origTheta) \origP{\origTheta},
@@ -374,7 +359,7 @@ wasp, $Y(\origTheta)$, which is assumed to be a linear relationship,
 where $T_{\mathrm{search}}$ is the search time required by the wasp to
 find the location of a butterfly's clutch. The motivation for this is
 that the higher the value of $\origTheta$ the higher the success rate for
-a given wasp.  The time a wasp requires to parasitize the clutch is
+a given wasp.  The time required by a wasp to parasitize the clutch is
 assumed to be proportional to the number of eggs, and the total time
 is
 \begin{eqnarray}
@@ -395,22 +380,38 @@ of the anti-pheromone. As $\origTheta$ increases the more likely an
 individual butterfly is to make use of the anti-pheromone and the more
 likely a wasp is to locate and ride along with a butterfly. The
 function, $\origP{\origTheta}$, will be used to balance the positive and
-negative impacts in the growth as well as the predation terms in
-equation (\ref{eq:initialSystem1}), and the parameters $\origAlpha$ and
-$\origGamma$ provide relative scales for the two impacts. Note that we can
-normalize $\origP{\origTheta}$ because it is scaled by the parameter $r$.
+negative impacts in the growth as well as the predation.  
+The function $\origP{\origTheta}$ is assumed to be an
+increasing function for $0\leq\origTheta\leq \origL$, and $\origP{0}>0$. If
+$\origP{\origTheta}$ is zero then equation (\ref{eq:waspPredationRate}) 
+indicates no growth and no predation. We can assume $\origP{\origTheta}$ has a
+minimal value at $\origTheta = 0$. In this treatment we
+examine the simplest such relationship, a linear function,
+\begin{eqnarray}
+  \label{eq:firstDefP}
+  \origP{\origTheta} & = & m \theta + a,
+\end{eqnarray}
+where $m>0$ and $a>0$. Note that in equation (\ref{eq:totalWaspPredationRate}) the function, $\origP{\origTheta}$, is multiplied by $r$ everywhere it appears. Since $a>0$, the function can be scaled as
+\begin{eqnarray}
+  \label{eq:factorP}
+  \origP{\origTheta} & = & a \bar{p}(\origTheta).
+\end{eqnarray}
+where
+\begin{eqnarray}
+  \label{eq:scaleP}
+  \bar{p}(\origTheta) & = & \frac{m}{a} \theta + 1.
+\end{eqnarray}
 
-
-Turning back to equation (\ref{eq:waspPredationRate}), the rate of
+Focusing on equation (\ref{eq:waspPredationRate}), the rate of
 predation can now be approximated.  The result can be immediately
 substituted into equation (\ref{eq:initialSystem1}) in the more
 traditional form as
 \begin{eqnarray}
   \label{eq:butterflyPredationRate}
-  \origGamma \cdot w(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta) }{\origC +  \origP{\origTheta} \origB(\origT,\origTheta)},
+  \origGamma \cdot w(\origT) \frac{\bar{p}(\origTheta) \origB(\origT,\origTheta) }{\origC +  \bar{p}(\origTheta) \origB(\origT,\origTheta)},
 \end{eqnarray}
-where $\origC=\frac{1}{\beta r}$ and
-$\origGamma=\frac{T_{\mathrm{total}}}{\beta}$.  Looking back at the
+where $\origC=\frac{1}{\beta r a}$ and
+$\origGamma=\frac{T_{\mathrm{total}}}{\beta a}$.  Looking back at the
 original predator-prey system, in particular equation
 (\ref{eq:initialSystem2}), the rate of predation for the single wasp
 population must accommodate the variation across all butterflies, and
@@ -418,57 +419,36 @@ the impact for the wasps must be accumulated across the entire
 butterfly population,
 \begin{eqnarray}
   \label{eq:totalWaspPredationRate}
-  \int^{\origL}_{\origTheta=0} \origG \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta) }{\origC + \origP{\origTheta} \origB(\origT,\origTheta)} ~ d\origTheta.
+  \int^{\origL}_{\origTheta=0} \origG \cdot \origW(\origT) \frac{\bar{p}(\origTheta) \origB(\origT,\origTheta) }{\origC + \bar{p}(\origTheta) \origB(\origT,\origTheta)} ~ d\origTheta.
 \end{eqnarray}
 
 We are almost ready to put these terms together for the current
 model. It is assumed that the mixing and interactions within the
 butterfly population are uniform, and the diffusion of the trait
-roughly follows Fick's law\citep{logan2006applied}. This diffusion term is not with respect to a spatial variable as is normally seen, rather it is with respect to the introduced variable for the propensity to make use of the pheromone. Here, a second
+roughly follows Fick's law\citep{logan2006applied}. This diffusion term is not with respect to a spatial variable as is normally seen, rather it is with respect to the introduced variable, $\theta$, for the propensity to make use of the pheromone. Here, a second
 order derivative term approximates the sharing of the genetic
 information relative to the propensity to use the
 anti-aphrodisiac. The result is a coupled PDE and ODE system given by
 \begin{eqnarray}
   \label{eq:odePDE1}
   \frac{\partial}{\partial \origT} \origB(\origT,\origTheta) & = &
-     \underbrace{  \origAlpha \cdot \origP{\origTheta} \origB(\origT,\origTheta) (\origK - \origB(\origT,\origTheta)) }_\text{trait dependent logistic growth}
-      -  \underbrace{\origGamma \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta)}{\origC+\origP{\origTheta}\origB(\origT,\origTheta)} }_\text{trait dependent predation by wasps}
-      +  \underbrace{\origMu \frac{\partial^2}{\partial \origTheta^2} \origB(\origT,\origTheta)}_\text{diffusion of trait within population}, \\ [20pt]
+     \underbrace{  \origAlpha a \cdot \bar{p}(\origTheta) \origB(\origT,\origTheta) (\origK - \origB(\origT,\origTheta)) }_\text{trait dependent logistic growth}
+      -  \underbrace{\origGamma \cdot \origW(\origT) \frac{\bar{p}(\origTheta) \origB(\origT,\origTheta)}{\origC+\bar{p}(\origTheta)\origB(\origT,\origTheta)} }_{\substack{\text{trait dependent predation} \\ \text{by wasps}}}
+      +  \underbrace{\origMu \frac{\partial^2}{\partial \origTheta^2} \origB(\origT,\origTheta),}_{\substack{\text{diffusion of trait} \\ \text{ within population}}} \\ [20pt]
   \label{eq:odePDE2}
   \frac{d}{d\origT} \origW(\origT) & = & - \underbrace{ \origD \cdot \origW(\origT) }_\text{natural death}  +
         \underbrace{
-          \int^{\origL}_{\origTheta=0} \origG \cdot \origW(\origT) \frac{\origP{\origTheta} \origB(\origT,\origTheta) }{\origC + \origP{\origTheta} \origB(\origT,\origTheta)} ~ d\origTheta
-       }_\text{net impact of feeding on butterflies across different trait levels }.
+          \int^{\origL}_{\origTheta=0} \origG \cdot \origW(\origT) \frac{\bar{p}(\origTheta) \origB(\origT,\origTheta) }{\origC + \bar{p}(\origTheta) \origB(\origT,\origTheta)} ~ d\origTheta.
+       }_{\substack{\text{net impact of feeding on} \\ \text{butterflies across different trait levels.}}}
 \end{eqnarray}
 
-As previously noted, the function $\origP{\origTheta}$ is assumed to be an
-increasing function for $0\leq\origTheta\leq \origL$, and $\origP{0}>0$. If
-$\origP{\origTheta}$ is zero then equation (\ref{eq:initialSystem1}) will
-indicate no growth and no predation. We can assume $\origP{\origTheta}$ has a
-minimal value, $a>0$,  at $\origTheta = 0$, i.e. $\origP{0}=a$, and the relationship has a positive slope. We
-examine the simplest such relationship, a linear function.
-
-This function is scaled separately in equations (\ref{eq:odePDE1}) and
-(\ref{eq:odePDE2}), and the function can be scaled in an arbitrary
-manner. We choose to scale the function so that its integral is one,
-\begin{eqnarray*}
-  \int^{\origL}_0 \origP{\origTheta} ~ d\origTheta & = & 1,
-\end{eqnarray*}
-and the resulting normalized form is
-\begin{eqnarray}
-  \label{eq:linearFormP}
-  \origP{\origTheta} & = & \origA + \frac{2(1-\origA\origL)}{\origL^2} \origTheta.
-\end{eqnarray}
-One immediate restriction on the parameters requires that
-$0<\origA\origL<1$. The total variation in the observed trait is given by 
-$\origP{\origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
 
 \begin{table}[ht]
   \centering
   \begin{tabular}{r|l}
     Scaling Factor & Value \\ \hline
     $\bar{B}$ & $\origK$ \\ [10pt]
-    $\bar{W}$ & $\frac{\origAlpha \origK^2 \origA}{\origGamma}$ \\  [10pt]
+    $\bar{W}$ & $\frac{\origAlpha \origK^2 \origA}{a \origGamma}$ \\  [10pt]
     $\bar{T}$ & $\frac{1}{\origAlpha \origK \origA}$ \\  [10pt]
     $\bar{\Theta}$ & $\origL$
   \end{tabular}
@@ -480,11 +460,11 @@ $\origP{\origL} - \origP{0} =\frac{2(1-\origA\origL)}{\origL}$.
   \centering
   \begin{tabular}{r|l}
   Original Parameter & Scaled Value \\ \hline
-    $m$   & $\frac{2(1-\origA\origL)}{\origA\origL}$, \\  [10pt]
-    $c$   & $\frac{\origC}{\origK\origA}$ \\  [10pt]
-    $d$   & $\frac{\origD}{\origAlpha\origK\origA}$ \\  [10pt]
-    $\mu$ & $\frac{\origMu}{\origAlpha\origK\origA\origL^2}$  \\  [10pt]
-    $g$   & $\frac{\origL\origG}{\origAlpha\origK\origA}$
+    $m$   & $\frac{m}{a}$, \\  [10pt]
+    $c$   & $\frac{\origC}{\origK}$ \\  [10pt]
+    $d$   & $\frac{\origD}{\origAlpha\origK a}$ \\  [10pt]
+    $\mu$ & $\frac{\origMu}{\origAlpha a origK\origA\origL^2}$  \\  [10pt]
+    $g$   & $\frac{\origL\origG}{\origAlpha\origK a}$
   \end{tabular}
   \caption{New values of parameters after scaling}
   \label{tab:newParameters}
@@ -497,7 +477,7 @@ $\origTheta\rightarrow \bar{\Theta}\scaledTheta$. The choices made for our
 scalings can be found in Table \ref{tab:scalingChoices}, and the
 corresponding transformations for the new parameters can be found in
 Table \ref{tab:newParameters}.  The resulting system can be reduced to
-the following form
+the following form:
 \begin{eqnarray}
   \label{eq:scaledodePDE1}
   \frac{\partial}{\partial \scaledT} \scaledB & = &
@@ -520,7 +500,7 @@ a population. The larger $\scaledM$ is the greater the amount of variation (see 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=8.5cm]{FIGURES/impact_of_m.png}
-  \caption[Schematic representation of the impact of the parameter $m$.]{Schematic representation of the impact of the parameter $m$ on the distribution of the butterfly population density with respect to the usage of anti-aphrodisiac.}
+  \caption[Schematic representation of the impact of the parameter $m$.]{The butterfly density is a function of the variable $\origTheta$. For example the part of a population with a higher value of $\origTheta$ may have a greater number of individuals. In this schematic representation of the impact of the parameter $m$ on the distribution of the butterfly population density  higher values of m correspond to greater impact associated with the use of the anti-aphrodisiac. A larger value of $m$ may result in higher variation of the density.}
   \label{fig:impact_of_m}
 \end{figure}
 With respect to the PDE, Neumann boundary conditions are used in the
@@ -531,80 +511,79 @@ subsequent numerical approximations below,
 \end{eqnarray*}
 We have not yet defined the initial conditions, and
 a variety of initial
-conditions have been explored. More details are  described in the results
-section, section \ref{section:results}. For the sake of clarity, the notation for the scaled variables will revert to a cleaner notation similar to that originally stated. For example we will express $\scaledB(\scaledT,\scaledTheta)$ as $b(t,\theta)$. For the subsequent sections we will focus on these scaled equations.
+conditions have been explored. More details are  described in the analysis
+section, section \ref{section:analysis}. For the sake of clarity, the notation for the scaled variables will revert to a cleaner notation similar to that originally stated. For example we will express $\scaledB(\scaledT,\scaledTheta)$ as $b(t,\theta)$. For the subsequent sections we will focus on these scaled equations.
 
-\section{Results}
-\label{section:results}
+\section{Analysis of the System}
+\label{section:analysis}
 
 We start with an
-examination of the behaviour of the system of ODEs given in equations
+examination of the behaviour of a system of ODEs which is closely related to our model.  This system is given in equations
 (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). We then examine the numerical
-approximation of the system and explore the behaviour of limit cycles for the system. Next approximations
+approximation of the system and explore the behaviour of limit cycles for the system. Next, numerical approximations
 of the coupled PDE and ODE from equations (\ref{eq:scaledodePDE1}) and
 (\ref{eq:scaledodePDE2}) are provided. In both sets of examples a
 numerical exploration of the existence of a stable steady state or
-limit cycles is given.
+limit cycle is given.
 
-The results given here rely on the numerical approximation of the two
+Many of the results given here rely on the numerical approximation of the two
 systems previously discussed. In particular approximation for the
 system of ODEs given in equations (\ref{eq:scaledODE1}) and
 (\ref{eq:scaledODE2}) is constructed using a Runga-Kutta Fehlberg
 method. Approximating the distributed system, equations
 (\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2}), requires a more
 careful implementation. The approximation method is described in
-Appendix \ref{numericalApproximation}.
+ \ref{numericalApproximation}.
 
 \subsection{Parameter Dependence on Stability of the ODE System}
 \label{subsection:parameters}
 
 Prior to examining the behaviour of the distributed system given in
-equations \ref{eq:odePDE1} and \ref{eq:odePDE2}, we explore potential restrictions on the parameters by studying  a closely related system of ordinary differential
+equations (\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2}), we explore potential behaviours with respect 
+to the parameters by studying  a closely related system of ordinary differential
 equations.  The focus is on the impact of the parameters of the
-system, and a more complete analysis is provided in 
-\ref{appendix:otherFixedPoints} and \ref{appendix:stability}.
+system, and a more complete mathematical analysis is provided in 
+\ref{appendix:otherFixedPoints}.
 
 The simplified system is found by examining a pair of ODEs with a similar form
-as the distributed system. By assuming that the distribution of the
-butterflies is a constant, and the entire population is concentrated on a single, constant 
-value of $\theta$, the system is approximated by the following system
-of ODEs:
+as the distributed system. We look at the limiting case in which there is only one trait shared across the population. Hence the distribution of the
+butterflies is independent of $\theta$ and so is the function $p(\theta)$. Recall from Equation (\ref{eq:definitionP}) that $p$ scales linearly between 1 and 1+$m$.
+Our new system is similar to that described by \cite{TEWA20134825} but now
+includes the extra parameter $p$:
 \begin{eqnarray}
   \label{eq:scaledODE1}
   \frac{d}{dt} b(t) & = &
-      p(\theta) b(t) (1 - b(t))
-      -  w(t) \frac{p(\theta) b(t)}{c+p(\theta)b(t)}, \\
+      p\; b(t) (1 - b(t))
+      -  w(t) \frac{p\; b(t)}{c+p\; b(t)}, \\
   \label{eq:scaledODE2}
   \frac{d}{dt} w(t) & = & -d \; w(t) +
-       g \; w(t) \frac{p(\theta) b(t) }{c + p(\theta) b(t)}.
+       g \; w(t) \frac{p\; b(t) }{c + p\; b(t)}.
 \end{eqnarray}
 In the subsequent examination of the approximation of the fully distributed system (the coupled PDE and ODE), the distribution of the butterflies is a function of $\theta$. The net effect is to produce a population whose characteristics extend along a distribution for $0\leq\theta\leq 1$.
 
-By focusing on the system of ODEs, we can more easily examine an approximation to
-the system by treating the variable $\theta$ as a fixed parameter and
-can gain some insight into the distributed system which will incorporate the full domain of possible values of $\theta$. Since $\theta$ is treated as a fixed value we will denote $p(\theta)$ as $p$ throughout this discussion of the system of ODEs. The analysis in
-this section focuses on the stability of the linearized system at the
-nontrivial fixed point. More details about the other fixed points are
+By focusing on the $\theta$-independent system of ODEs, we gain insight into the impact of the key parameters on the overall behaviour of the system. Comparing the ODE to the PDE enables us to engage in a prelimanry exploration of the inclusion of the variation of the behavioural phenotype.  The analysis in
+this subsection focuses on the stability of the linearized system at the
+nontrivial fixed point found in the positive quadrant for certain parameter regimes. More details about the other fixed points are
 provided in  \ref{appendix:otherFixedPoints} and  B.
 
 There are two $b$-nullclines for the system in the $b,w$ plane given by the equations
 \begin{eqnarray}
   \label{eq:bnullclines}
   b & = & 0, \\
-  w & = & (1-b)(c+b\cdot p).
+  w & = & (1-b)(c+b p).
 \end{eqnarray}
 Note that the second $b$-nullcline above is a parabola opening downward, and the vertex is located at
 $b=\frac{p-c}{2p}$. On the other hand, the $w$-nullclines are given by
 \begin{eqnarray}
   \label{eq:wnullclines}
   w & = & 0, \\
-  b & = & \frac{cd}{(g-d)p}.
+  b & = & \frac{cd}{p(g-d)}.
 \end{eqnarray}
 The second $w$-nullcline above is a vertical line in the $b,w$ plane. (The second $w$-nullcline does not exist if $g=d$.) In
 order for a fixed point to exist in the first quadrant an immediate
 restriction on the parameters requires that $g>d$.  Given the
-nullclines, there are three fixed points (as long as $g\ne d$), at $(0,0), (1,0)$ and $(b^*,w^*)$ with $b^*=\frac{cd}{p\cdot (g-d)}$ and
-$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p\cdot (g-d)}\right)$.  This last fixed point is in the positive quadrant only if $g-d>0$ and
+nullclines, there are three fixed points (as long as $g\ne d$), at $(0,0), (1,0)$ and $(b^*,w^*)$ with $b^*=\frac{cd}{p (g-d)}$ and
+$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p (g-d)}\right)$.  This last fixed point is in the positive quadrant only if $g-d>0$ and
 \begin{eqnarray}
 \label{eqn:positivityRequirement}
 \frac{c\,d}{g-d}<p.
@@ -626,15 +605,15 @@ The Jacobian for the system in equations (\ref{eq:scaledODE1}) and
 where
 \begin{eqnarray}
   \label{eq:jacobian}
-  J_{11} & = & p\cdot (1-2b^*) - w^* p\cdot \frac{c}{(c+p\cdot b^*)^2}, \\
-  J_{12} & = & \frac{-b^*\cdot p}{c+p\cdot b^*}, \\
-  J_{21} & = & \frac{g\cdot c \cdot w^* \cdot p}{(c+p\cdot b^*)^2}.
+  J_{11} & = & p (1-2b^*) -  \frac{cw^*p}{(c+p b^*)^2}, \\
+  J_{12} & = & \frac{-pb^* }{c+p b^*}, \\
+  J_{21} & = &g\frac{ c  w^*  p}{(c+p b^*)^2}.
 \end{eqnarray}
 The value of $J_{12}$ is always negative, and the value of $J_{21}$ is always positive. Thus the determinant must be positive, and so both eigenvalues have the same sign.
 Additionally, the eigenvalues of the Jacobian have negative real part when the
 trace is negative, i.e.,
 \begin{eqnarray}
-  p\cdot (1-2b^*) - w^* p\frac{c}{(c+p\cdot b^*)^2} & < & 0.
+  p (1-2b^*) - \frac{cw^*p}{(c+p b^*)^2} & < & 0.
 \end{eqnarray}
 Substituting the values of $b^*$ and $w^*$ for the non-trivial fixed point
 yields
@@ -643,15 +622,14 @@ yields
   \frac{p-c}{2} & < & \frac{c\,d}{g-d}.
 \end{eqnarray}
 This expression can be viewed through another substitution. We let
-$u=\frac{c\,d}{g-d}=\frac{c}{\frac{g}{d}-1}$ which relates the scaled saturation time to the overall benefit to the wasps.   Since
-$p>0$ the relationship in equation
+$u=\frac{c\,d}{g-d}=\frac{c}{\frac{g}{d}-1}$ which relates the scaled saturation time to the overall benefit to the wasps.   The relationship in equation
 (\ref{eqn:traceNegative}) is now
 \begin{eqnarray}
   \label{eq:stabilityParameters}
   u & > & \frac{p-c}{2}.
 \end{eqnarray}
 Note also that under this transformation, the value of the butterfly
-density at the fixed point is $\frac{u}{p}$. Our earlier assumption, equation (\ref{eqn:positivityRequirement}), requiring that the fixed point occurs in the first quadrant,  implies that
+density at the fixed point is $b^* = \frac{u}{p}$. Our earlier assumption, equation (\ref{eqn:positivityRequirement}), requiring that the fixed point occurs in the first quadrant,  implies that
 \begin{eqnarray}
   \label{eq:boundFixedPoint}
   u & < & p.
@@ -663,17 +641,18 @@ Combining these inequalities yields
   \end{array}
 \end{equation}
 
-The feasible region that implies stability of the fixed point can be
+The region that implies stability of the fixed point can be
 determined in the $(p,u)$-plane. Note that for the case of the ODE, $p$ is a fixed parameter. If the parameters result in a point in
 the region bounded by equation (\ref{eq:stabilityParameters}) and
 equation (\ref{eq:boundFixedPoint}) then the resulting
 fixed point will be linearly stable. A graphical depiction of the
 stability region in the $(p,u)$ plane is shown in Figure
-\ref{fig:uvStabilityRegion}. For the region above the line $u=p$, there is no fixed point in the positive quadrant, but for the region below the line $u = \frac{p-c}{2}$ there is still  a fixed point in the positive quadrant, however, it is not stable.  In the appendix, we will prove that this situation leads to the existence of a \emph{limit cycle}, implying oscillatory behavior of the butterfly and wasp populations.  In addition, it is proven in the appendix that all solutions to the system of ODEs in the first quadrant remain bounded for all future times.  We summarize these results in 
+\ref{fig:uvStabilityRegion}. For the region above the line $u=p$, there is no fixed point in the positive quadrant.  For the region below the line $u = \frac{p-c}{2}$ there is   a fixed point in the positive quadrant, however, it is not stable.  In the appendix, we prove that this situation leads to the existence of a \emph{limit cycle}, implying oscillatory behavior of the butterfly and wasp populations. Thus, as the system passes through the line $u = \frac{p-c}{2}$, the system undergoes a \emph{Hopf bifurcation}. In addition, it is proven in the appendix that all solutions to the system of ODEs in the first quadrant remain bounded for all future times.  
 
 \begin{theorem}  Solutions to the  system of ordinary differential equations given by equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) in the first quadrant remain bounded for all positive time.  The system (with $g\ne d)$ has fixed points in the $(b,w)$-plane at the points $(0,0), (1,0),$ and $(b^*,w^*)$, where $b^*=\frac{cd}{p\cdot (g-d)}$ and
-$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p\cdot (g-d)}\right)$.  The latter fixed point lies in the positive quadrant if $g-d>0$ and $u<p$, where $u=\frac{cd}{g-d}.$
-Furthermore, this fixed point is asymptotically stable when $u>\frac{p-c}{2}$ and is unstable if $u<\frac{p-c}{2}.$ However, when this fixed point is unstable, there exists at least one  limit cycle in the positive quadrant.
+$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p\cdot (g-d)}\right)$.  The latter fixed point lies in the positive quadrant if $0<u<p$, where $u=\frac{cd}{g-d}.$
+Considering $u$ as a bifurcation parameter, the system undergoes a Hopf bifurcation at $u^* = \frac{p-c}{2}$.  
+That is, the fixed point $(b^*,w^*)$ is asymptotically stable when $u>\frac{p-c}{2}$ and is unstable if $u<\frac{p-c}{2},$ and, since all positive solutions to the system are bounded,  there is at a  limit cycle in the positive quadrant when the fixed point is unstable.
 
 \end{theorem}
 
@@ -691,7 +670,7 @@ domain of $\theta$ is $0\leq\theta\leq 1$. For a given set of
 parameters the value of $u$ is fully determined. The possible values of $p$
 vary from $p=1$ to $p=1+m$.  The corresponding region in the $(p,u)$
 plane is along a horizontal line segment from $(1,u)$ to
-$(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}. We note that if the propensity for using the anti-pheromone within the butterfly population is high enough (corresponding to large values of $m$), the population may be destabilized (see Figure \ref{fig:distributedLineSegment}). As this result comes from the ODE system and does not take into consideration the differences in the individual behavior ($\theta$ is fixed), it is of interest how this can change once we allow for behavioral differences within the butterfly population. This will be explored in the next section where we summarize our findings for both the ODE and PDE systems and discuss how taking variation into account can give more insight into the dynamics of the population. 
+$(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}. We note that if the propensity for using the anti-pheromone within the butterfly population is high enough (corresponding to large values of $m$), the population may be destabilized by the Hopf bifurcation (see Figure \ref{fig:distributedLineSegment}). As this result comes from the ODE system and does not take into consideration the differences in the individual behavior ($\theta$ is fixed), it is of interest how this can change once we allow for behavioral differences within the butterfly population. This will be explored in the next section where we summarize our findings for both the ODE and PDE systems and discuss how taking variation into account can give more insight into the dynamics of the population. 
 
 
 
@@ -724,66 +703,77 @@ $(1+m,u)$ as shown in Figure \ref{fig:distributedLineSegment}. We note that if t
   \end{tabular}
   \caption[Upper and lower bounds of the butterfly density.]{The upper
     and lower bounds of the long term density of the butterfly
-    population. The population was approximated for different values
+    population. Graph (A) represents the maximum and minimum values of limit cycles for $c=1.1$. Graph (B) represents the maximum and minimum values of the limit cycles for $c=2.8$. The population was approximated for different values
+    of $m$. The approximation was stopped if it either became close to
+    a steady state or a limit cycle.  The value of $g$ is 0.6, $d$ is 0.1. }
+  \label{fig:odeButterflyMaxMin}
+\end{figure}
+
+\begin{figure}[htb]
+  \begin{tabular}{p{0.5\textwidth}p{0.5\textwidth}}
+  \includegraphics[height=8cm]{FIGURES/maxMinByM-c-1.1-mu-01-04.pdf} 
+  &
+  \includegraphics[height=8cm]{FIGURES/maxMinByM-c-2.8-mu-01-04.pdf} \\
+  \multicolumn{1}{c}{(A)} & 
+  \multicolumn{1}{c}{(B)} \\
+  \end{tabular}
+  \caption[Upper and lower bounds of the butterfly density.]{The  upper
+    % https://www.overleaf.com/project/5eb9da10e929ab0001816b1e
+    and lower bounds of the long term density of the butterfly
+    population. The dashed line is the bounds for the ODE model, and the symbols are for the PDE model with different values of the diffusion parameter. The population was approximated for different values
     of $m$. The approximation was stopped if it either became close to
     a steady state or a limit cycle.  The value of $g$ is 0.6, $d$ is 0.1. The value of $c$ for the graph on the left (A) is 1.1, and the value of $c$ for the graph on the right (B) is 2.8.}
-  \label{fig:odeButterflyMaxMin}
+  \label{fig:odepdeButterflyMaxMin}
 \end{figure}
 
 
 
 
 
-\subsection{Numerical Approximation of the solutions of the system of ODEs}
+
+\subsection{Numerical results for the system of ODEs}
 \label{subsection:odeApproximation}
 
-We first examine the behaviour of the system of ODEs given in
-equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}). Our focus
-is on the stability characteristics of the fixed points as well as the
-long term dynamics of the system. The behaviour at the non-trivial
-fixed point is explored with respect to changes in the parameter
-$m$, reflecting changes in the propensity of the male butterflies to use the anti-aphrodisiac. Because the ODE model does not take into consideration the variation in the behavioral phenotype, the change in $\theta$ is not relevant for the ODE and we 
-assume that $\theta=1$.
+We now turn to examine the results of a numerical exploration of the solutions to 
+equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}).
+We focus on the long term behaviour of the solutions to the 
+system to determine whether the approximation results in movement toward a fixed point or
+the existence of a limit cycle.
 
-An example of the long term behaviour is provided in Figure
-\ref{fig:odeButterflyMaxMin}. The system of ODEs given in
-equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) was
-approximated using a Runga-Kutta Fehlberg method with a minimum step
-size of 1.0E-5.  The value of the parameters in the example are
-$c=2.8$, $g=0.6$, $d=0.1$. Approximations were constructed for values
-of $m$ starting at $m=0.1$ and ending at $m=15.0$. The graph on the left, (A), represents the maximum and minimum values of limit cycles for $c=1.1$. The graph on the right, (B), represents the maximum values of limit cycles for $c=2.8$. The impact of increasing the value of $c$ is to shift to a smaller value of $m$ where limit cycles first appear.
 
-The approximation for the initial value of $m$ was started near the
-non-trivial steady state, but the values of the butterflies and wasps
-were taken to be 95\% of the values for the steady state. The
-approximation was run until it detected the state was not changing or
-a limit cycle was reached. In this case, if both densities did not
-change more than 1.0E-7 from a previous high or low value for over
-2000 time steps it was considered to be at a steady state. For the
-limit cycle if the minimum and maximum for both densities was within
-1.0E-7 for two full cycles then it was considered to be in a limit
-cycle. \textcolor{red}{Should these details be moved in the appendix and only summarized here?}\textcolor{blue}{Yes.  we should just be discussing how figure 3 gives information about the butterfly population ... the details of how fig 3 was constructed go in an appendix.}
+The long term behaviour for one parameter range is shown in Figure
+\ref{fig:odeButterflyMaxMin} (see section \ref{numericalApproximationODE} for details on the numerical approximation).  
+Our focus is on the behaviour of the solutions over different values of the parameter $m$, and explore the role that 
+different values of $c$ play in the transitions between a stable fixed point versus a limit cycle. 
+The values of the parameters in the example are
+$g=0.6$, $d=0.1$. Approximations were constructed for values
+of $m$ starting at $m=0.1$ and ending at $m=15.0$.  Graph (A) represents the maximum and minimum values of the limit cycles for $c=1.1$, and graph (B) represents the maximum and minimum values of the limit cycles for $c=2.8$. The impact of increasing the value of $c$ is to shift to a smaller value of $m$ where limit cycles first appear.
 
-After the initial approximation, the initial condition for the next
-value of $m$ was the end state of the previous approximation. This
-process was done for the values of $m$ starting at the lowest value
-and increasing. the process was then repeated for the value of $m$
-starting at the highest value and decreasing. The results were nearly
-identical, and no hysteresis was detected.
+It is important to note that shortly after the transition from a stable to an unstable fixed point, the approximations of the limit cycle indicate the butterfly population moves very close to zero. This can be seen in Figure \ref{fig:odeButterflyMaxMin} where the extremes of the limit cycle are shown.
+
+For the graph on the left in Figure \ref{fig:odeButterflyMaxMin}, $c=1.1$, the transition from a linearly stable fixed point to periodic solutions should occur at $m\approx 0.54$. With respect to the approximation that transition occurs near $m\approx ?$. For the graph on the right, for the graph on the right, $c=2.8$, the transition from a linear stable fixed point to periodic solutions should occur at $m\approx 2.92$. With respect to the approximation the transition occurs at $m\approx ?$. In general, that transition occurs at
+\begin{eqnarray}
+m^* & = & c - 1 + 2 u.
+\end{eqnarray}
+As $c$ increases the transition should occur at a larger value of $m$.
+
+
 
 
 
 The value of $\theta$ is fixed at 1 for these approximations, and the Hopf bifurcation occurs at $m=2.92$. With respect to the numerical approximations, the system moved close to a steady state for values of $m$ less than about 2.841. For larger values of $m$ the system approached a limit
 cycle. The resulting numerical simulations provide a close estimate of the location of the bifurcation.
 
-\subsection{Numerical Approximation of solutions of the coupled PDE and ODE}
+\subsection{Numerical Results for the coupled PDE and ODE system}
+\label{subsection:pdeApproximation}
 
-In this section we provide a  numerical exploration of the full, coupled system of the PDE and
+In this subsection we provide a  numerical exploration of the full, coupled system of the PDE and
 ODE, equations (\ref{eq:scaledodePDE1}) and (\ref{eq:scaledodePDE2}). The details of the full approximation method are
 described in appendix \ref{numericalApproximation}. The parameter
 range is similar to that in subsection
-\ref{subsection:odeApproximation}.
+\ref{subsection:odeApproximation}. When comparing these results to the ODE model, it is important to note how the full population of the butterflies impact the dynamics. The PDE model may include a subset of the butterfly population whose predicted behaviour is to settle into a constant equilibrium as well as a subset of the butterfly population whose predicted behaviour is a limit cycle. The result is the onset for the transition to a limit cycle is delayed or no longer present.
 
+The approximation for the first example examined is shown in Figure \ref{fig:approximationM12Mu01}. 
 The value of the parameters in the example are $c=2.8$, $g=0.6$,
 $d=0.1$, and $\mu=0.01$. The temporal behaviour of the system is
 similar to that found in the previous subsection
@@ -791,20 +781,35 @@ similar to that found in the previous subsection
 --- provide example for $m=5$. --- Need to discuss this.
 
 The onset of a limit cycle is delayed with respect to the system of
-ODEs. For this value of $m$ the fixed point for the ODEs results in a
+ODEs. In particular, we compare how the behaviors between the ODE and PDE systems differ for different values of the parameter $m$, which controls the slope of the propensity function $p(\theta)$, in effect magnifying the way the behavior is expressed as well as the range of the propensity function (sensitivity to $\theta)$. In this way, higher $m$ values correspond to larger differences in the manifestation of the trait within a population. In the ODE system, there is no dependence on $\theta$, therefore choosing a particular value of $m$ corresponds to keeping the propensity for the use of anti-aphrodisiac fixed for the entire population. We note that when compared to the ODE system, it takes a larger value of $m$ for the system to settle into a periodic behavior, which is the less ideal state for the population given that the population may come close to zero, therefore making extinction more likely (see Figure \ref{fig:odepdeButterflyMaxMin}) in the presence of fluctuations due to external influences. The ecological implication of this may be that in the absence of variation, for a particular propensity for the use of anti-aphrodisiac, the population will be more likely to be destabilized, while in the presence of variation, the population will more likely remain at a constant equilibrium, which is more advantageous overall. 
+\par Further, we also investigate how these results change as we vary the diffusion coefficient $\mu$ in the PDE system, which represents the rate at which the change in the group phenotype composition happens from generation to generation (for high values of $\mu$, the population becomes more well-mixed faster) (insert figure demonstrating impact of $\mu$ on the population). In this case, we compare how diffusion ($\mu$) impacts the population with various levels of variation in the manifestation of the trait ($m$). We see that when the group phenotype composition changes slowly ($\mu$ is relatively small, and distribution of the trait doesn't change rapidly), the population can have a larger variation in the manifestation of trait (higher values of $m$) and still be sustained (see Figure \ref{fig:odepdeButterflyMaxMin}). For larger values of $\mu$, the population would need to have less variation in the manifestation of the trait in order to be sustained. We also note that as $\mu$ gets large, the results start to resemble those of the ODE system with an increases in the use of anti-aphrodisiac resulting in the destabilization of the population. This is expected as faster changes in the group phenotype composition lead to a more well-mixed population and therefore should resemble the ODE system. In other words, the distribution of the population is relatively uniform with respect to $\theta$, therefore resembling the case of the ODE system where there is no dependence on $\theta$. Higher diffusion allows certain subsets of the populations to be mixed more rapidly. If a rapid fluctuation begins in one part of the distribution a higher diffusion will more rapidly distribute the population throughout the entire domain. A smaller diffusion will allow a rapid change  in one part of the distribution to propagate.
+Spatially explicit population models tend to be more stable, with less tendency for extinction, compared to ODE models that exclude animal movement. Allowing individuals an opportunity to seek refuge is one reason enhancing stability. Similarly, implementing explicit variation for group phenotype composition appears to have an analogous effect on stability. 
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[trim=5 12 5 5,clip,scale=0.7]{FIGURES/M_vs_Mu.pdf}
+  \caption[$\mu$ vs m comparison]{Numerical simulations for low and high values of $\mu$ and $m$. For a fixed value of the parameter $\mu$, the tuning of parameter $m$ controls the impact associated with the use of anti-pheromone with higher values of m implying greater degree of variation within the butterfly population. For a fixed value of parameter $m$, we see that the impact of increasing the diffusion coefficient $\mu$ results in a more well mixed population, with the expression level becoming more evenly distributed within the population. For all simulations, we looked at the time corresponding to the maximum peak in the $\theta$ distribution and plotted the butterfly densities across all $\theta$s for that specific time point.}
+  \label{fig:mu_vs_m}
+\end{figure}
+ Include interpretation for c: the parameter c dictates the rate of saturation.  We note that the previous result discussed is exaggerated for higher values of c.     For $m=5$ the fixed point for the ODEs results in a
 limit cycle. However, in the case of the coupled PDE and ODE system a
 limit cycle did not appear until much larger values of $m$. For
-example, at $m=12$, a repeating patter was found. The results of an
+example, at $m=12$, a repeating pattern was found. The results of an
 approximation are shown in Figure \ref{fig:approximationM12Mu01}.
 
 The results shown in Figure \ref{fig:approximationM12Mu01} are only
 for a short time span in order to make it easier to show the change in
-time. The initial condition in this case is a Gaussian with a center
-at the right end point.  Similar patterns emerge for an initial
-condition that is a Gaussian centered at the left, a constant initial
+time. A question arises is the importance of the initial condition, and various initial conditions were examined all of which resulted in similar outcomes. For example, the initial condition in this case is a Gaussian function with a center
+at the right end point of the domain consistent with a scenario in which the majority of the population exhibits a higher propensity for using the pheromone.  Similar patterns emerge for an initial
+condition that is a Gaussian centered at the left characterizing a scenario in which the population exhibits a lower propensity for using the pheromone, a constant initial
 condition, and an initial condition with the butterfly density set at
 the theoretical steady state given each value of $\theta$.
 
+To compare the impact of the parameter $m$, a similar approximation was
+constructed with the same values for the parameter, except that $m=15$. 
+The results are shown in Figure \ref{fig:approximationM15Mu01}. In this 
+case there are some initial oscillations in the populations, but the 
+changes rapidly move to a steady state.
 
 Approximations were constructed for
 values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
@@ -826,14 +831,12 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
   \label{fig:approximationM15Mu01}
 \end{figure}
 
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=12cm]{FIGURES/maxMinByM-mu-01-04.pdf}
-  \caption[Maximum and minimum values of the butterfly
-  density]{Maximum and minimum values of the butterfly densities after
-    a long time period as the parameter $m$ varies.  The value of $c$ is 2.8, the value of $g$ is 0.6, and the value of $d$ is 0.1. }
-  \label{fig:maxMinButterflySmallMu}
-\end{figure}
+Figure \ref{fig:approximationM01Mu01C11} Approximation of
+the system, $m=0.01$, $\mu=0.01$, $c=1.1$, $g=0.6$, and $d=0.1$.  
+In this example we get rapid convergence to a steady state. The value of $m$ is small. In Figure \ref{fig:approximationM51Mu01C11} we increase $m$ to 0.51. 
+Goes to steady state but slowly oscillates to the steady state.
+In Figure \ref{fig:approximationM150Mu01C11} increase $m$ to 1.5.
+Now see oscillations.
 
 \begin{figure}[htb]
   \centering
@@ -859,11 +862,24 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
     the system, $m=1.50$, $\mu=0.01$, $c=1.1$, $g=0.6$, and $d=0.1$. }
   \label{fig:approximationM150Mu01C11}
 \end{figure}
-\textcolor{red}{The oscillations seem to be sustained for a relatively small window of $m$ values (Figures 4,5) when the diffusion is small. Is this still the case for Figures 7,8 and 9? How much does $m$ have to increase for the oscillations to disappear? 
-\\Need to think of the significance of these figures and Figure 6 in the context of $\mu$ and $m$. Here are my quick thoughts on Fig 6: 1)without including variation in the trait, increases in the use of anti-aphrodisiac (larger $m$) results in the destabilization of the population (Figure 6,ode) 2) When variation is accounted for, but the change in the group phenotype composition changes slowly ($\mu$ is relatively small, and distribution of the trait doesn't change fast), the population can be sustained for higher propensities for using the anti-aphrodisiac within the population 3) As $\mu$ gets large (resulting in faster changes in the group phenotype composition and leading to more well-mixed population), the results start to resemble those of the ODE when increases in the use of anti-aphrodisiac result in the destabilization of the population.  }
 
+
+
+\begin{figure}[!htp]
+\begin{center}
+\includegraphics[scale=0.6]{FIGURES/Simulations_mu_0.04.eps} 
+\includegraphics[scale=0.2]{FIGURES/Ratio_mu0.01.jpg}  
+\end{center}
+
+\caption{Figure A shows a selection of runs in the $m-c$ parameter space for $\mu=0.04$. Figure B shows the $m-c$ parameter space for $\mu=0.01$. Low values of c correspond to a high-predation scenario, where wasps receive the most benefit from butterfly consumption. The parameter $m$ corresponds to the variation of the trait manifestation within the butterfly population. Some things to note: 1) In the presence of higher variation of the trait in the butterfly population, the "strong" survive at the expense of the weak (the level of predation still plays a role here, too).
+2) The oscillations of the wasp population get close to zero in the low-c region. This may be due to the length of the cycle in the butterfly population (as compared to the scenario in the higher-c region). The wasps don't have enough time to recover from a rapid collapse of the butterfly population. 3) As $\mu$ decreases, the idea of "the strong" butterflies (those that display the trait, higher $\theta$)  surviving at the expense of the "weak" is more clearly observed. This should make sense as lower $\mu$ corresponds to less homogeneous populations, which remains so for longer (the trait distribution changes slowly from generation to generation) 4) May be worth exploring and framing in the context of "realistic" versus "ideal" region?
+Details about the code:  Latin Hypercube Sampling is used to generate N sets of samples from the $m-c$ parameter space. For each pair of parameter values, I integrate the PDE using the explicit finite difference method. Considering only the second half of the time domain (to exclude possible transient behavior), I look at the 80th percentile of theta values and find the maximum butterfly density ($B_{high\theta}$). For the same value of $t$, I look at the 20th percentile of theta values and find the maximum butterfly density ($B_{low\theta}$). Finally, I compute the ratio $\frac{B_{high\theta}}{B_{low\theta}}$ and plot them on a color scale such that values below 1 are marked red, values close to 1 are marked green, and those that deviate significantly from 1 are colored using a grey scale.}
+      \label{fig:mvsc}
+\end{figure}
 
 \section{Conclusion}
+
+Need stuff here about the differences between our results and the Huigen's prediction of evolutionary pressure to be less likely to use the anti-aphrodisiac pheromone.
 
 \section{Acknowledgements}
 
@@ -871,22 +887,19 @@ values of $m$ sarting at $m=0.1$ and ending at $m=15.0$.
 
 \appendix
 
-\section{The Fixed Points On The $b$ and $w$ Axes}
+\section{Stability analysis of the ODE system}
 \label{appendix:otherFixedPoints}
 
-In subsection \ref{subsection:parameters} the stability of the
-non-trivial fixed point in the positive quadrant was examined. More details about the other
-fixed points as well as a more complete description of the Jacobian of
-the system given in equations (\ref{eq:scaledODE1}) and
-(\ref{eq:scaledODE2}) are provided here. In particular the other two
-fixed points are given,  the Jacobian is stated, and the linear
-stability at the other two fixed points is briefly explored.
+In subsection \ref{subsection:parameters}, we examined the stability of the
+non-trivial fixed point in the positive quadrant for the ODE system given by equations (\ref{eq:scaledODE1}) and
+(\ref{eq:scaledODE2}). In this appendix we provide a more complete stability analysis for all fixed points of this system.  In particular  two other
+fixed points are determined and the linear
+stability at these two fixed points is discussed.
 
-The the system of equations given in by
+The  system of equations given in by
 (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) has (at most) one fixed point
-with both $b>0$ and $w>0$. There are two other fixed points on the boundary of the positive quadrant, i.e $b=0$ or $w=0$.  One is the fixed point at the origin, $b=0$ and $w=0$.
-The remaining fixed point occurs at $w=0$ and $b=\frac{c\cdot
-  d}{p(\theta)\left(g - d\right)}$. \textcolor{blue} {No, this fixed point is at b=1, w=0}
+with both $b>0$ and $w>0$.  This was discussed in \ref{subsection:parameters} and given as $b^*= \frac{dc}{(g-d)p}$ and $w^* = (c+\frac{dc}{g-d})(1- \frac{dc}{(g-d)p}).$  There are two other fixed points on the boundary of the positive quadrant, i.e $b=0$ or $w=0$.  One is the fixed point at the origin, $b=0$ and $w=0$.
+The remaining fixed point occurs at $b=1$ and $w=0$. 
   
 
 The stability at these two fixed points can be examined by first
@@ -899,66 +912,46 @@ determining the Jacobian of the system,
           \end{array}
           \right].
 \end{eqnarray*}
-The values of the entries in the matrix are
+The entries in the matrix are given by
 \begin{eqnarray*}
-  J_{11} & = & p(\theta)\left(1-2b\right) -
-               \frac{w\cdot c \cdot p(\theta)}{\left( c + p(\theta)b \right)^2}, \\
-  J_{12} & = & -\frac{p(\theta)b}{c+p(\theta)b}, \\
-  J_{21} & = & g\cdot c \cdot  p(\theta) \frac{w}{\left(c+p(\theta)b\right)^2}, \\
-  J_{22} & = & -d + g\cdot b \cdot  p(\theta) \frac{1}{c+p(\theta)b}.
+  J_{11} & = & p(1-2b) -
+               \frac{w  c   p}{\left( c + pb \right)^2}, \\
+  J_{12} & = & -\frac{pb}{c+pb}, \\
+  J_{21} & = & g \cdot\frac{wcp}{(c+pb)^2}, \\
+  J_{22} & = & -d + g  \cdot \frac{pb}{c+pb}.
 \end{eqnarray*}
 
-For the fixed point at the origin, the Jacobian can be expressed as 
+For the fixed point at the origin, the Jacobian reduces to 
 \begin{eqnarray*}
   J~\bigg|_{(0,0)} & = & \left[
           \begin{array}{rr}
-            p(\theta) & 0 \\
+            p & 0 \\
             0 & -d
           \end{array}
           \right].
 \end{eqnarray*}
-Since it is assumed that both $p(\theta)$ and $d$ are non-negative, this fixed point  is unstable  (saddle point).
+Since it is assumed that both $p$ and $d$ are non-negative, this fixed point  is unstable  (saddle point).
 
-For the fixed point at $w=0$ and
-$b=\frac{c\cdot d}{p(\theta)\left(g - d\right)}$, the Jacobian can be
-expressed as 
-\begin{eqnarray*}
-  J & = & \left[
-          \begin{array}{cc}
-            p(\theta)\left( 1 -
-            \frac{2c\cdot d}{p(\theta)(g-d)} \right) & -\frac{d}{g} \\
-            0 & 0
-          \end{array}
-          \right].
-\end{eqnarray*}
 
-As described in subsection \ref{subsection:parameters} it is assumed
-that $g>d$. In order for this fixed point to be stable in the
-direction associated with the non-zero eigenvalue then we have that
-\begin{eqnarray*}
-  p(\theta) & < & \frac{2cd}{g-d}.
-\end{eqnarray*}
-
-\textcolor{blue}{Replace above with:}
 
 At the fixed point $b=1$, $w=0$, the Jacobian is given by 
 \begin{eqnarray*}
   J~\bigg|_{(1,0)} & = & \left[
           \begin{array}{cc}
-            -p(\theta) & -\frac{p(\theta)}{c+p(\theta)} \\
-            0 & -d+\frac{gp(\theta)}{c+p(\theta)}
+            -p & -\frac{p}{c+p} \\
+            0 & -d+\frac{gp}{c+p}
           \end{array}
           \right].
 \end{eqnarray*}
 
-This fixed point is unstable as long as $p(\theta) >\frac{dc}{g-d}$.  This condition is equivalent to $b^* < 1$.  (If on the other hand, $p(\theta) <\frac{dc}{g-d}$, then the equilibrium $(b^*,w^*)$ moves into the fourth quadrant ($w^*<0$) and the equilibrium $(1,0)$ is a stable attractor.)
+This fixed point is unstable as long as $p >\frac{dc}{g-d}$.  This condition is equivalent to $b^* < 1$.  (If on the other hand, $p <\frac{dc}{g-d}$, then the equilibrium $(b^*,w^*)$ moves into the fourth quadrant ($w^*<0$) and the equilibrium $(1,0)$ is a stable attractor.)
 
-\textcolor{blue}{I suggest replacing Appendix B with the following}
 
-\textbf{NEW TITLE:  Limit Cycles}
+\noindent
+\textbf{Limit Cycles}
 
-In section 3.3 we showed that there is an equilibrium solution $(b^*,w^*)$ in the positive quadrant for the ODE system under the conditions:  1.)  $g-d>0$, and 2.) $\frac{cd}{g-d}<p(\theta)$.   Here, the values of  $p(\theta)$ are constrained by $1<p(\theta)<1+m$.   We also showed in that section that this 
-equilibrium is stable under the condition that $\frac{p-c}{2} < \frac{cd}{g-d}.$   In this appendix, we prove the existence of a limit cycle when this latter inequality fails, i.e. the equilibrium becomes unstable.
+In \ref{subsection:parameters} we showed that there is an equilibrium solution $(b^*,w^*)$ in the positive quadrant for the ODE system under the conditions:  1.)  $g-d>0$, and 2.) $\frac{cd}{g-d}<p$.   Here, the values of  $p$ are constrained by $1<p<1+m$.   We also showed in that section that this 
+equilibrium is stable if and only if $\frac{p-c}{2} < \frac{cd}{g-d}.$   In this appendix, we prove the existence of a limit cycle when this latter inequality fails, i.e. the equilibrium becomes unstable.
 
 We begin by remarking that the positive quadrant of the $(b,w)$-plane is invariant under the flow of the ODE system.
 
@@ -971,7 +964,7 @@ All solutions of equations (\ref{eq:scaledODE1}) and
 \end{lemma}
 
 \begin{proof}
-  This follows by noticing that the non-negative axes, $\{(b,0):\  b \ge 0\}$ and $\{(0,w):\  w\ge 0\}$ are invariant under the flow.  Then, by uniqueness, we conclude that no flow line can pass from the positive quadrant through these axes.
+  This follows by noticing that the non-negative axes, $\{(b,0):\  b \ge 0\}$ and $\{(0,w):\  w\ge 0\}$ are invariant under the flow, that is, if a solution starts in this set then it remains in this set. Then, by uniqueness, we conclude that no flow line can pass from the positive quadrant through these axes.
 \end{proof}
 
 We next show that all solutions in the positive quadrant are bounded for all positive time.  
@@ -988,36 +981,39 @@ is positively invariant.
   $$\frac{d}{dt}b(t) < 0,\  \  {\rm when}\ \ b(t)\ge 1.$$
   
   Now, since we have already discussed that solutions in the positive quadrant cannot cross the axes, it is only left to show that we can choose $R_0$ large enough so that if $R>R_0$, we have
-  $$\frac{d}{dt}(b(t)+\frac{1}{g}w(t)) <0,\  {\rm when}\  b(t)+\frac{1}{g}w(t) =R.$$
+  $$\frac{d}{dt}\left(b(t)+\frac{1}{g}w(t)\right) <0,\  {\rm when}\  b(t)+\frac{1}{g}w(t) =R.$$
   
   But from equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}), we have
-  $$\frac{d}{dt}(b(t)+\frac{1}{g}w(t))  =\left( p\left( \theta \right) b(t)\left( 1-b(t)\right) -\frac{d}{g}
-w\left( t\right) \right). $$
+  $$\frac{d}{dt}\left(b(t)+\frac{1}{g}w(t)\right)  = p b(t)\left( 1-b(t)\right) -\frac{d}{g}
+w\left( t\right) . $$
 
 If $b(t) \ge 1$, the right hand side in negative.  On the other hand, if $b(t) < 1$, we use $\frac{d}{g}w(t) = d(R-b(t))$ to get
-$$\frac{d}{dt}(b(t)+\frac{1}{g}w(t)) =p\left( \theta \right) b(t)\left(
+$$\frac{d}{dt}(b(t)+\frac{1}{g}w(t)) =p b(t)\left(
 1-b(t)\right) -d\left( R-b(t)\right),$$
-which is negative if $R>R_0= \frac{p(\theta)}{d} +1.$
+which is negative if $R>R_0= \frac{p}{d} +1.$
 \end{proof}
 
 Finally, applying the Poincair\'{e}--Bendixson theorem \citep{nonlinearChaos}, together with the above lemma, we have
 
 \begin{theorem}
-  If $0 < \frac{cd}{g-d} < \frac{p(\theta) -c}{2}$, then there exists at least one  limit cycle solution to equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) in the positive quadrant.
+  If $0 < \frac{cd}{g-d} < \frac{p -c}{2}$, then there exists at least one  limit cycle solution to equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) in the positive quadrant.
 \end{theorem}
 
-Summarizing the results of Apendices A and B, we have
+Summarizing these results, we have
 
 \begin{theorem}
-  The system of ordinary differential equations given by equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) (with $g\ne d)$ has fixed points in the $(b,w)$-plane at the points $(0,0), (1,0),$ and $(b^*,w^*)$, where $b^*=\frac{cd}{p(\theta)(g-d)}$ and
-$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(\theta)(g-d)}\right)$. 
- The  fixed point $(b^*,w^*)$ lies in the positive quadrant if $g-d>0$ and $u<p$, where $u=\frac{cd}{g-d}.$
-Furthermore, this fixed point is asymptotically stable when $u>\frac{p-c}{2}$ and is unstable if $u<\frac{p-c}{2}.$ However, all positive solutions to the system are bounded, and when this fixed point is unstable, there exists at least one  limit cycle in the positive quadrant.
+  The system of ordinary differential equations given by equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) (with $g\ne d)$ has fixed points in the $(b,w)$-plane at the points $(0,0), (1,0),$ and $(b^*,w^*)$, where $b^*=\frac{cd}{p(g-d)}$ and
+$w^*=\left(\frac{cd}{g-d}+c\right)\left(1-\frac{cd}{p(g-d)}\right)$. 
+ The  fixed point $(b^*,w^*)$ lies in the positive quadrant if $g-d>0$ and $u<p$, where $u=\frac{cd}{g-d}.$ Considering $u$ as a bifurcation parameter, the system undergoes a Hopf bifurcation at $u^* = \frac{p-c}{2}$.  
+That is, the fixed point $(b^*,w^*)$ is asymptotically stable when $u>\frac{p-c}{2}$ and is unstable if $u<\frac{p-c}{2},$ and, since all positive solutions to the system are bounded,  there is at a  limit cycle in the positive quadrant when the fixed point is unstable.
 Finally, the fixed point $(0,0)$ is always an unstable saddle point, and the fixed point $(1,0)$ is unstable when $u<p$, otherwise it is stable.
 \end{theorem}
 
-\section{Stability of the Equilibria}
+%\section{Stability of the %Equilibria}
 \label{appendix:stability}
+
+
+\iffalse
 
 The linear stability with respect to the parameters for the
 non-trivial fixed points is examined in subsection 
@@ -1200,8 +1196,33 @@ then the system possesses at least one closed loop in the first quadrant.
       \label{fig:lim}
 \end{figure}
 
+\fi
 
-\section{Numerical Approximation of the Coupled PDE and ODE system}
+\section{Numerical Approximations}
+\label{numericalApproximationODE}
+\subsection{Numerical Approximations of the ODE system}
+The system of ODEs given in
+equations (\ref{eq:scaledODE1}) and (\ref{eq:scaledODE2}) was
+approximated using a Runga-Kutta Fehlberg method with a minimum step
+size of 1.0E-5. 
+The approximation for the initial value of $m$ was started near the
+non-trivial steady state, but the values of the butterflies and wasps
+were taken to be 95\% of the values for the steady state. The
+approximation was run until it detected the state was not changing or
+a limit cycle was reached. In this case, if both densities did not
+change more than 1.0E-7 from a previous high or low value for over
+2000 time steps it was considered to be at a steady state. For the
+limit cycle if the minimum and maximum for both densities was within
+1.0E-7 for two full cycles then it was considered to be in a limit
+cycle.
+
+After the initial approximation, the initial condition for the next
+value of $m$ was the end state of the previous approximation. This
+process was done for the values of $m$ starting at the lowest value
+and increasing. the process was then repeated for the value of $m$
+starting at the highest value and decreasing. The results were nearly
+identical, and no hysteresis was detected.
+\subsection{Numerical Approximations of the Coupled PDE and ODE system}
 \label{numericalApproximation}
 
 We introduce the method for the numerical approximation of the coupled
@@ -1241,8 +1262,8 @@ equation, and the relationship can be simplified as
 \end{eqnarray}
 
 The discretization of equations (\ref{eq:scaledodePDE1}) and
-(\ref{eq:scaledodePDE2}) is constructed by substituting the definition
-of $b_N$ from equation (\ref{eqn:spatialDiscretization}). A Galerkin
+(\ref{eq:scaledodePDE2}) is constructed by substituting the definitionhttps://www.overleaf.com/project/5eb9da10e929ab0001816b1e
+of $b_N$ from equation (\ref{eqn:spatialDiscretization})https://www.overleaf.com/project/5eb9da10e929ab0001816b1e. A Galerkin
 approximation is constructed, and one minor complication is that the
 Lagrange interpolants are polynomials of degree $N$, and the
 Gauss-Lobatto quadrature is exact for polynomials up to degree
@@ -1293,3 +1314,5 @@ method.
 
 
 \end{document}
+
+https://www.overleaf.com/project/5eb9da10e929ab0001816b1e
