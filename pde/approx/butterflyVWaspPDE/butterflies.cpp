@@ -431,6 +431,19 @@ void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFil
     resultsFile.write(reinterpret_cast<char*>(butterflies),static_cast<long>(N+2)*static_cast<long>(sizeof(double)));
 }
 
+// Method to get the current state vector at the left third of the disribution
+double Butterflies::getLeftThirdButterflies()
+{
+    return(butterflies[getNumber()*2/3]);
+}
+
+// Method to get the current state vector at the left third of the disribution
+double Butterflies::getRightThirdButterflies()
+{
+    return(butterflies[getNumber()/3]);
+}
+
+
 // Method to calculate the value of p(theta).
 double Butterflies::parameterDistribution(double theta)
 {

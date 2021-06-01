@@ -41,6 +41,9 @@ public:
     void setM(double value) { m = value; }
     double getM() { return(m); }
 
+    double getLeftThirdButterflies();
+    double getRightThirdButterflies();
+
 
 protected:
 

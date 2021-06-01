@@ -8,6 +8,7 @@
 
 #include "numericaltrials.h"
 #include "util.h"
+#include "limInf.h"
 
 //#define OUTPUTFILE "approximation.csv"
 #define BINARYOUTPUTFILE "approximation-TRIAL-"
@@ -28,8 +29,7 @@ void NumericalTrials::multipleApproximationsByM(
         double maxDeltaNorm, int maxNewtonSteps,
         int skipPrint, int skipFileSave,
         int numberThreads)
-{
-
+{    
     int num = 0;
     double m = lowM;
     std::vector<std::thread> processes;
@@ -64,6 +64,82 @@ void NumericalTrials::multipleApproximationsByM(
 
             std::cout << "Moving along " << m << std::endl;
             m += stepM;
+            num += 1;
+        }
+
+        std::vector<std::thread>::iterator eachProcess;
+        for(eachProcess=processes.begin();eachProcess!=processes.end();++eachProcess)
+        {
+            eachProcess->join();
+        }
+
+        std::vector<NumericalTrials*>::iterator eachTrial;
+        for(eachTrial=trials.begin();eachTrial!=trials.end();++eachTrial)
+        {
+            delete *eachTrial;
+        }
+        //th.join();
+    }
+
+
+}
+
+void NumericalTrials::multipleApproximationsByMandC(
+        double mu,double g, double d,
+        double lowC, double highC, double stepC,
+        double lowM, double highM, double stepM,
+        double dt, unsigned long maxTimeLupe,
+        int legendrePolyDegree,
+        double maxDeltaNorm, int maxNewtonSteps,
+        int skipPrint, int skipFileSave,
+        int numberThreads,
+        std::string filename)
+{
+    // Open a file to write the results to.  Write the header for the file as well if this is a new file..
+    std::fstream csvFile;
+    csvFile.open(filename, std::ios::out);
+    csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
+    csvFile.close();
+
+    int num = 0;
+    double m = lowM;
+    double c = lowC;
+    std::vector<std::thread> processes;
+    std::vector<NumericalTrials*> trials;
+    while(m<=highM)
+    {
+        processes.clear();
+        trials.clear();
+        num = 0;
+        while((m<=highM)&&(num<numberThreads))
+        {
+            std::ostringstream filename("");
+            filename << BINARYOUTPUTFILE
+                     << "-c-" <<  std::setw(6) << std::fixed << std::setprecision(4) << std::setfill('0') << c
+                     << "-m-" <<  std::setw(6) << std::fixed << std::setprecision(4) << std::setfill('0') << m
+                     << "-mu-" << mu
+                     << ".bin";
+            std::cout << "Writing to " << filename.str() << std::endl;
+
+            NumericalTrials *trial = new NumericalTrials();
+            trials.push_back(trial);
+            processes.push_back(
+                        std::thread(&NumericalTrials::approximateSystemCheckOscillation,trial,
+                                    mu,c,g,d,m,
+                                    dt,maxTimeLupe,
+                                    legendrePolyDegree,
+                                    maxDeltaNorm,maxNewtonSteps,
+                                    filename.str(),
+                                    skipPrint)
+                        );
+
+            std::cout << "Moving along " << m << std::endl;
+            c += stepC;
+            if(c>highC)
+            {
+                c = lowC;
+                m += stepM;
+            }
             num += 1;
         }
 
@@ -173,6 +249,104 @@ int NumericalTrials::approximateSystem(
 
     // Clean up the data file and close it
     binFile.close();
+    delete theButterflies;
+
+    return(1);
+}
+
+int NumericalTrials::approximateSystemCheckOscillation(
+        double mu, double c, double g, double d, double m,
+        double dt, unsigned long maxTimeLupe,
+        int legendrePolyDegree,
+        double maxDeltaNorm, int maxNewtonSteps,
+        std::string filename,
+        int skipPrint
+        )
+{
+    double t               = 0.0;
+    unsigned long timeLupe = 0;
+    LimInf<double> maxButterflyLeft(0.0,true);
+
+    // Variables used to save the results of calculations into a
+    // data file.
+    std::fstream binFile (filename, std::ios::out | std::ios::binary);
+
+    std::cout << "Pre-processing" << std::endl;
+    int N = legendrePolyDegree;
+    Butterflies *theButterflies = new Butterflies(N,N+2);
+    theButterflies->initializeLegendreParams();
+    theButterflies->setMu(mu);
+    theButterflies->setC(c);
+    theButterflies->setG(g);
+    theButterflies->setD(d);
+    theButterflies->setM(m);
+    theButterflies->setDT(dt);
+
+    //theButterflies->initializeButterfliesGaussian(1.0,mu);
+    theButterflies->initializeButterfliesConstant(1.0);
+    theButterflies->writeParameters(binFile);
+    theButterflies->writeBinaryHeader(binFile);
+
+    // Define the variables used to determing if the system is repeating
+    // Used to figure out when to stop.
+    double maxButterfliesDensity = theButterflies->totalButterflyPopulation();
+    double prevButterflyDensity = maxButterfliesDensity;
+    double minButterfliesDensity = maxButterfliesDensity;
+    int countButterflyIncreasing = 0;
+
+    double prevWaspDensity = theButterflies->waspPopulation();
+    double maxWaspDensity = prevWaspDensity;
+    double minWaspDensity = maxWaspDensity;
+    int countWaspIncreasing = 0;
+    int prevCycleClose = 0;
+
+    double prevButterflyCheck = 0.0;
+    double prevWaspCheck = 0.0;
+    int prevValueClose = 0;
+
+
+    // Start the time loop, and calculation an approximation at
+    // each time step.
+    for(timeLupe=0;timeLupe<maxTimeLupe;++timeLupe)
+    {
+        t = static_cast<double>(timeLupe)*dt;
+
+        if(timeLupe%(static_cast<unsigned long>(skipPrint))==0)
+        {
+            std::cout << "Calculating an approximation: "
+                         << std::fixed
+                         << std::setw(8)
+                         << std::setprecision(4)
+                         << timeLupe << " (" << t << ") ";
+        }
+
+        if(
+           theButterflies->singleTimeStep(maxDeltaNorm,maxNewtonSteps,timeLupe%(static_cast<unsigned long>(skipPrint))==0)
+                < 0)
+        {
+            std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
+            return(0);
+        }
+
+        if(checkRepeating(
+                    theButterflies,
+                    prevButterflyDensity,maxButterfliesDensity,minButterfliesDensity,prevButterflyCheck,
+                    prevWaspDensity,maxWaspDensity,minWaspDensity,prevWaspCheck,
+                    prevCycleClose,prevValueClose,countButterflyIncreasing,countWaspIncreasing
+                    ))
+            break; // the solution is either settling into a steady state or repeating.... enough is enough.
+
+        maxButterflyLeft = theButterflies->getLeftThirdButterflies();
+        //double rightPartial = theButterflies->getRightThirdButterflies();
+
+    }
+
+    // Open a file to write the results to.  Write the header for the file as well if this is a new file..
+    std::fstream csvFile;
+    csvFile.open(filename, std::ios::out | std::ios::app);
+
+    // Clean up the data file and close it
+    csvFile.close();
     delete theButterflies;
 
     return(1);

@@ -55,7 +55,7 @@ int main()
 
 #endif
 
-#define APPROXIMATE_MULTIPLE_M
+//#define APPROXIMATE_MULTIPLE_M
 #ifdef APPROXIMATE_MULTIPLE_M
     NumericalTrials::multipleApproximationsByM(
             mu,c,g,d,
@@ -70,6 +70,19 @@ int main()
             NUMBER_THREADS);
 #endif
 
+#define APPROXIMATE_OSCILLATION_BY_CM
+#ifdef APPROXIMATE_OSCILLATION_BY_CM
+    NumericalTrials::multipleApproximationsByMandC(
+                mu,g,d,
+                1.0,3.5,0.1,
+                1.0,4.5,0.1,
+                dt,NUMBER_TIME_LOOP,
+                LEGENDRE_POLY_DEGREE,
+                MAX_DELTA_NORM,MAX_NEWTON_STEPS,
+                SKIP_PRINT_UPDATE,SKIP_FILE_SAVE,
+                1+0*NUMBER_THREADS,
+                "/tmp/results.csv");
+#endif
 
 //#define APPROXIMATE_HYSTERESIS
 #ifdef APPROXIMATE_HYSTERESIS

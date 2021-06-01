@@ -16,6 +16,7 @@ SOURCES += \
 HEADERS += \
     approximationbase.h \
     legendre.h \
+    limInf.h \
     util.h \
     lu_decomp.h \
     pdeSolver.h \

@@ -17,8 +17,7 @@ class NumericalTrials : public ApproximationBase
 public:
     NumericalTrials();
 
-    static void multipleApproximationsByM(
-            double mu, double c, double g, double d,
+    static void multipleApproximationsByM(double mu, double c, double g, double d,
             double lowM, double highM, double stepM,
             double dt, unsigned long maxTimeLupe,
             int legendrePolyDegree,
@@ -26,6 +25,16 @@ public:
             int skipPrint,
             int skipFileSave,
             int numberThreads);
+
+    static void multipleApproximationsByMandC(double mu, double g, double d,
+            double lowC, double highC, double stepC,
+            double lowM, double highM, double stepM,
+            double dt, unsigned long maxTimeLupe,
+            int legendrePolyDegree,
+            double maxDeltaNorm, int maxNewtonSteps,
+            int skipPrint, int skipFileSave,
+            int numberThreads,
+            std::string filename);
 
     int approximateSystem(
             double mu, double c, double g, double d, double m,
@@ -35,6 +44,15 @@ public:
             std::string filename,
             int skipPrint,
             int skipFileSave);
+
+    int approximateSystemCheckOscillation(
+            double mu, double c, double g, double d, double m,
+            double dt, unsigned long maxTimeLupe,
+            int legendrePolyDegree,
+            double maxDeltaNorm, int maxNewtonSteps,
+            std::string filename,
+            int skipPrint
+            );
 
     int approximateSystemTrackRepeating(double muLow, double muHigh, int numberMu,
             double c, double g, double d,

@@ -1,0 +1,97 @@
+#ifndef LIMINF_H
+#define LIMINF_H
+
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
+template <class number>
+class LimInf
+{
+
+public:
+    LimInf(number initial,bool maximum=true);
+    void operator=(number val);
+private:
+
+    bool searchMax;
+    bool trending;
+    long iterations;
+    number extremeValue;
+    number prevExtremeValue;
+    number prevValue;
+};
+
+template <class number>
+LimInf<number>::LimInf(number initial,bool maximum)
+{
+    searchMax = maximum;
+    trending = true;
+    iterations = 0;
+    extremeValue = initial;
+    prevValue = initial;
+    prevExtremeValue = initial;
+}
+
+template <class number>
+void LimInf<number>::operator=(number val)
+{
+    std::cout << "Checking " << val << "   ";
+    //if(searchMax)
+    {
+        // We are trying to keep track of the largest value in the cycle.
+        if(trending)
+        {
+            // The value of the function is assumed to be increasing.
+            if(prevValue<val)
+            {
+                // The value of the function is getting bigger.
+                if(prevExtremeValue<val)
+                {
+                    prevExtremeValue = val; // This is the biggest it has been this cycle.
+                    extremeValue = (val>extremeValue)? val : extremeValue;
+                }
+                iterations = 0;             // This the last time the function was increasing.
+            }
+
+            // The function is decreasing. Is it a minor blip or part of a
+            // long term trend?
+            else if(++iterations > 200)
+            {
+                // It has been decreasing for a while. Assume it is part of a long term trend,
+                // and the function is decreasing.
+                trending = false;
+                iterations = 0;
+                extremeValue = prevExtremeValue;
+            }
+            std::cout << "Increasing  " << extremeValue << std::endl;
+
+        }
+
+        else
+        {
+            // The value of the function is assumed to be decreasing in the big picture.
+            std::cout << "Decreasing  " << extremeValue << std::endl;
+            if(prevValue>val)
+            {
+                // The function is decreasing.
+                iterations = 0;
+            }
+            else if(++iterations > 200)
+            {
+                // It has been increasing for a while. Assume it is part of a long term trend,
+                // and the function is now increasing
+                trending = true;
+                iterations = 0;
+                prevExtremeValue = val;
+            }
+
+        }
+
+        prevValue = val; // keep track of the previous value.
+
+    }
+
+}
+
+#endif // LIMINF_H
