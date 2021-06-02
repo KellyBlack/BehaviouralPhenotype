@@ -265,7 +265,6 @@ int NumericalTrials::approximateSystemCheckOscillation(
 {
     double t               = 0.0;
     unsigned long timeLupe = 0;
-    LimInf<double> maxButterflyLeft(0.0,true);
 
     // Variables used to save the results of calculations into a
     // data file.
@@ -304,6 +303,11 @@ int NumericalTrials::approximateSystemCheckOscillation(
     double prevWaspCheck = 0.0;
     int prevValueClose = 0;
 
+    LimInf<double> maxButterflyLeft(theButterflies->getLeftThirdButterflies(),true);
+    LimInf<double> minButterflyLeft(theButterflies->getLeftThirdButterflies(),false);
+    LimInf<double> maxButterflyRight(theButterflies->getRightThirdButterflies(),true);
+    LimInf<double> minButterflyRight(theButterflies->getRightThirdButterflies(),false);
+
 
     // Start the time loop, and calculation an approximation at
     // each time step.
@@ -317,7 +321,12 @@ int NumericalTrials::approximateSystemCheckOscillation(
                          << std::fixed
                          << std::setw(8)
                          << std::setprecision(4)
-                         << timeLupe << " (" << t << ") ";
+                         << timeLupe << " (" << t << ") "
+                         << maxButterflyLeft.extreme() << "  "
+                         << minButterflyLeft.extreme() << "  "
+                         << maxButterflyRight.extreme() << "  "
+                         << minButterflyRight.extreme() << "  "
+                         ;
         }
 
         if(
@@ -336,8 +345,10 @@ int NumericalTrials::approximateSystemCheckOscillation(
                     ))
             break; // the solution is either settling into a steady state or repeating.... enough is enough.
 
-        maxButterflyLeft = theButterflies->getLeftThirdButterflies();
-        //double rightPartial = theButterflies->getRightThirdButterflies();
+        maxButterflyLeft  = theButterflies->getLeftThirdButterflies();
+        minButterflyLeft  = theButterflies->getLeftThirdButterflies();
+        maxButterflyRight = theButterflies->getRightThirdButterflies();
+        minButterflyRight = theButterflies->getRightThirdButterflies();
 
     }
 

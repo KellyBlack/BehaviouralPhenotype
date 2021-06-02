@@ -11,8 +11,11 @@ class LimInf
 
 public:
     LimInf(number initial,bool maximum=true);
+    number extreme();
     void operator=(number val);
 private:
+
+    bool testDirection(number currentVal,number prevVal);
 
     bool searchMax;
     bool trending;
@@ -33,30 +36,31 @@ LimInf<number>::LimInf(number initial,bool maximum)
     prevExtremeValue = initial;
 }
 
+
 template <class number>
 void LimInf<number>::operator=(number val)
 {
-    std::cout << "Checking " << val << "   ";
+    //std::cout << "Checking " << val << ", " << prevExtremeValue << ": ";
     //if(searchMax)
     {
         // We are trying to keep track of the largest value in the cycle.
         if(trending)
         {
             // The value of the function is assumed to be increasing.
-            if(prevValue<val)
+            if(testDirection(val,prevValue))
             {
                 // The value of the function is getting bigger.
-                if(prevExtremeValue<val)
+                if(testDirection(val,prevExtremeValue))
                 {
                     prevExtremeValue = val; // This is the biggest it has been this cycle.
-                    extremeValue = (val>extremeValue)? val : extremeValue;
+                    extremeValue = (testDirection(val,extremeValue)) ? val : extremeValue;
                 }
                 iterations = 0;             // This the last time the function was increasing.
             }
 
             // The function is decreasing. Is it a minor blip or part of a
             // long term trend?
-            else if(++iterations > 200)
+            else if(++iterations > 100)
             {
                 // It has been decreasing for a while. Assume it is part of a long term trend,
                 // and the function is decreasing.
@@ -64,26 +68,27 @@ void LimInf<number>::operator=(number val)
                 iterations = 0;
                 extremeValue = prevExtremeValue;
             }
-            std::cout << "Increasing  " << extremeValue << std::endl;
+            //std::cout << "Increasing  " << extremeValue << std::endl;
 
         }
 
         else
         {
             // The value of the function is assumed to be decreasing in the big picture.
-            std::cout << "Decreasing  " << extremeValue << std::endl;
-            if(prevValue>val)
+            //std::cout << "Decreasing  " << extremeValue << std::endl;
+            if(!testDirection(val,prevValue))
             {
                 // The function is decreasing.
                 iterations = 0;
             }
-            else if(++iterations > 200)
+            else if(++iterations > 100)
             {
                 // It has been increasing for a while. Assume it is part of a long term trend,
                 // and the function is now increasing
                 trending = true;
                 iterations = 0;
                 prevExtremeValue = val;
+                extremeValue = val;
             }
 
         }
@@ -93,5 +98,23 @@ void LimInf<number>::operator=(number val)
     }
 
 }
+
+
+template <class number>
+bool LimInf<number>::testDirection(number currentVal,number prevVal)
+{
+    if(searchMax)
+    {
+        return(currentVal>prevVal);
+    }
+    return(currentVal<prevVal);
+}
+
+template <class number>
+number LimInf<number>::extreme()
+{
+    return(extremeValue);
+}
+
 
 #endif // LIMINF_H
