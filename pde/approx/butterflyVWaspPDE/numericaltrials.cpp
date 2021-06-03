@@ -268,7 +268,6 @@ int NumericalTrials::approximateSystemCheckOscillation(
 
     // Variables used to save the results of calculations into a
     // data file.
-    std::fstream binFile (filename, std::ios::out | std::ios::binary);
 
     std::cout << "Pre-processing" << std::endl;
     int N = legendrePolyDegree;
@@ -283,8 +282,8 @@ int NumericalTrials::approximateSystemCheckOscillation(
 
     //theButterflies->initializeButterfliesGaussian(1.0,mu);
     theButterflies->initializeButterfliesConstant(1.0);
-    theButterflies->writeParameters(binFile);
-    theButterflies->writeBinaryHeader(binFile);
+    //theButterflies->writeParameters(binFile);
+    //theButterflies->writeBinaryHeader(binFile);
 
     // Define the variables used to determing if the system is repeating
     // Used to figure out when to stop.
@@ -355,6 +354,17 @@ int NumericalTrials::approximateSystemCheckOscillation(
     // Open a file to write the results to.  Write the header for the file as well if this is a new file..
     std::fstream csvFile;
     csvFile.open(filename, std::ios::out | std::ios::app);
+
+    csvFile << "which," << mu << ","
+            << c << ","
+            << g << ","
+            << d << ","
+            << m << ","
+            << t << ","
+            << maxButterflyLeft.extreme() << ","
+            << minButterflyLeft.extreme() << ","
+            << maxButterflyRight.extreme() << ","
+            << minButterflyRight.extreme() << std::endl;
 
     // Clean up the data file and close it
     csvFile.close();
