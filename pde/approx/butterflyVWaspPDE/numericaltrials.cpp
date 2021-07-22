@@ -100,7 +100,7 @@ void NumericalTrials::multipleApproximationsByMandC(
     // Open a file to write the results to.  Write the header for the file as well if this is a new file..
     std::fstream csvFile;
     csvFile.open(filename, std::ios::out);
-    csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
+    csvFile << "which,mu,c,g,d,m,time,maxButterflyLeft,minButterflyLeft,maxButterflyRight,minButterflyRight" << std::endl;
     csvFile.close();
 
     double m = lowM;
@@ -118,7 +118,7 @@ void NumericalTrials::multipleApproximationsByMandC(
     trials.clear();
     while((m<=highM) || (!processes.empty()))
     {
-        while((m<=highM)&&((int)processes.size()<numberThreads))
+        while((m<=highM)&&(static_cast<int>(processes.size())<numberThreads))
         {
             NumericalTrials *trial = new NumericalTrials();
             trials.push_back(trial);
@@ -127,14 +127,13 @@ void NumericalTrials::multipleApproximationsByMandC(
             newProcess->running = true;
             newProcess->process = std::thread(&NumericalTrials::approximateSystemCheckOscillation,trial,
                                               mu,c,g,d,m,
-                                              dt,maxTimeLupe/1000,
+                                              dt,maxTimeLupe,
                                               legendrePolyDegree,
                                               maxDeltaNorm,maxNewtonSteps,
                                               filename,
-                                              skipPrint*100000,skipFileSave,&(newProcess->running));
+                                              skipPrint,skipFileSave,&(newProcess->running));
 
             processes.push_back(newProcess);
-            std::cout << "Moving along " << m << std::endl;
             c += stepC;
             if(c>highC)
             {
@@ -145,18 +144,18 @@ void NumericalTrials::multipleApproximationsByMandC(
         }
 
         sleep(2);
-        std::cout << "got a bunch of processes, " << processes.size() << std::endl;
+        std::cout << "Checking processes to see if any have stopped, " << processes.size() << "." << std::endl;
 
         std::vector<remoteProcess*>::iterator eachProcess;
         for(eachProcess=processes.begin();eachProcess!=processes.end();++eachProcess)
         {
+
             remoteProcess* process = *eachProcess;
             if(!process->running)
             {
-                std::cout << "not running" << std::endl;
+                std::cout << "Thread has finished." << std::endl;
                 if(process->process.joinable())
                 {
-                    std::cout << "Thread is joinable" << std::endl;
                     process->process.join();
                     processes.erase(eachProcess);
                     delete process;
@@ -164,11 +163,9 @@ void NumericalTrials::multipleApproximationsByMandC(
                     break;
                 }
             }
-            else
-                std::cout << "Tried and still running" << std::endl;
+
         }
 
-        std::cout << "checking " << processes.size() << " processes (" << m << "/" << highM << ")" << std::endl;
     }
 
     trials.clear();
@@ -280,7 +277,7 @@ int NumericalTrials::approximateSystemCheckOscillation(
         std::atomic<bool> *running
         )
 {
-    *running = true;
+    *running               = true;
     double t               = 0.0;
     unsigned long timeLupe = 0;
 
