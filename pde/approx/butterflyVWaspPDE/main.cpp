@@ -4,7 +4,7 @@
 #include "numericaltrials.h"
 #include "rungakutta45.h"
 
-#define SKIP_PRINT_UPDATE 40000
+#define SKIP_PRINT_UPDATE 100000
 #define SKIP_FILE_SAVE 1500
 #define NUMBER_TIME_LOOP 3000000000
 #define MAX_NEWTON_STEPS 50
@@ -70,8 +70,8 @@ int main()
             NUMBER_THREADS);
 #endif
 
-#define APPROXIMATE_OSCILLATION_BY_CM
-#ifdef APPROXIMATE_OSCILLATION_BY_CM
+#define APPROXIMATE_OSCILLATION_BY_MC
+#ifdef APPROXIMATE_OSCILLATION_BY_MC
     NumericalTrials::multipleApproximationsByMandC(
                 mu,g,d,
                 1.0,3.5,0.1,

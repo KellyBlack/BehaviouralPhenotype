@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <atomic>
 
 
 #include "util.h"
@@ -45,14 +46,14 @@ public:
             int skipPrint,
             int skipFileSave);
 
-    int approximateSystemCheckOscillation(
-            double mu, double c, double g, double d, double m,
+    int approximateSystemCheckOscillation(double mu, double c, double g, double d, double m,
             double dt, unsigned long maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
             std::string filename,
-            int skipPrint
-            );
+            int skipPrint,
+            int skipFileSave,
+            std::atomic<bool> *running);
 
     int approximateSystemTrackRepeating(double muLow, double muHigh, int numberMu,
             double c, double g, double d,
@@ -91,7 +92,7 @@ protected:
 
 private:
 
-    bool checkRepeating(
+    int checkRepeating(
             Butterflies *theButterflies,
             double &prevButterflyDensity,
             double &maxButterfliesDensity,

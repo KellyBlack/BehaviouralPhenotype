@@ -12,6 +12,7 @@ class LimInf
 public:
     LimInf(number initial,bool maximum=true);
     number extreme();
+    void setExtreme(number val);
     void operator=(number val);
 private:
 
@@ -36,6 +37,11 @@ LimInf<number>::LimInf(number initial,bool maximum)
     prevExtremeValue = initial;
 }
 
+template  <class number>
+void LimInf<number>::setExtreme(number val)
+{
+    extremeValue = val;
+}
 
 template <class number>
 void LimInf<number>::operator=(number val)

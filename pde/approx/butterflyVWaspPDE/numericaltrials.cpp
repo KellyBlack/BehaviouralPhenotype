@@ -1,6 +1,8 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <unistd.h>
+#include <atomic>
 
 #include <sys/ipc.h>
 #include <sys/msg.h>
@@ -101,38 +103,37 @@ void NumericalTrials::multipleApproximationsByMandC(
     csvFile << "which,mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     csvFile.close();
 
-    int num = 0;
     double m = lowM;
     double c = lowC;
-    std::vector<std::thread> processes;
-    std::vector<NumericalTrials*> trials;
-    while(m<=highM)
-    {
-        processes.clear();
-        trials.clear();
-        num = 0;
-        while((m<=highM)&&(num<numberThreads))
-        {
-            std::ostringstream filename("");
-            filename << BINARYOUTPUTFILE
-                     << "-c-" <<  std::setw(6) << std::fixed << std::setprecision(4) << std::setfill('0') << c
-                     << "-m-" <<  std::setw(6) << std::fixed << std::setprecision(4) << std::setfill('0') << m
-                     << "-mu-" << mu
-                     << ".bin";
-            std::cout << "Writing to " << filename.str() << std::endl;
 
+    struct remoteProcess {
+        std::thread process;
+        std::atomic<bool> running;
+    };
+
+    std::vector<remoteProcess*> processes;
+    std::vector<NumericalTrials*> trials;
+
+    processes.clear();
+    trials.clear();
+    while((m<=highM) || (!processes.empty()))
+    {
+        while((m<=highM)&&((int)processes.size()<numberThreads))
+        {
             NumericalTrials *trial = new NumericalTrials();
             trials.push_back(trial);
-            processes.push_back(
-                        std::thread(&NumericalTrials::approximateSystemCheckOscillation,trial,
-                                    mu,c,g,d,m,
-                                    dt,maxTimeLupe,
-                                    legendrePolyDegree,
-                                    maxDeltaNorm,maxNewtonSteps,
-                                    filename.str(),
-                                    skipPrint)
-                        );
 
+            remoteProcess* newProcess = new remoteProcess;
+            newProcess->running = true;
+            newProcess->process = std::thread(&NumericalTrials::approximateSystemCheckOscillation,trial,
+                                              mu,c,g,d,m,
+                                              dt,maxTimeLupe/1000,
+                                              legendrePolyDegree,
+                                              maxDeltaNorm,maxNewtonSteps,
+                                              filename,
+                                              skipPrint*100000,skipFileSave,&(newProcess->running));
+
+            processes.push_back(newProcess);
             std::cout << "Moving along " << m << std::endl;
             c += stepC;
             if(c>highC)
@@ -140,23 +141,38 @@ void NumericalTrials::multipleApproximationsByMandC(
                 c = lowC;
                 m += stepM;
             }
-            num += 1;
+
         }
 
-        std::vector<std::thread>::iterator eachProcess;
+        sleep(2);
+        std::cout << "got a bunch of processes, " << processes.size() << std::endl;
+
+        std::vector<remoteProcess*>::iterator eachProcess;
         for(eachProcess=processes.begin();eachProcess!=processes.end();++eachProcess)
         {
-            eachProcess->join();
+            remoteProcess* process = *eachProcess;
+            if(!process->running)
+            {
+                std::cout << "not running" << std::endl;
+                if(process->process.joinable())
+                {
+                    std::cout << "Thread is joinable" << std::endl;
+                    process->process.join();
+                    processes.erase(eachProcess);
+                    delete process;
+                    //eachProcess--;
+                    break;
+                }
+            }
+            else
+                std::cout << "Tried and still running" << std::endl;
         }
 
-        std::vector<NumericalTrials*>::iterator eachTrial;
-        for(eachTrial=trials.begin();eachTrial!=trials.end();++eachTrial)
-        {
-            delete *eachTrial;
-        }
-        //th.join();
+        std::cout << "checking " << processes.size() << " processes (" << m << "/" << highM << ")" << std::endl;
     }
 
+    trials.clear();
+    processes.clear();
 
 }
 
@@ -242,7 +258,7 @@ int NumericalTrials::approximateSystem(
                     prevButterflyDensity,maxButterfliesDensity,minButterfliesDensity,prevButterflyCheck,
                     prevWaspDensity,maxWaspDensity,minWaspDensity,prevWaspCheck,
                     prevCycleClose,prevValueClose,countButterflyIncreasing,countWaspIncreasing
-                    ))
+                    ) != 0)
             break; // the solution is either settling into a steady state or repeating.... enough is enough.
 
     }
@@ -260,9 +276,11 @@ int NumericalTrials::approximateSystemCheckOscillation(
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
         std::string filename,
-        int skipPrint
+        int skipPrint,int skipFileSave,
+        std::atomic<bool> *running
         )
 {
+    *running = true;
     double t               = 0.0;
     unsigned long timeLupe = 0;
 
@@ -333,16 +351,27 @@ int NumericalTrials::approximateSystemCheckOscillation(
                 < 0)
         {
             std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
+            *running = false;
             return(0);
         }
 
-        if(checkRepeating(
+        int repeating = checkRepeating(
                     theButterflies,
                     prevButterflyDensity,maxButterfliesDensity,minButterfliesDensity,prevButterflyCheck,
                     prevWaspDensity,maxWaspDensity,minWaspDensity,prevWaspCheck,
                     prevCycleClose,prevValueClose,countButterflyIncreasing,countWaspIncreasing
-                    ))
+                    );
+        if(repeating != 0)
+        {
+            if(repeating < 0)
+            {
+                maxButterflyLeft.setExtreme(theButterflies->getLeftThirdButterflies());
+                minButterflyLeft.setExtreme(theButterflies->getLeftThirdButterflies());
+                maxButterflyRight.setExtreme(theButterflies->getRightThirdButterflies());
+                minButterflyRight.setExtreme(theButterflies->getRightThirdButterflies());
+            }
             break; // the solution is either settling into a steady state or repeating.... enough is enough.
+        }
 
         maxButterflyLeft  = theButterflies->getLeftThirdButterflies();
         minButterflyLeft  = theButterflies->getLeftThirdButterflies();
@@ -352,28 +381,32 @@ int NumericalTrials::approximateSystemCheckOscillation(
     }
 
     // Open a file to write the results to.  Write the header for the file as well if this is a new file..
-    std::fstream csvFile;
-    csvFile.open(filename, std::ios::out | std::ios::app);
+    if(skipFileSave!=0)
+    {
+        std::fstream csvFile;
+        csvFile.open(filename, std::ios::out | std::ios::app);
 
-    csvFile << "which," << mu << ","
-            << c << ","
-            << g << ","
-            << d << ","
-            << m << ","
-            << t << ","
-            << maxButterflyLeft.extreme() << ","
-            << minButterflyLeft.extreme() << ","
-            << maxButterflyRight.extreme() << ","
-            << minButterflyRight.extreme() << std::endl;
+        csvFile << "which," << mu << ","
+                << c << ","
+                << g << ","
+                << d << ","
+                << m << ","
+                << t << ","
+                << maxButterflyLeft.extreme() << ","
+                << minButterflyLeft.extreme() << ","
+                << maxButterflyRight.extreme() << ","
+                << minButterflyRight.extreme() << std::endl;
 
-    // Clean up the data file and close it
-    csvFile.close();
+        // Clean up the data file and close it
+        csvFile.close();
+    }
+
     delete theButterflies;
-
+    *running = false;
     return(1);
 }
 
-bool NumericalTrials::checkRepeating(
+int NumericalTrials::checkRepeating(
         Butterflies *theButterflies,
         double &prevButterflyDensity,
         double &maxButterfliesDensity,
@@ -491,17 +524,17 @@ bool NumericalTrials::checkRepeating(
     prevWaspDensity = currentWaspDensity;
 
     if((prevCycleClose>=0xf)||(maxButterfliesDensity>10.0))
-        return(true);
+        return(-1);
     else if (prevValueClose>MAX_CHECK_CONSTANT)
     {
         maxButterfliesDensity = currentButterflyDensity;
         minButterfliesDensity = currentButterflyDensity;
         maxWaspDensity = currentWaspDensity;
         minWaspDensity = currentWaspDensity;
-        return(true);
+        return(1);
     }
 
-    return(false);
+    return(0);
 }
 
 
