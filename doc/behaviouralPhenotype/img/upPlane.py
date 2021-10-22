@@ -1,4 +1,4 @@
-%matplotlib qt
+#%matplotlib qt
 #%matplotlib inline
 
 import numpy
@@ -82,8 +82,8 @@ p = numpy.array([0.0,largeP])
 fig = plt.figure(figsize=(10,10))
 axes = fig.add_subplot(1, 1, 1)
 makeStabilityRegionPlot(c,m,largeU,largeP,p,axes,"Stability Region For The ODEs")
-#plt.show()
-plt.savefig("odeStability-up-plane.pdf")
+plt.show()
+#plt.savefig("odeStability-up-plane.pdf")
 plt.close()
 
 fig = plt.figure(figsize=(10,10))
@@ -92,8 +92,8 @@ axes = fig.add_subplot(1, 1, 1)
 makeStabilityRegionPlot(c,m*0.75,largeU,largeP,p,axes,"")
 axes.plot(numpy.array([1.0,1.0+m*0.75]),numpy.array([0.75,0.75]),'b--',linewidth=2)
 fig.suptitle("",fontsize=30)
-#plt.show()
-plt.savefig("odeStability-up-plane-Line-A.pdf")
+plt.show()
+#plt.savefig("odeStability-up-plane-Line-A.pdf")
 plt.close()
 
 fig = plt.figure(figsize=(10,10))
@@ -103,8 +103,8 @@ makeStabilityRegionPlot(c,m*1.2,largeU,largeP,p,axes,"")
 axes.plot(numpy.array([1.0,1.0+m*1.2]),numpy.array([0.75,0.75]),'b--',linewidth=2)
 fig.suptitle("",fontsize=30)
 
-#plt.show()
-plt.savefig("odeStability-up-plane-Line-B.pdf")
+plt.show()
+#plt.savefig("odeStability-up-plane-Line-B.pdf")
 plt.close()
 
 fig = plt.figure(figsize=(10,10))
@@ -114,7 +114,7 @@ makeStabilityRegionPlot(c/6.0,m*1.2,largeU,largeP,p,axes,"",0.95,0.02)
 axes.plot(numpy.array([1.0,1.0+m*1.2]),numpy.array([0.75,0.75]),'b--',linewidth=2)
 fig.suptitle("",fontsize=30)
 
-#plt.show()
-plt.savefig("odeStability-up-plane-Line-C.pdf")
+plt.show()
+#plt.savefig("odeStability-up-plane-Line-C.pdf")
 plt.close()
 
