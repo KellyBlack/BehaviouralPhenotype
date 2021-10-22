@@ -20,7 +20,7 @@
 NumericalTrials::NumericalTrials() :
     ApproximationBase::ApproximationBase()
 {
-
+    theButterflies = nullptr;
 }
 
 void NumericalTrials::multipleApproximationsByM(
@@ -106,32 +106,32 @@ void NumericalTrials::multipleApproximationsByMandC(
     double m = lowM;
     double c = lowC;
 
+    NumericalTrials* lastTrial = nullptr;
+
     struct remoteProcess {
         std::thread process;
         std::atomic<bool> running;
+        NumericalTrials* trial;
     };
 
     std::vector<remoteProcess*> processes;
-    std::vector<NumericalTrials*> trials;
 
     processes.clear();
-    trials.clear();
     while((m<=highM) || (!processes.empty()))
     {
         while((m<=highM)&&(static_cast<int>(processes.size())<numberThreads))
         {
-            NumericalTrials *trial = new NumericalTrials();
-            trials.push_back(trial);
-
+            NumericalTrials *trial    = new NumericalTrials();
             remoteProcess* newProcess = new remoteProcess;
             newProcess->running = true;
+            newProcess->trial = trial;
             newProcess->process = std::thread(&NumericalTrials::approximateSystemCheckOscillation,trial,
                                               mu,c,g,d,m,
                                               dt,maxTimeLupe,
                                               legendrePolyDegree,
                                               maxDeltaNorm,maxNewtonSteps,
                                               filename,
-                                              skipPrint,skipFileSave,&(newProcess->running));
+                                              skipPrint,skipFileSave,lastTrial,&(newProcess->running));
 
             processes.push_back(newProcess);
             c += stepC;
@@ -153,12 +153,21 @@ void NumericalTrials::multipleApproximationsByMandC(
             remoteProcess* process = *eachProcess;
             if(!process->running)
             {
-                std::cout << "Thread has finished." << std::endl;
+                std::cout << "Thread has finished: " << process << std::endl;
                 if(process->process.joinable())
                 {
+                    if(lastTrial!=nullptr)
+                    {
+                        delete lastTrial;
+                    }
+                    //lastTrial = process->trial;
+                    delete process->trial;
+
                     process->process.join();
+                    process->trial = nullptr;
                     processes.erase(eachProcess);
                     delete process;
+
                     //eachProcess--;
                     break;
                 }
@@ -168,7 +177,6 @@ void NumericalTrials::multipleApproximationsByMandC(
 
     }
 
-    trials.clear();
     processes.clear();
 
 }
@@ -267,16 +275,17 @@ int NumericalTrials::approximateSystem(
     return(1);
 }
 
-int NumericalTrials::approximateSystemCheckOscillation(
-        double mu, double c, double g, double d, double m,
+int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, double g, double d, double m,
         double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
         std::string filename,
-        int skipPrint,int skipFileSave,
+        int skipPrint, int skipFileSave,
+        NumericalTrials *prevApprox,
         std::atomic<bool> *running
         )
 {
+
     *running               = true;
     double t               = 0.0;
     unsigned long timeLupe = 0;
@@ -286,7 +295,8 @@ int NumericalTrials::approximateSystemCheckOscillation(
 
     std::cout << "Pre-processing" << std::endl;
     int N = legendrePolyDegree;
-    Butterflies *theButterflies = new Butterflies(N,N+2);
+    if(theButterflies==nullptr)
+        theButterflies = new Butterflies(N,N+2);
     theButterflies->initializeLegendreParams();
     theButterflies->setMu(mu);
     theButterflies->setC(c);
@@ -300,17 +310,20 @@ int NumericalTrials::approximateSystemCheckOscillation(
     //theButterflies->writeParameters(binFile);
     //theButterflies->writeBinaryHeader(binFile);
 
+    if(prevApprox != nullptr)
+        theButterflies->copyState(prevApprox->getButterflies());
+
     // Define the variables used to determing if the system is repeating
     // Used to figure out when to stop.
     double maxButterfliesDensity = theButterflies->totalButterflyPopulation();
     double prevButterflyDensity = maxButterfliesDensity;
     double minButterfliesDensity = maxButterfliesDensity;
-    int countButterflyIncreasing = 0;
+    int countButterflyIncreasing = -2;
 
     double prevWaspDensity = theButterflies->waspPopulation();
     double maxWaspDensity = prevWaspDensity;
     double minWaspDensity = maxWaspDensity;
-    int countWaspIncreasing = 0;
+    int countWaspIncreasing = -2;
     int prevCycleClose = 0;
 
     double prevButterflyCheck = 0.0;
@@ -352,6 +365,11 @@ int NumericalTrials::approximateSystemCheckOscillation(
             return(0);
         }
 
+        maxButterflyLeft  = theButterflies->getLeftThirdButterflies();
+        minButterflyLeft  = theButterflies->getLeftThirdButterflies();
+        maxButterflyRight = theButterflies->getRightThirdButterflies();
+        minButterflyRight = theButterflies->getRightThirdButterflies();
+
         int repeating = checkRepeating(
                     theButterflies,
                     prevButterflyDensity,maxButterfliesDensity,minButterfliesDensity,prevButterflyCheck,
@@ -369,11 +387,6 @@ int NumericalTrials::approximateSystemCheckOscillation(
             }
             break; // the solution is either settling into a steady state or repeating.... enough is enough.
         }
-
-        maxButterflyLeft  = theButterflies->getLeftThirdButterflies();
-        minButterflyLeft  = theButterflies->getLeftThirdButterflies();
-        maxButterflyRight = theButterflies->getRightThirdButterflies();
-        minButterflyRight = theButterflies->getRightThirdButterflies();
 
     }
 
@@ -419,63 +432,68 @@ int NumericalTrials::checkRepeating(
         int &countWaspIncreasing
         )
 {
-    const long MAX_CHECK_CONSTANT = 2000;
-    double currentButterflyDensity = theButterflies->totalButterflyPopulation();
-    double currentWaspDensity = theButterflies->waspPopulation();
+    const double CLOSE_STEADY_STATE = 1.0E-6;
+    const double CLOSE_SMALL_CHANGE = 1.0E-4;
+    const long MAX_CHECK_CONSTANT   = 2000;
+    double currentButterflyDensity  = theButterflies->totalButterflyPopulation();
+    double currentWaspDensity       = theButterflies->waspPopulation();
 
-    if((fabs(currentWaspDensity-prevWaspDensity)<1.0E-7)&&(fabs(currentButterflyDensity-prevButterflyDensity)<1.0E-7))
+    // First check to see if the solution is settling into a stable steady state.
+    if(((fabs(currentWaspDensity-prevWaspCheck)<CLOSE_STEADY_STATE)&&(fabs(currentButterflyDensity-prevButterflyCheck)<CLOSE_STEADY_STATE)))
     {
-        if(((fabs(prevWaspCheck-currentWaspDensity)>1.0E-7)||(fabs(prevButterflyCheck-currentButterflyDensity)>1.0E-7)))
-        {
-            prevValueClose = 0;
-            prevWaspCheck = currentWaspDensity;
-            prevButterflyCheck = currentButterflyDensity;
-        }
-        else
-        {
-            prevValueClose += 1;
-        }
-
+        // The last approximation is close to the last check state.
+        prevValueClose += 1;
     }
-    else
+     else
     {
+        // The last approximation is away from the check state. Reset the check state and the counter.
         prevValueClose = 0;
-        //prevWaspCheck = currentWaspDensity;
-        //prevButterflyCheck = currentButterflyDensity;
+        prevWaspCheck = currentWaspDensity;
+        prevButterflyCheck = currentButterflyDensity;
     }
+
 
     if(currentButterflyDensity<prevButterflyDensity)
     {
-        // The butterfly population is decreasing. If countIncreasing is
-        // pos. that means that the butterfly count had a long trend of
-        // increasing.
-        if(countButterflyIncreasing-->0)
+        // The butterfly population is decreasing. If countButterflyIncreasing
+        // is positive then this is not the first time it has gone through this
+        // check
+        minButterfliesDensity = prevButterflyDensity;
+        if(countButterflyIncreasing == 1)
         {
             //std::cout << which << ": max butterfly " << prevButterflyDensity << "-" << maxButterfliesDensity << std::endl;
-            if(fabs(maxButterfliesDensity-prevButterflyDensity)<1E-4)
+            if(fabs(maxButterfliesDensity-prevButterflyDensity)<CLOSE_SMALL_CHANGE)
                 prevCycleClose = (prevCycleClose | 0x1);
             else
                 prevCycleClose = 0;
 
-            maxButterfliesDensity = prevButterflyDensity;
-            countButterflyIncreasing = 0;
+            //maxButterfliesDensity = prevButterflyDensity;
+            countButterflyIncreasing = 2;
+        }
+        else if (countButterflyIncreasing < 0)
+        {
+            countButterflyIncreasing = 1;
         }
     }
     else
     {
-        // The butterfly population is increasing. If countIncreasing is
-        // neg. that means that the butterfly count had a long trend of
-        // decreasing.
-        if(countButterflyIncreasing++ < 0)
+        // The butterfly population is increasing. If countButterflyIncreasing
+        // is negative then this is not the first time it has gone through this check.
+        maxButterfliesDensity = prevButterflyDensity;
+        if(countButterflyIncreasing == -1)
         {
             //std::cout << which << ": min butterfly " << prevButterflyDensity << "-" << minButterfliesDensity << std::endl;
-            if(fabs(minButterfliesDensity-prevButterflyDensity)<1E-4)
+            if(fabs(minButterfliesDensity-prevButterflyDensity)<CLOSE_SMALL_CHANGE)
                 prevCycleClose = (prevCycleClose | 0x2);
             else
                 prevCycleClose = 0;
 
-            minButterfliesDensity = prevButterflyDensity;
-            countButterflyIncreasing = 0;
+            //minButterfliesDensity = prevButterflyDensity;
+            countButterflyIncreasing = -2;
+        }
+        else
+        {
+            countButterflyIncreasing = -1;
         }
 
 
@@ -489,16 +507,21 @@ int NumericalTrials::checkRepeating(
         // The wasp population is decreasing. If countIncreasing is
         // pos. that means that the wasp count had a long trend of
         // increasing.
-        if(countWaspIncreasing-->0)
+        minWaspDensity = prevWaspDensity;
+        if(countWaspIncreasing == 1)
         {
             //std::cout << which << ": max wasp " << prevWaspDensity << "-" << maxWaspDensity << std::endl;
-            if(fabs(maxWaspDensity-prevWaspDensity)<1E-4)
+            if(fabs(maxWaspDensity-prevWaspDensity)<CLOSE_SMALL_CHANGE)
                 prevCycleClose = (prevCycleClose | 0x4);
             else
                 prevCycleClose = 0;
 
-            maxWaspDensity = prevWaspDensity;
-            countWaspIncreasing = 0;
+            //maxWaspDensity = prevWaspDensity;
+            countWaspIncreasing = 2;
+        }
+        else
+        {
+            countWaspIncreasing = 1;
         }
     }
     else
@@ -506,16 +529,21 @@ int NumericalTrials::checkRepeating(
         // The wasp population is increasing. If countIncreasing is
         // neg. that means that the wasp count had a long trend of
         // decreasing.
-        if(countWaspIncreasing++ < 0)
+        maxWaspDensity = prevWaspDensity;
+        if(countWaspIncreasing == -1)
         {
             //std::cout << which << ": min wasp " << prevWaspDensity << "-" << minWaspDensity << std::endl;
-            if(fabs(minWaspDensity-prevWaspDensity)<1E-4)
+            if(fabs(minWaspDensity-prevWaspDensity)<CLOSE_SMALL_CHANGE)
                 prevCycleClose = (prevCycleClose | 0x8);
             else
                 prevCycleClose = 0;
 
-            minWaspDensity = prevWaspDensity;
-            countWaspIncreasing = 0;
+            //minWaspDensity = prevWaspDensity;
+            countWaspIncreasing = -2;
+        }
+        else
+        {
+            countWaspIncreasing = -1;
         }
     }
     prevWaspDensity = currentWaspDensity;

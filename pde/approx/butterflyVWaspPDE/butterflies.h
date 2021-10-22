@@ -43,6 +43,10 @@ public:
 
     double getLeftThirdButterflies();
     double getRightThirdButterflies();
+    double getButterfly(int which);
+    void   setButterfly(int which,double val);
+    void   copyState(Butterflies* butterfly);
+    void   printState();
 
 
 protected:

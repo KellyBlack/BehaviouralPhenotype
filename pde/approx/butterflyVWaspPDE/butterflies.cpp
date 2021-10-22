@@ -434,13 +434,13 @@ void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFil
 // Method to get the current state vector at the left third of the disribution
 double Butterflies::getLeftThirdButterflies()
 {
-    return(butterflies[getNumber()*2/3]);
+    return(getButterfly(getNumber()*2/3));
 }
 
 // Method to get the current state vector at the left third of the disribution
 double Butterflies::getRightThirdButterflies()
 {
-    return(butterflies[getNumber()/3]);
+    return(getButterfly(getNumber()/3));
 }
 
 
@@ -448,4 +448,42 @@ double Butterflies::getRightThirdButterflies()
 double Butterflies::parameterDistribution(double theta)
 {
     return(m*theta+1.0);
+}
+
+// method to get the value of the butterflies at a specific index
+double Butterflies::getButterfly(int which)
+{
+    return(butterflies[which]);
+}
+
+// method to set the value of the butterflies at a specific index
+void Butterflies::setButterfly(int which,double val)
+{
+    butterflies[which] = val;
+}
+
+// Method to copy the state from another instance of a Butterflies object
+void Butterflies::copyState(Butterflies* butterfly)
+{
+    int num = getStateSize();
+    int lupe;
+    if(butterfly != nullptr)
+    {
+        for(lupe=0;lupe<num;++lupe)
+        {
+            setButterfly(lupe,butterfly->getButterfly(lupe));
+            std::cout << "copying " << getButterfly(lupe) << " " << butterfly->getButterfly(lupe) << std::endl;
+        }
+        copyCurrentStateToTemp();
+    }
+}
+
+void Butterflies::printState()
+{
+    int num = getStateSize();
+    int lupe;
+    for(lupe=0;lupe<num;++lupe)
+     {
+         std::cout << "State: " << lupe << ", " << getButterfly(lupe) << std::endl;
+     }
 }

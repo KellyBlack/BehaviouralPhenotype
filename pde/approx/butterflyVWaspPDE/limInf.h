@@ -30,7 +30,7 @@ template <class number>
 LimInf<number>::LimInf(number initial,bool maximum)
 {
     searchMax = maximum;
-    trending = true;
+    trending = false;
     iterations = 0;
     extremeValue = initial;
     prevValue = initial;
@@ -56,11 +56,8 @@ void LimInf<number>::operator=(number val)
             if(testDirection(val,prevValue))
             {
                 // The value of the function is getting bigger.
-                if(testDirection(val,prevExtremeValue))
-                {
-                    prevExtremeValue = val; // This is the biggest it has been this cycle.
-                    extremeValue = (testDirection(val,extremeValue)) ? val : extremeValue;
-                }
+                extremeValue = (testDirection(val,extremeValue)) ? val : extremeValue;
+                prevExtremeValue = (testDirection(val,prevExtremeValue)) ? val : prevExtremeValue;
                 iterations = 0;             // This the last time the function was increasing.
             }
 
@@ -72,7 +69,7 @@ void LimInf<number>::operator=(number val)
                 // and the function is decreasing.
                 trending = false;
                 iterations = 0;
-                extremeValue = prevExtremeValue;
+                //extremeValue = prevExtremeValue;
             }
             //std::cout << "Increasing  " << extremeValue << std::endl;
 

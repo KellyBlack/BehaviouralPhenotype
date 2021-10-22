@@ -4,23 +4,23 @@
 #include "numericaltrials.h"
 #include "rungakutta45.h"
 
-#define SKIP_PRINT_UPDATE 100000
+#define SKIP_PRINT_UPDATE 100000000
 #define SKIP_FILE_SAVE 1500
 #define NUMBER_TIME_LOOP 3000000000
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
-#define NUMBER_THREADS 7
+#define NUMBER_THREADS 12
 
 int main()
 {
     // Set up the temporal variables.
-    double dt = 0.000001;
+    double dt = 0.00001;
 
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double mu = 0.0095;
+    double mu = 0.01; // 0.0095
     double c  = 2.75;
     double g  = 0.6;
     double d  = 0.1;
@@ -74,8 +74,8 @@ int main()
 #ifdef APPROXIMATE_OSCILLATION_BY_MC
     NumericalTrials::multipleApproximationsByMandC(
                 mu,g,d,
-                1.0,3.5,0.1,
-                1.0,4.5,0.1,
+                0.1,7.0/10.0,0.1,
+                0.1,50.0/10.0,0.1,
                 dt,NUMBER_TIME_LOOP,
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,

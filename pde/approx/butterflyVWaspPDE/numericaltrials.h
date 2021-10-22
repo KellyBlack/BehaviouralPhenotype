@@ -53,6 +53,7 @@ public:
             std::string filename,
             int skipPrint,
             int skipFileSave,
+            NumericalTrials *prevApprox,
             std::atomic<bool> *running);
 
     int approximateSystemTrackRepeating(double muLow, double muHigh, int numberMu,
@@ -87,10 +88,15 @@ public:
             double &maxButterfly, double &minButterfly,
             double &maxWasp, double &minWaspDensity);
 
+    Butterflies* getButterflies() { return(theButterflies); }
+    void printState() { theButterflies->printState(); }
+
 protected:
 
 
 private:
+
+    Butterflies *theButterflies;
 
     int checkRepeating(
             Butterflies *theButterflies,
