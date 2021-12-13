@@ -214,20 +214,29 @@ int NumericalTrials::approximateSystem(
 
     // Define the variables used to determing if the system is repeating
     // Used to figure out when to stop.
-    double maxButterfliesDensity = theButterflies->totalButterflyPopulation();
-    double prevButterflyDensity = maxButterfliesDensity;
-    double minButterfliesDensity = maxButterfliesDensity;
+    double maxButterfliesDensity     = theButterflies->totalButterflyPopulation();
+    double prevButterflyDensity      = maxButterfliesDensity;
+    double minButterfliesDensity     = maxButterfliesDensity;
+    double prevMaxButterfliesDensity = maxButterfliesDensity;
+    double prevMinButterfliesDensity = maxButterfliesDensity;
     int countButterflyIncreasing = 0;
 
-    double prevWaspDensity = theButterflies->waspPopulation();
-    double maxWaspDensity = prevWaspDensity;
-    double minWaspDensity = maxWaspDensity;
-    int countWaspIncreasing = 0;
+    double prevWaspDensity    = theButterflies->waspPopulation();
+    double maxWaspDensity     = prevWaspDensity;
+    double minWaspDensity     = maxWaspDensity;
+    double prevMaxWaspDensity = maxWaspDensity;
+    double prevMinWaspDensity = maxWaspDensity;
+    int countWaspIncreasing   = -2;
     int prevCycleClose = 0;
 
     double prevButterflyCheck = 0.0;
     double prevWaspCheck = 0.0;
     int prevValueClose = 0;
+
+    LimInf<double> maxButterflyLeft(theButterflies->getLeftThirdButterflies(),true);
+    LimInf<double> minButterflyLeft(theButterflies->getLeftThirdButterflies(),false);
+    LimInf<double> maxButterflyRight(theButterflies->getRightThirdButterflies(),true);
+    LimInf<double> minButterflyRight(theButterflies->getRightThirdButterflies(),false);
 
 
     // Start the time loop, and calculation an approximation at
@@ -242,7 +251,12 @@ int NumericalTrials::approximateSystem(
                          << std::fixed
                          << std::setw(8)
                          << std::setprecision(4)
-                         << timeLupe << " (" << t << ") ";
+                         << timeLupe << " (" << t << ") "
+                         << maxButterflyLeft.extreme() << "  "
+                         << minButterflyLeft.extreme() << "  "
+                         << maxButterflyRight.extreme() << "  "
+                         << minButterflyRight.extreme() << "  "
+                            ;
         }
 
         if(
@@ -258,13 +272,24 @@ int NumericalTrials::approximateSystem(
             theButterflies->writeBinaryCurrentApprox(t,binFile);
         }
 
-        if(checkRepeating(
+        int repeating = checkRepeating(
                     theButterflies,
-                    prevButterflyDensity,maxButterfliesDensity,minButterfliesDensity,prevButterflyCheck,
-                    prevWaspDensity,maxWaspDensity,minWaspDensity,prevWaspCheck,
+                    prevButterflyDensity,maxButterfliesDensity,minButterfliesDensity,prevMaxButterfliesDensity,prevMinButterfliesDensity,prevButterflyCheck,
+                    prevWaspDensity,maxWaspDensity,minWaspDensity,prevMaxWaspDensity,prevMinWaspDensity,prevWaspCheck,
                     prevCycleClose,prevValueClose,countButterflyIncreasing,countWaspIncreasing
-                    ) != 0)
+                    );
+        if(repeating != 0)
+        {
+            if(repeating > 0)
+            {
+                maxButterflyLeft.setExtreme(theButterflies->getLeftThirdButterflies());
+                minButterflyLeft.setExtreme(theButterflies->getLeftThirdButterflies());
+                maxButterflyRight.setExtreme(theButterflies->getRightThirdButterflies());
+                minButterflyRight.setExtreme(theButterflies->getRightThirdButterflies());
+                //std::cout << "Steady state achieved." << std::endl;
+            }
             break; // the solution is either settling into a steady state or repeating.... enough is enough.
+        }
 
     }
 
@@ -318,11 +343,15 @@ int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, doub
     double maxButterfliesDensity = theButterflies->totalButterflyPopulation();
     double prevButterflyDensity = maxButterfliesDensity;
     double minButterfliesDensity = maxButterfliesDensity;
+    double prevMinButterfliesDensity = maxButterfliesDensity;
+    double prevMaxButterfliesDensity = maxButterfliesDensity;
     int countButterflyIncreasing = -2;
 
     double prevWaspDensity = theButterflies->waspPopulation();
     double maxWaspDensity = prevWaspDensity;
     double minWaspDensity = maxWaspDensity;
+    double prevMaxWaspDensity = prevWaspDensity;
+    double prevMinWaspDensity = maxWaspDensity;
     int countWaspIncreasing = -2;
     int prevCycleClose = 0;
 
@@ -372,18 +401,19 @@ int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, doub
 
         int repeating = checkRepeating(
                     theButterflies,
-                    prevButterflyDensity,maxButterfliesDensity,minButterfliesDensity,prevButterflyCheck,
-                    prevWaspDensity,maxWaspDensity,minWaspDensity,prevWaspCheck,
+                    prevButterflyDensity,maxButterfliesDensity,minButterfliesDensity,prevMaxButterfliesDensity,prevMinButterfliesDensity,prevButterflyCheck,
+                    prevWaspDensity,maxWaspDensity,minWaspDensity,prevMaxWaspDensity,prevMinWaspDensity,prevWaspCheck,
                     prevCycleClose,prevValueClose,countButterflyIncreasing,countWaspIncreasing
                     );
         if(repeating != 0)
         {
-            if(repeating < 0)
+            if(repeating > 0)
             {
                 maxButterflyLeft.setExtreme(theButterflies->getLeftThirdButterflies());
                 minButterflyLeft.setExtreme(theButterflies->getLeftThirdButterflies());
                 maxButterflyRight.setExtreme(theButterflies->getRightThirdButterflies());
                 minButterflyRight.setExtreme(theButterflies->getRightThirdButterflies());
+                //std::cout << "Steady state achieved." << std::endl;
             }
             break; // the solution is either settling into a steady state or repeating.... enough is enough.
         }
@@ -421,10 +451,14 @@ int NumericalTrials::checkRepeating(
         double &prevButterflyDensity,
         double &maxButterfliesDensity,
         double &minButterfliesDensity,
+        double &prevMaxButterfliesDensity,
+        double &prevMinButterfliesDensity,
         double &prevButterflyCheck,
         double &prevWaspDensity,
         double &maxWaspDensity,
         double &minWaspDensity,
+        double &prevMaxWaspDensity,
+        double &prevMinWaspDensity,
         double &prevWaspCheck,
         int &prevCycleClose,
         int &prevValueClose,
@@ -443,6 +477,8 @@ int NumericalTrials::checkRepeating(
     {
         // The last approximation is close to the last check state.
         prevValueClose += 1;
+        //if(prevValueClose>1000)
+        //    std::cout << "butterflies close " << prevValueClose << std::endl;
     }
      else
     {
@@ -456,47 +492,42 @@ int NumericalTrials::checkRepeating(
     if(currentButterflyDensity<prevButterflyDensity)
     {
         // The butterfly population is decreasing. If countButterflyIncreasing
-        // is positive then this is not the first time it has gone through this
+        // is negative then this is the first time it has gone through this
         // check
-        minButterfliesDensity = prevButterflyDensity;
-        if(countButterflyIncreasing == 1)
+        minButterfliesDensity = currentButterflyDensity;
+        if(countButterflyIncreasing < 0)
         {
             //std::cout << which << ": max butterfly " << prevButterflyDensity << "-" << maxButterfliesDensity << std::endl;
-            if(fabs(maxButterfliesDensity-prevButterflyDensity)<CLOSE_SMALL_CHANGE)
+            if(fabs(maxButterfliesDensity-prevMaxButterfliesDensity)<CLOSE_SMALL_CHANGE)
                 prevCycleClose = (prevCycleClose | 0x1);
             else
                 prevCycleClose = 0;
 
-            //maxButterfliesDensity = prevButterflyDensity;
+            prevMaxButterfliesDensity = maxButterfliesDensity;
             countButterflyIncreasing = 2;
         }
-        else if (countButterflyIncreasing < 0)
-        {
+        else
             countButterflyIncreasing = 1;
-        }
+
     }
     else
     {
         // The butterfly population is increasing. If countButterflyIncreasing
-        // is negative then this is not the first time it has gone through this check.
+        // is positive then this is the first time it has gone through this check.
         maxButterfliesDensity = prevButterflyDensity;
-        if(countButterflyIncreasing == -1)
+        if(countButterflyIncreasing > 0)
         {
             //std::cout << which << ": min butterfly " << prevButterflyDensity << "-" << minButterfliesDensity << std::endl;
-            if(fabs(minButterfliesDensity-prevButterflyDensity)<CLOSE_SMALL_CHANGE)
+            if(fabs(minButterfliesDensity-prevMinButterfliesDensity)<CLOSE_SMALL_CHANGE)
                 prevCycleClose = (prevCycleClose | 0x2);
             else
                 prevCycleClose = 0;
 
-            //minButterfliesDensity = prevButterflyDensity;
+            prevMinButterfliesDensity = minButterfliesDensity;
             countButterflyIncreasing = -2;
         }
         else
-        {
             countButterflyIncreasing = -1;
-        }
-
-
 
     }
     prevButterflyDensity = currentButterflyDensity;
@@ -507,22 +538,21 @@ int NumericalTrials::checkRepeating(
         // The wasp population is decreasing. If countIncreasing is
         // pos. that means that the wasp count had a long trend of
         // increasing.
-        minWaspDensity = prevWaspDensity;
-        if(countWaspIncreasing == 1)
+        minWaspDensity = currentWaspDensity;
+        if(countWaspIncreasing < 0)
         {
             //std::cout << which << ": max wasp " << prevWaspDensity << "-" << maxWaspDensity << std::endl;
-            if(fabs(maxWaspDensity-prevWaspDensity)<CLOSE_SMALL_CHANGE)
+            if(fabs(maxWaspDensity-prevMaxWaspDensity)<CLOSE_SMALL_CHANGE)
                 prevCycleClose = (prevCycleClose | 0x4);
             else
                 prevCycleClose = 0;
 
-            //maxWaspDensity = prevWaspDensity;
+            prevMaxWaspDensity = maxWaspDensity;
             countWaspIncreasing = 2;
         }
         else
-        {
             countWaspIncreasing = 1;
-        }
+
     }
     else
     {
@@ -530,28 +560,30 @@ int NumericalTrials::checkRepeating(
         // neg. that means that the wasp count had a long trend of
         // decreasing.
         maxWaspDensity = prevWaspDensity;
-        if(countWaspIncreasing == -1)
+        if(countWaspIncreasing > 0)
         {
             //std::cout << which << ": min wasp " << prevWaspDensity << "-" << minWaspDensity << std::endl;
-            if(fabs(minWaspDensity-prevWaspDensity)<CLOSE_SMALL_CHANGE)
+            if(fabs(minWaspDensity-prevMinWaspDensity)<CLOSE_SMALL_CHANGE)
                 prevCycleClose = (prevCycleClose | 0x8);
             else
                 prevCycleClose = 0;
 
-            //minWaspDensity = prevWaspDensity;
+            prevMinWaspDensity = minWaspDensity;
             countWaspIncreasing = -2;
         }
         else
-        {
             countWaspIncreasing = -1;
-        }
     }
     prevWaspDensity = currentWaspDensity;
 
     if((prevCycleClose>=0xf)||(maxButterfliesDensity>10.0))
+    {
+        //std::cout << "cycle! " << prevCycleClose << std::endl;
         return(-1);
+    }
     else if (prevValueClose>MAX_CHECK_CONSTANT)
     {
+        // The solution is assumed to be close to a steady state.
         maxButterfliesDensity = currentButterflyDensity;
         minButterfliesDensity = currentButterflyDensity;
         maxWaspDensity = currentWaspDensity;

@@ -57,7 +57,6 @@ void LimInf<number>::operator=(number val)
             {
                 // The value of the function is getting bigger.
                 extremeValue = (testDirection(val,extremeValue)) ? val : extremeValue;
-                prevExtremeValue = (testDirection(val,prevExtremeValue)) ? val : prevExtremeValue;
                 iterations = 0;             // This the last time the function was increasing.
             }
 
@@ -67,9 +66,9 @@ void LimInf<number>::operator=(number val)
             {
                 // It has been decreasing for a while. Assume it is part of a long term trend,
                 // and the function is decreasing.
+                prevExtremeValue = extremeValue;
                 trending = false;
                 iterations = 0;
-                //extremeValue = prevExtremeValue;
             }
             //std::cout << "Increasing  " << extremeValue << std::endl;
 
@@ -90,7 +89,6 @@ void LimInf<number>::operator=(number val)
                 // and the function is now increasing
                 trending = true;
                 iterations = 0;
-                prevExtremeValue = val;
                 extremeValue = val;
             }
 
@@ -116,7 +114,7 @@ bool LimInf<number>::testDirection(number currentVal,number prevVal)
 template <class number>
 number LimInf<number>::extreme()
 {
-    return(extremeValue);
+    return(prevExtremeValue);
 }
 
 
