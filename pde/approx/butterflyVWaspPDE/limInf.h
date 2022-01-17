@@ -41,6 +41,7 @@ template  <class number>
 void LimInf<number>::setExtreme(number val)
 {
     extremeValue = val;
+    prevExtremeValue = val;
 }
 
 template <class number>

@@ -121,16 +121,36 @@ int main()
 
 #define ONE_APPROXIMATION
 #ifdef ONE_APPROXIMATION
-    NumericalTrials trial;
+    //NumericalTrials trial;
     c = 8.0;
     m = 5.0;
-    trial.approximateSystem(
-            mu,c,g,d, m,
-            dt,NUMBER_TIME_LOOP,
+    //trial.approximateSystem(
+    //        mu,c,g,d, m,
+    //        dt,NUMBER_TIME_LOOP,
+    //        LEGENDRE_POLY_DEGREE,
+    //        MAX_DELTA_NORM,MAX_NEWTON_STEPS,
+    //        "/tmp/approximation-m-5.0.bin",
+    //        SKIP_PRINT_UPDATE,SKIP_FILE_SAVE);
+
+    struct remoteProcess {
+        std::thread process;
+        std::atomic<bool> running;
+        NumericalTrials* trial;
+    };
+    NumericalTrials *trial =  new NumericalTrials();
+    remoteProcess* newProcess = new remoteProcess;
+    newProcess->running = true;
+    newProcess->trial = trial;
+    trial->approximateSystemCheckOscillation(
+            mu, c, g, d, m,
+            dt, NUMBER_TIME_LOOP,
             LEGENDRE_POLY_DEGREE,
             MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-            "/tmp/approximation-m-5.0.bin",
-            SKIP_PRINT_UPDATE,SKIP_FILE_SAVE);
+            "/tmp/trial.dat",
+            SKIP_PRINT_UPDATE,SKIP_FILE_SAVE,
+            nullptr,
+            &(newProcess->running));
+
 #endif
 
 //#define APPROXIMATE_HYSTERESIS
