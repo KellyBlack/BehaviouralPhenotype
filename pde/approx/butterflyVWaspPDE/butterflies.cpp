@@ -432,15 +432,17 @@ void Butterflies::writeBinaryCurrentApprox(double &time,std::fstream &resultsFil
 }
 
 // Method to get the current state vector at the left third of the disribution
-double Butterflies::getLeftThirdButterflies()
+double Butterflies::getLeftEndButterflies()
 {
-    return(getButterfly(getNumber()*2/3));
+    //return(getButterfly(getNumber()*2/3));
+    return(getButterfly(getNumber()-2));
 }
 
 // Method to get the current state vector at the left third of the disribution
-double Butterflies::getRightThirdButterflies()
+double Butterflies::getRightEndButterflies()
 {
-    return(getButterfly(getNumber()/3));
+    //return(getButterfly(getNumber()/3));
+    return(getButterfly(2));
 }
 
 

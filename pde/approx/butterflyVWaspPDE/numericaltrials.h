@@ -17,6 +17,7 @@ class NumericalTrials : public ApproximationBase
 {
 public:
     NumericalTrials();
+    ~NumericalTrials();
 
     static void multipleApproximationsByM(double mu, double c, double g, double d,
             double lowM, double highM, double stepM,
@@ -118,6 +119,8 @@ private:
             int &countWaspIncreasing
             );
 
+    void saveResults(std::string filename);
+    static bool checkPreviousSimulation(double m,double c,std::string filename);
 
 
 };

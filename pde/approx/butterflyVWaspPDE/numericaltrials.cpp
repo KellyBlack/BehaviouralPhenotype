@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <sstream>
 #include <unistd.h>
@@ -22,6 +23,14 @@ NumericalTrials::NumericalTrials() :
 {
     theButterflies = nullptr;
 }
+
+// Destructor for the numerical trials class.
+NumericalTrials::~NumericalTrials()
+{
+    if(theButterflies != nullptr)
+        delete theButterflies;
+}
+
 
 void NumericalTrials::multipleApproximationsByM(
         double mu, double c, double g, double d,
@@ -121,19 +130,23 @@ void NumericalTrials::multipleApproximationsByMandC(
     {
         while((m<=highM)&&(static_cast<int>(processes.size())<numberThreads))
         {
-            NumericalTrials *trial    = new NumericalTrials();
-            remoteProcess* newProcess = new remoteProcess;
-            newProcess->running = true;
-            newProcess->trial = trial;
-            newProcess->process = std::thread(&NumericalTrials::approximateSystemCheckOscillation,trial,
-                                              mu,c,g,d,m,
-                                              dt,maxTimeLupe,
-                                              legendrePolyDegree,
-                                              maxDeltaNorm,maxNewtonSteps,
-                                              filename,
-                                              skipPrint,skipFileSave,lastTrial,&(newProcess->running));
+            if(checkPreviousSimulation(m,c,"./results.bin"))
+            {
+                NumericalTrials *trial    = new NumericalTrials();
+                remoteProcess* newProcess = new remoteProcess;
+                newProcess->running = true;
+                newProcess->trial = trial;
+                newProcess->process = std::thread(&NumericalTrials::approximateSystemCheckOscillation,trial,
+                                                  mu,c,g,d,m,
+                                                  dt,maxTimeLupe,
+                                                  legendrePolyDegree,
+                                                  maxDeltaNorm,maxNewtonSteps,
+                                                  filename,
+                                                  skipPrint,skipFileSave,lastTrial,&(newProcess->running));
 
-            processes.push_back(newProcess);
+                processes.push_back(newProcess);
+            }
+
             c += stepC;
             if(c>highC)
             {
@@ -154,6 +167,8 @@ void NumericalTrials::multipleApproximationsByMandC(
             if(!process->running)
             {
                 std::cout << "Thread has finished: " << process << std::endl;
+                //process->trial->printState();
+                process->trial->saveResults("./results.bin");
                 if(process->process.joinable())
                 {
                     if(lastTrial!=nullptr)
@@ -196,7 +211,7 @@ int NumericalTrials::approximateSystem(
     // data file.
     std::fstream binFile (filename, std::ios::out | std::ios::binary);
 
-    std::cout << "Pre-processing" << std::endl;
+    std::cout << "Pre-processing c=" << c << " m=" << m << " mu=" << mu << std::endl;
     int N = legendrePolyDegree;
     Butterflies *theButterflies = new Butterflies(N,N+2);
     theButterflies->initializeLegendreParams();
@@ -233,10 +248,10 @@ int NumericalTrials::approximateSystem(
     double prevWaspCheck = 0.0;
     int prevValueClose = 0;
 
-    LimInf<double> maxButterflyLeft(theButterflies->getLeftThirdButterflies(),true);
-    LimInf<double> minButterflyLeft(theButterflies->getLeftThirdButterflies(),false);
-    LimInf<double> maxButterflyRight(theButterflies->getRightThirdButterflies(),true);
-    LimInf<double> minButterflyRight(theButterflies->getRightThirdButterflies(),false);
+    LimInf<double> maxButterflyLeft(theButterflies->getLeftEndButterflies(),true);
+    LimInf<double> minButterflyLeft(theButterflies->getLeftEndButterflies(),false);
+    LimInf<double> maxButterflyRight(theButterflies->getRightEndButterflies(),true);
+    LimInf<double> minButterflyRight(theButterflies->getRightEndButterflies(),false);
 
 
     // Start the time loop, and calculation an approximation at
@@ -256,7 +271,7 @@ int NumericalTrials::approximateSystem(
                          << minButterflyLeft.extreme() << "  "
                          << maxButterflyRight.extreme() << "  "
                          << minButterflyRight.extreme() << "  "
-                            ;
+                         << std::endl;
         }
 
         if(
@@ -266,6 +281,11 @@ int NumericalTrials::approximateSystem(
             std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
             return(0);
         }
+
+        maxButterflyLeft  = theButterflies->getLeftEndButterflies();
+        minButterflyLeft  = theButterflies->getLeftEndButterflies();
+        maxButterflyRight = theButterflies->getRightEndButterflies();
+        minButterflyRight = theButterflies->getRightEndButterflies();
 
         if(timeLupe%static_cast<unsigned long>(skipFileSave)==0)
         {
@@ -282,10 +302,10 @@ int NumericalTrials::approximateSystem(
         {
             if(repeating > 0)
             {
-                maxButterflyLeft.setExtreme(theButterflies->getLeftThirdButterflies());
-                minButterflyLeft.setExtreme(theButterflies->getLeftThirdButterflies());
-                maxButterflyRight.setExtreme(theButterflies->getRightThirdButterflies());
-                minButterflyRight.setExtreme(theButterflies->getRightThirdButterflies());
+                maxButterflyLeft.setExtreme(theButterflies->getLeftEndButterflies());
+                minButterflyLeft.setExtreme(theButterflies->getLeftEndButterflies());
+                maxButterflyRight.setExtreme(theButterflies->getRightEndButterflies());
+                minButterflyRight.setExtreme(theButterflies->getRightEndButterflies());
                 std::cout << "Steady state achieved." << std::endl;
             }
             break; // the solution is either settling into a steady state or repeating.... enough is enough.
@@ -359,17 +379,22 @@ int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, doub
     double prevWaspCheck = 0.0;
     int prevValueClose = 0;
 
-    LimInf<double> maxButterflyLeft(theButterflies->getLeftThirdButterflies(),true);
-    LimInf<double> minButterflyLeft(theButterflies->getLeftThirdButterflies(),false);
-    LimInf<double> maxButterflyRight(theButterflies->getRightThirdButterflies(),true);
-    LimInf<double> minButterflyRight(theButterflies->getRightThirdButterflies(),false);
+    LimInf<double> maxButterflyLeft(theButterflies->getLeftEndButterflies(),true);
+    LimInf<double> minButterflyLeft(theButterflies->getLeftEndButterflies(),false);
+    LimInf<double> maxButterflyRight(theButterflies->getRightEndButterflies(),true);
+    LimInf<double> minButterflyRight(theButterflies->getRightEndButterflies(),false);
 
+
+    //std::fstream binFile ("/tmp/approximation-m-5.0.bin", std::ios::out | std::ios::binary);
+    //theButterflies->writeParameters(binFile);
+    //theButterflies->writeBinaryHeader(binFile);
 
     // Start the time loop, and calculation an approximation at
     // each time step.
     for(timeLupe=0;timeLupe<maxTimeLupe;++timeLupe)
     {
         t = static_cast<double>(timeLupe)*dt;
+        theButterflies->setLastTime(t);
 
         if(timeLupe%(static_cast<unsigned long>(skipPrint))==0)
         {
@@ -382,7 +407,7 @@ int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, doub
                          << minButterflyLeft.extreme() << "  "
                          << maxButterflyRight.extreme() << "  "
                          << minButterflyRight.extreme() << "  "
-                         ;
+                         << std::endl;
         }
 
         if(
@@ -394,6 +419,18 @@ int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, doub
             return(0);
         }
 
+        maxButterflyLeft  = theButterflies->getLeftEndButterflies();
+        minButterflyLeft  = theButterflies->getLeftEndButterflies();
+        maxButterflyRight = theButterflies->getRightEndButterflies();
+        minButterflyRight = theButterflies->getRightEndButterflies();
+
+        /*
+        if(timeLupe%static_cast<unsigned long>(skipFileSave)==0)
+        {
+            theButterflies->writeBinaryCurrentApprox(t,binFile);
+        }
+        */
+
         int repeating = checkRepeating(
                     theButterflies,
                     prevButterflyDensity,maxButterfliesDensity,minButterfliesDensity,prevMaxButterfliesDensity,prevMinButterfliesDensity,prevButterflyCheck,
@@ -404,13 +441,29 @@ int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, doub
         {
             if(repeating > 0)
             {
-                maxButterflyLeft.setExtreme(theButterflies->getLeftThirdButterflies());
-                minButterflyLeft.setExtreme(theButterflies->getLeftThirdButterflies());
-                maxButterflyRight.setExtreme(theButterflies->getRightThirdButterflies());
-                minButterflyRight.setExtreme(theButterflies->getRightThirdButterflies());
+                maxButterflyLeft.setExtreme(theButterflies->getLeftEndButterflies());
+                minButterflyLeft.setExtreme(theButterflies->getLeftEndButterflies());
+                maxButterflyRight.setExtreme(theButterflies->getRightEndButterflies());
+                minButterflyRight.setExtreme(theButterflies->getRightEndButterflies());
                 maxWaspDensity = theButterflies->waspPopulation();
                 minWaspDensity = theButterflies->waspPopulation();
+                std::cout << "Steady state" << std::endl;
             }
+
+            theButterflies->setLeftMax(maxButterflyLeft.extreme());
+            theButterflies->setLeftMin(minButterflyLeft.extreme());
+            theButterflies->setRightMax(maxButterflyRight.extreme());
+            theButterflies->setRightMin(minButterflyRight.extreme());
+
+            std::cout << "DONE,"
+                    << c << ","
+                    << m << ","
+                    << t << ","
+                    << maxButterflyLeft.extreme() << ","
+                    << minButterflyLeft.extreme() << ","
+                    << maxButterflyRight.extreme() << ","
+                    << minButterflyRight.extreme() << std::endl;
+
             break; // the solution is either settling into a steady state or repeating.... enough is enough.
         }
 
@@ -437,7 +490,7 @@ int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, doub
         csvFile.close();
     }
 
-    delete theButterflies;
+    //delete theButterflies;
     *running = false;
     return(1);
 }
@@ -816,7 +869,8 @@ int NumericalTrials::approximateSystemQuietResponse(
                          << std::fixed
                          << std::setw(8)
                          << std::setprecision(4)
-                         << timeLupe << " (" << t << "-" << which <<  ") ";
+                         << timeLupe << " (" << t << "-" << which <<  ") "
+                         << std::endl;
         }
 
         if(
@@ -1077,7 +1131,8 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
                          << std::fixed
                          << std::setw(8)
                          << std::setprecision(4)
-                         << timeLupe << " (" << timeSpan <<  ") ";
+                         << timeLupe << " (" << timeSpan <<  ") "
+                         << std::endl;
         }
 
         if(
@@ -1208,3 +1263,87 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
 
 }
 
+void NumericalTrials::saveResults(std::string filename)
+{
+    std::ofstream binFile (filename, std::ios_base::app ); //std::ios::out | std::ios::binary | std::ios::ate
+    if(binFile.fail())
+    {
+        std::cout << "ERROR" << std::endl;
+        return;
+    }
+
+    //binFile.seekp(0,std::ios::end);
+    double val;
+    val = theButterflies->getC();
+    std::cout << "c=" << val << "  ";
+    binFile.write(reinterpret_cast<char*>(&val),sizeof(double));
+
+    val = theButterflies->getM();
+    std::cout << "m=" << val << "  ";
+    binFile.write(reinterpret_cast<char*>(&val),sizeof(double));
+
+    val = theButterflies->getLastTime();
+    std::cout << "time=" << val << "  ";
+    binFile.write(reinterpret_cast<char*>(&val),sizeof(double));
+
+    val = theButterflies->getLeftMax();
+    std::cout << "left max=" << val << "  ";
+    binFile.write(reinterpret_cast<char*>(&val),sizeof(double));
+
+    val = theButterflies->getLeftMin();
+    std::cout << "left min=" << val << "  ";
+    binFile.write(reinterpret_cast<char*>(&val),sizeof(double));
+
+    val = theButterflies->getRightMax();
+    std::cout << "right max=" << val << "  ";
+    binFile.write(reinterpret_cast<char*>(&val),sizeof(double));
+
+    val = theButterflies->getRightMin();
+    std::cout << "right min=" << val << "  ";
+    binFile.write(reinterpret_cast<char*>(&val),sizeof(double));
+
+    int stateSize = 1;
+    std::cout << "stateSize=" << val << std::endl;
+    binFile.write(reinterpret_cast<char*>(&stateSize),sizeof(int));
+
+    binFile.close();
+
+}
+
+bool NumericalTrials::checkPreviousSimulation(double m,double c,std::string filename)
+{
+    double cRead;
+    double mRead;
+
+    std::ifstream binFile ( filename, std::ios::binary );
+    if(binFile.fail())
+    {
+        std::cout << "ERROR" << std::endl;
+        return(false);
+    }
+
+    double val;
+
+    while(binFile.good())
+    {
+        binFile.read(reinterpret_cast<char*>(&cRead),sizeof(double));
+        binFile.read(reinterpret_cast<char*>(&mRead),sizeof(double));
+
+        if((fabs(m-mRead)<1.0E-5) && (fabs(c-cRead)<1.0E-5))
+        {
+            return(false);
+        }
+
+        binFile.read(reinterpret_cast<char*>(&val),sizeof(double));
+        binFile.read(reinterpret_cast<char*>(&val),sizeof(double));
+        binFile.read(reinterpret_cast<char*>(&val),sizeof(double));
+        binFile.read(reinterpret_cast<char*>(&val),sizeof(double));
+        binFile.read(reinterpret_cast<char*>(&val),sizeof(double));
+
+        int stateSize;
+        binFile.read(reinterpret_cast<char*>(&stateSize),sizeof(int));
+    }
+    binFile.close();
+
+    return(true);
+}

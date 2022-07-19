@@ -41,13 +41,25 @@ public:
     void setM(double value) { m = value; }
     double getM() { return(m); }
 
-    double getLeftThirdButterflies();
-    double getRightThirdButterflies();
+    double getLeftEndButterflies();
+    double getRightEndButterflies();
     double getButterfly(int which);
     void   setButterfly(int which,double val);
     void   copyState(Butterflies* butterfly);
     void   printState();
 
+    void setLeftMax (double value) { leftMax  = value;}
+    void setLeftMin (double value) { leftMin  = value;}
+    void setRightMax(double value) { rightMax = value;}
+    void setRightMin(double value) { rightMin = value;}
+
+    double getLeftMax()  { return(leftMax);}
+    double getLeftMin()  { return(leftMin);}
+    double getRightMax() { return(rightMax);}
+    double getRightMin() { return(rightMin);}
+
+    void   setLastTime(double value) { lastTime = value;}
+    double getLastTime() { return(lastTime);}
 
 protected:
 
@@ -63,6 +75,12 @@ private:
     double g  = 0.2;
     double d  = 0.5;
     double m  = 0.7;
+
+    double leftMax  = 0.0;
+    double leftMin  = 0.0;
+    double rightMax = 0.0;
+    double rightMin = 0.0;
+    double lastTime = 0.0;
 };
 
 #endif // BUTTERFLIES_H

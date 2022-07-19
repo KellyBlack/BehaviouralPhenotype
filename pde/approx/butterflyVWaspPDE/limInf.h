@@ -57,7 +57,7 @@ void LimInf<number>::operator=(number val)
             if(testDirection(val,prevValue))
             {
                 // The value of the function is getting bigger.
-                extremeValue = (testDirection(val,extremeValue)) ? val : extremeValue;
+                extremeValue = val;
                 iterations = 0;             // This the last time the function was increasing.
             }
 

@@ -14,7 +14,7 @@
 #define MAX_NEWTON_STEPS 50
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
-#define NUMBER_THREADS 12
+#define NUMBER_THREADS 14
 
 int main()
 {
@@ -74,12 +74,14 @@ int main()
             NUMBER_THREADS);
 #endif
 
-//#define APPROXIMATE_OSCILLATION_BY_MC
+#define APPROXIMATE_OSCILLATION_BY_MC
 #ifdef APPROXIMATE_OSCILLATION_BY_MC
     NumericalTrials::multipleApproximationsByMandC(
                 mu,g,d,
                 0.1,10.0,0.1,
-                0.1,30.0,0.1,
+                0.1,50.0,0.1,
+                //2.0,2.1,0.1,
+                //17.0,22.01,0.1,
                 dt,NUMBER_TIME_LOOP,
                 LEGENDRE_POLY_DEGREE,
                 MAX_DELTA_NORM,MAX_NEWTON_STEPS,
@@ -119,19 +121,20 @@ int main()
     */
 #endif
 
-#define ONE_APPROXIMATION
+//#define ONE_APPROXIMATION
 #ifdef ONE_APPROXIMATION
-    //NumericalTrials trial;
-    c = 8.0;
-    m = 5.0;
-    //trial.approximateSystem(
-    //        mu,c,g,d, m,
-    //        dt,NUMBER_TIME_LOOP,
-    //        LEGENDRE_POLY_DEGREE,
-    //        MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-    //        "/tmp/approximation-m-5.0.bin",
-    //        SKIP_PRINT_UPDATE,SKIP_FILE_SAVE);
+    NumericalTrials trial;
+    c = 2.0; // 8.0;
+    m = 18.0;  // 5.0;
+    trial.approximateSystem(
+            mu,c,g,d, m,
+            dt,NUMBER_TIME_LOOP,
+            LEGENDRE_POLY_DEGREE,
+            MAX_DELTA_NORM,MAX_NEWTON_STEPS,
+            "/tmp/approximation-m-18.0.bin",
+            SKIP_PRINT_UPDATE,SKIP_FILE_SAVE);
 
+    /*
     struct remoteProcess {
         std::thread process;
         std::atomic<bool> running;
@@ -150,7 +153,7 @@ int main()
             SKIP_PRINT_UPDATE,SKIP_FILE_SAVE,
             nullptr,
             &(newProcess->running));
-
+    */
 #endif
 
 //#define APPROXIMATE_HYSTERESIS
