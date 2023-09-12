@@ -385,9 +385,12 @@ int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, doub
     LimInf<double> minButterflyRight(theButterflies->getRightEndButterflies(),false);
 
 
-    //std::fstream binFile ("/tmp/approximation-m-5.0.bin", std::ios::out | std::ios::binary);
-    //theButterflies->writeParameters(binFile);
-    //theButterflies->writeBinaryHeader(binFile);
+#define WRITE_SPATIAL_SOLUTION
+#ifdef WRITE_SPATIAL_SOLUTION
+    std::fstream binFile ("/tmp/approximation-m-5.0.bin", std::ios::out | std::ios::binary);
+    theButterflies->writeParameters(binFile);
+    theButterflies->writeBinaryHeader(binFile);
+#endif
 
     // Start the time loop, and calculation an approximation at
     // each time step.
@@ -424,12 +427,12 @@ int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, doub
         maxButterflyRight = theButterflies->getRightEndButterflies();
         minButterflyRight = theButterflies->getRightEndButterflies();
 
-        /*
+#ifdef WRITE_SPATIAL_SOLUTION
         if(timeLupe%static_cast<unsigned long>(skipFileSave)==0)
         {
             theButterflies->writeBinaryCurrentApprox(t,binFile);
         }
-        */
+#endif
 
         int repeating = checkRepeating(
                     theButterflies,
@@ -489,6 +492,10 @@ int NumericalTrials::approximateSystemCheckOscillation(double mu, double c, doub
         // Clean up the data file and close it
         csvFile.close();
     }
+
+#ifdef WRITE_SPATIAL_SOLUTION
+    binFile.close();
+#endif
 
     //delete theButterflies;
     *running = false;

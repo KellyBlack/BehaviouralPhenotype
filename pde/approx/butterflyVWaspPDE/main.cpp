@@ -76,6 +76,7 @@ int main()
 
 #define APPROXIMATE_OSCILLATION_BY_MC
 #ifdef APPROXIMATE_OSCILLATION_BY_MC
+    /*
     NumericalTrials::multipleApproximationsByMandC(
                 mu,g,d,
                 0.1,10.0,0.1,
@@ -88,7 +89,8 @@ int main()
                 SKIP_PRINT_UPDATE,SKIP_FILE_SAVE,
                 NUMBER_THREADS,
                 "/tmp/results.csv");
-    /*
+    */
+
     struct remoteProcess {
         std::thread process;
         std::atomic<bool> running;
@@ -99,8 +101,8 @@ int main()
     remoteProcess* newProcess = new remoteProcess;
     newProcess->running = true;
     newProcess->trial = trial;
-    c = 6.4;
-    m = 0.3;
+    c = 0.7;
+    m = 10.0;
     //trial->approximateSystem(
     //            mu,c,g,d,m,
     //            dt,NUMBER_TIME_LOOP,
@@ -118,7 +120,7 @@ int main()
                 nullptr,&(newProcess->running)
             );
     delete trial;
-    */
+
 #endif
 
 //#define ONE_APPROXIMATION
@@ -131,7 +133,7 @@ int main()
             dt,NUMBER_TIME_LOOP,
             LEGENDRE_POLY_DEGREE,
             MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-            "/tmp/approximation-m-18.0.bin",
+            "/tmp/approximation-c-2.0-m-18.0-mu-0.01.bin",
             SKIP_PRINT_UPDATE,SKIP_FILE_SAVE);
 
     /*

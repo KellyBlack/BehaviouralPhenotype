@@ -40,8 +40,8 @@ LimInf<number>::LimInf(number initial,bool maximum)
 template  <class number>
 void LimInf<number>::setExtreme(number val)
 {
-    extremeValue = val;
-    prevExtremeValue = val;
+    extremeValue     = val;   // Estimate of the extreme in the current cycle
+    prevExtremeValue = val;   // Estimate of the extreme in the previous cycle
 }
 
 template <class number>
@@ -54,7 +54,7 @@ void LimInf<number>::operator=(number val)
         if(trending)
         {
             // The value of the function is assumed to be increasing.
-            if(testDirection(val,prevValue))
+            if(testDirection(val,prevValue) || (fabs(val - prevExtremeValue) < 3.0e-4))
             {
                 // The value of the function is getting bigger.
                 extremeValue = val;
@@ -79,7 +79,11 @@ void LimInf<number>::operator=(number val)
         {
             // The value of the function is assumed to be decreasing in the big picture.
             //std::cout << "Decreasing  " << extremeValue << std::endl;
-            if(!testDirection(val,prevValue))
+            if( fabs(val - prevExtremeValue) < 3.0e-4)
+            {
+                iterations = 0;
+            }
+            else if(!testDirection(val,prevValue) || (fabs(val - prevExtremeValue) < 3.0e-4))
             {
                 // The function is decreasing.
                 iterations = 0;
