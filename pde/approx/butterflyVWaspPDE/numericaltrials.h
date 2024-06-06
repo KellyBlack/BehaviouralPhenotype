@@ -89,6 +89,15 @@ public:
             double &maxButterfly, double &minButterfly,
             double &maxWasp, double &minWaspDensity);
 
+    int approximateSteadyState(
+        double mu, double c, double g, double d, double m,
+        double dt,
+        int legendrePolyDegree,
+        double maxDeltaNorm, int maxNewtonSteps,
+        std::string filename,
+        int skipPrint,
+        int skipFileSave);
+
     Butterflies* getButterflies() { return(theButterflies); }
     void printState() { theButterflies->printState(); }
 

@@ -1270,6 +1270,74 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
 
 }
 
+int NumericalTrials::approximateSteadyState(
+    double mu, double c, double g, double d, double m,
+    double dt,
+    int legendrePolyDegree,
+    double maxDeltaNorm, int maxNewtonSteps,
+    std::string filename,
+    int skipPrint,
+    int skipFileSave)
+{
+    double t        = 0.0;
+    unsigned long timeLupe = 0;
+
+    // Variables used to save the results of calculations into a
+    // data file.
+    std::fstream binFile (filename, std::ios::out | std::ios::binary);
+
+    std::cout << "Pre-processing c=" << c << " m=" << m << " mu=" << mu << std::endl;
+    int N = legendrePolyDegree;
+    Butterflies *theButterflies = new Butterflies(N,N+2);
+    theButterflies->initializeLegendreParams();
+    theButterflies->setMu(mu);
+    theButterflies->setC(c);
+    theButterflies->setG(g);
+    theButterflies->setD(d);
+    theButterflies->setM(m);
+    theButterflies->setDT(dt);
+
+    //theButterflies->initializeButterfliesGaussian(1.0,mu);
+    theButterflies->initializeButterfliesConstant(1.0);
+    if(!skipFileSave)
+    {
+        theButterflies->writeParameters(binFile);
+        theButterflies->writeBinaryHeader(binFile);
+    }
+
+
+    if(skipPrint>0)
+    {
+        std::cout << "Calculating an approximation: "
+                  << std::fixed
+                  << std::setw(8)
+                  << std::setprecision(4)
+                  << mu << "," << c << "," << g << ","
+                  << d << "," << m
+                  << std::endl;
+    }
+
+    if(
+       theButterflies->
+        steadyStateApprox(maxDeltaNorm,maxNewtonSteps,timeLupe%(static_cast<unsigned long>(skipPrint))==0)
+            < 0)
+    {
+        std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
+        return(0);
+    }
+
+
+    if(!skipFileSave)
+    {
+        theButterflies->writeBinaryCurrentApprox(t,binFile);
+        // Clean up the data file and close it
+        binFile.close();
+    }
+    delete theButterflies;
+
+    return(1);
+}
+
 void NumericalTrials::saveResults(std::string filename)
 {
     std::ofstream binFile (filename, std::ios_base::app ); //std::ios::out | std::ios::binary | std::ios::ate
