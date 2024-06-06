@@ -210,7 +210,7 @@ double PDESolver::normDelta()
 int PDESolver::singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool printInfo)
 {
     // Build the system and solve.
-    calculateRHS();
+    calculateRHSTimeStepping();
     //copyCurrentStateToTemp();
     bool canInvert(true);
     double stepDeltaNorm = 0.0;
@@ -219,7 +219,45 @@ int PDESolver::singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool p
     {
         // Perform the Newton steps to approximate the nonlinear
         // equations associated with the implicit system.
-        buildJacobian();
+        buildJacobianTimeStepping();
+        canInvert = solveLinearizedSystem();
+        if(canInvert)
+        {
+            // Life is good. Perform the Newton step and update the current state vector.
+            updateNewtonStep();
+            if(printInfo)
+                std::cout << "  step: " << totalStepsPossible - maxNewtonSteps << ", ";
+            stepDeltaNorm = normDelta();
+        }
+        else
+        {
+            std::cout << "  System not invertible" << std::endl;
+            return(-1);
+        }
+
+    } while((stepDeltaNorm>maxNewtonDiffNorm) && canInvert && (maxNewtonSteps-- > 0));
+
+    if(printInfo)
+        std::cout << std::endl;
+
+    return(totalStepsPossible - maxNewtonSteps);
+
+}
+
+// Method to approximate the steady state to the numerical approximation.
+// Performs a Newton method to invert the nonlinear system.
+int PDESolver::steadyStateApprox(double maxNewtonDiffNorm,int maxNewtonSteps,bool printInfo)
+{
+    // Build the system and solve.
+    calculateRHSTimeStepping();
+    bool canInvert(true);
+    double stepDeltaNorm = 0.0;
+    int totalStepsPossible = maxNewtonSteps;
+    do
+    {
+        // Perform the Newton steps to approximate the nonlinear
+        // equations associated with the implicit system.
+        buildjacobianSteadyState();
         canInvert = solveLinearizedSystem();
         if(canInvert)
         {

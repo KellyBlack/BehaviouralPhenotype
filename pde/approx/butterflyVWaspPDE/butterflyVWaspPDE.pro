@@ -17,6 +17,7 @@ HEADERS += \
     approximationbase.h \
     legendre.h \
     limInf.h \
+    mainRoutines.h \
     util.h \
     lu_decomp.h \
     pdeSolver.h \

@@ -25,15 +25,18 @@ public:
     void createArrays();
     void deleteArrays();
     void initializeLegendreParams();
-
-    virtual void buildJacobian() = 0;
+    
+    virtual void buildJacobianTimeStepping() = 0;
+    virtual void buildjacobianSteadyState()  = 0;
     virtual void updateNewtonStep() = 0;
-    virtual void calculateRHS() = 0;
+    virtual void calculateRHSTimeStepping() = 0;
+    virtual void calculateRHSSteadyState() = 0;
     virtual void copyCurrentStateToTemp() = 0;
     virtual void copyCurrentState(double *ptr) = 0;
     bool solveLinearizedSystem();
     double normDelta();
     int singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool printInfo);
+    int steadyStateApprox(double maxNewtonDiffNorm,int maxNewtonSteps,bool printInfo);
 
     void writeAbscissa(std::ofstream &resultsFile);
     void writeBinaryHeader(std::fstream &resultsFile);
