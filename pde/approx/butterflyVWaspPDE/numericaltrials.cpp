@@ -14,7 +14,7 @@
 #include "limInf.h"
 
 //#define OUTPUTFILE "approximation.csv"
-#define BINARYOUTPUTFILE "approximation-TRIAL-"
+#define BINARYOUTPUTFILE "/tmp/approximation-TRIAL-"
 
 
 // Constructor for the numerical trials class.
