@@ -243,4 +243,44 @@ void checkHysteresis_by_m()
 
 }
 
+
+void performManyApproximations_by_m_my()
+{
+    // Set up the temporal variables.
+    double dt = 0.00001;
+
+    //NumericalTrials *trials = new NumericalTrials();
+
+    // Define the default values of the parameters.
+    double mu = 0.01; // 0.0095
+    double c  = 2.75;
+    double g  = 0.6;
+    double d  = 0.1;
+    //double m  = 0.2;
+
+    std::cout << "Starting" << std::endl;
+
+    std::ostringstream filename("");
+    filename.str("");
+    filename.clear();
+    filename << "/tmp/changingMResults_c="
+             <<  std::setw(6) << std::fixed << std::setprecision(4) << std::setfill('0') << c
+             << ".csv";
+    std::cout << "Writing to " << filename.str() << std::endl;
+
+    NumericalTrials trial;
+    trial.approximateSystemTrackRepeating(
+        mu,2.5*mu,6,
+        c,g,d,
+        //7.01,15.5,120,
+        0.1,15.0,160,
+        dt,NUMBER_TIME_LOOP,
+        LEGENDRE_POLY_DEGREE,
+        MAX_DELTA_NORM,MAX_NEWTON_STEPS,
+        -SKIP_PRINT_UPDATE,NUMBER_THREADS,
+        false,
+        filename.str());
+
+}
+
 #endif // MAINROUTINES_H
