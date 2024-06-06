@@ -1039,11 +1039,11 @@ int NumericalTrials::approximateSystemHysteresis(double mu,
 
     if(appendFile)
     {
-        csvFile.open("changingMHysteresisReverse.csv", std::ios::out | std::ios::app);
+        csvFile.open("/tmp/changingMHysteresisReverse.csv", std::ios::out | std::ios::app);
     }
     else
     {
-        csvFile.open("changingMHysteresisReverse.csv", std::ios::out);
+        csvFile.open("/tmp/changingMHysteresisReverse.csv", std::ios::out);
         csvFile << "mu,c,g,d,m,time,maxWasp,minWasp,minButterfly,maxButterfly" << std::endl;
     }
 

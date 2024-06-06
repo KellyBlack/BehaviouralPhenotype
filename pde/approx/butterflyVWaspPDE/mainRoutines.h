@@ -212,4 +212,35 @@ void makeOneApproximation()
 
 }
 
+void checkHysteresis_by_m()
+{
+    // Set up the temporal variables.
+    double dt = 0.00001;
+
+    //NumericalTrials *trials = new NumericalTrials();
+
+    // Define the default values of the parameters.
+    double mu = 0.01; // 0.0095
+    double c  = 2.75;
+    double g  = 0.6;
+    double d  = 0.1;
+    //double m  = 0.2;
+
+    std::cout << "Starting" << std::endl;
+
+    NumericalTrials trial;
+
+    trial.approximateSystemHysteresis(
+        mu,c,g,d,
+        //0.01,15.5,120,
+        0.1,10.5,100,
+        dt,NUMBER_TIME_LOOP,
+        LEGENDRE_POLY_DEGREE,
+        MAX_DELTA_NORM,MAX_NEWTON_STEPS,
+        -SKIP_PRINT_UPDATE,
+        true);
+
+
+}
+
 #endif // MAINROUTINES_H

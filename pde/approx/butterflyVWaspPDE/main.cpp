@@ -18,25 +18,8 @@ int main()
     //odeApproximation();
     //performManyApprpoximations_m();
     //performManyApprpoximations_m_c();
-    makeOneApproximation();
-
-
-
-//#define APPROXIMATE_HYSTERESIS
-#ifdef APPROXIMATE_HYSTERESIS
-    NumericalTrials trial;
-
-    trial.approximateSystemHysteresis(
-                mu,c,g,d,
-                //0.01,15.5,120,
-                0.1,10.5,100,
-                dt,NUMBER_TIME_LOOP,
-                LEGENDRE_POLY_DEGREE,
-                MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-                -SKIP_PRINT_UPDATE,
-                true);
-
-#endif
+    //makeOneApproximation();
+    checkHysteresis_by_m();
 
 //#define APPROXIMATE_MULTIPLE_M_MU
 #ifdef APPROXIMATE_MULTIPLE_M_MU
