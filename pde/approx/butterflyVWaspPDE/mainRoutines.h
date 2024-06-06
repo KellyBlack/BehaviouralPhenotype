@@ -159,4 +159,57 @@ void performManyApprpoximations_m_c()
 
 }
 
+void makeOneApproximation()
+{
+    // Set up the temporal variables.
+    double dt = 0.00001;
+
+    //NumericalTrials *trials = new NumericalTrials();
+
+    // Define the default values of the parameters.
+    double mu = 0.01; // 0.0095
+    double c  = 2.75;
+    double g  = 0.6;
+    double d  = 0.1;
+    double m  = 0.2;
+
+    std::cout << "Starting" << std::endl;
+
+    NumericalTrials trial;
+    c = 2.0;  // 2.0; // 8.0;
+    m = 10.0; //18.0;  // 5.0;
+    d = 0.1;
+    g = 0.6;
+    mu = 0.01;
+    trial.approximateSystem(
+        mu,c,g,d, m,
+        dt,NUMBER_TIME_LOOP,
+        LEGENDRE_POLY_DEGREE,
+        MAX_DELTA_NORM,MAX_NEWTON_STEPS,
+        "/tmp/trialApprox.bin", //approximation-c-2.0-m-18.0-mu-0.01.bin",
+        SKIP_PRINT_UPDATE,SKIP_FILE_SAVE);
+
+    /*
+    struct remoteProcess {
+        std::thread process;
+        std::atomic<bool> running;
+        NumericalTrials* trial;
+    };
+    NumericalTrials *trial =  new NumericalTrials();
+    remoteProcess* newProcess = new remoteProcess;
+    newProcess->running = true;
+    newProcess->trial = trial;
+    trial->approximateSystemCheckOscillation(
+            mu, c, g, d, m,
+            dt, NUMBER_TIME_LOOP,
+            LEGENDRE_POLY_DEGREE,
+            MAX_DELTA_NORM,MAX_NEWTON_STEPS,
+            "/tmp/trial.dat",
+            SKIP_PRINT_UPDATE,SKIP_FILE_SAVE,
+            nullptr,
+            &(newProcess->running));
+    */
+
+}
+
 #endif // MAINROUTINES_H
