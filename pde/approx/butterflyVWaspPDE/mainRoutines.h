@@ -33,10 +33,6 @@ void odeApproximation()
     double m  = 0.2;
 
     std::ostringstream filename("");
-
-    std::cout << "Starting" << std::endl;
-
-
     filename.str("");
     filename.clear();
     filename << "/tmp/rk45_c-"
@@ -74,8 +70,6 @@ void performManyApprpoximations_m()
     double d  = 0.1;
     //double m  = 0.2;
 
-    std::cout << "Starting" << std::endl;
-
     NumericalTrials::multipleApproximationsByM(
         mu,c,g,d,
         //0.01,1.0,0.1,
@@ -106,10 +100,6 @@ void performManyApprpoximations_m_c()
     double g  = 0.6;
     double d  = 0.1;
     double m  = 0.2;
-
-    std::ostringstream filename("");
-
-    std::cout << "Starting" << std::endl;
 
     /*
     NumericalTrials::multipleApproximationsByMandC(
@@ -173,8 +163,6 @@ void makeOneApproximation()
     double d  = 0.1;
     double m  = 0.2;
 
-    std::cout << "Starting" << std::endl;
-
     NumericalTrials trial;
     c = 2.0;  // 2.0; // 8.0;
     m = 10.0; //18.0;  // 5.0;
@@ -226,8 +214,6 @@ void checkHysteresis_by_m()
     double d  = 0.1;
     //double m  = 0.2;
 
-    std::cout << "Starting" << std::endl;
-
     NumericalTrials trial;
 
     trial.approximateSystemHysteresis(
@@ -244,7 +230,7 @@ void checkHysteresis_by_m()
 }
 
 
-void performManyApproximations_by_m_my()
+void performManyApproximations_by_m_mu()
 {
     // Set up the temporal variables.
     double dt = 0.00001;
@@ -257,8 +243,6 @@ void performManyApproximations_by_m_my()
     double g  = 0.6;
     double d  = 0.1;
     //double m  = 0.2;
-
-    std::cout << "Starting" << std::endl;
 
     std::ostringstream filename("");
     filename.str("");

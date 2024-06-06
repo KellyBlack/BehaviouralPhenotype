@@ -15,12 +15,14 @@
 int main()
 {
 
+     std::cout << "Starting" << std::endl;
+
     //odeApproximation();
     //performManyApprpoximations_m();
     //performManyApprpoximations_m_c();
     //makeOneApproximation();
     //checkHysteresis_by_m();
-    performManyApproximations_by_m_my();
+    performManyApproximations_by_m_mu();
 
     std::cout << "Done" << std::endl;
 
