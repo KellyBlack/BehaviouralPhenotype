@@ -1,12 +1,12 @@
-#include <string>
-#include <sstream>
+//#include <string>
+//#include <sstream>
 
-#include "numericaltrials.h"
-#include "rungakutta45.h"
+//#include "numericaltrials.h"
+//#include "rungakutta45.h"
 
-#include "numericaltrials.h"
-#include "util.h"
-#include "limInf.h"
+//#include "numericaltrials.h"
+//#include "util.h"
+//#include "limInf.h"
 
 #include "mainRoutines.h"
 
@@ -16,57 +16,10 @@ int main()
 {
 
     //odeApproximation();
-    performManyApprpoximations_m();
+    //performManyApprpoximations_m();
+    performManyApprpoximations_m_c();
 
 
-//#define APPROXIMATE_OSCILLATION_BY_MC
-#ifdef APPROXIMATE_OSCILLATION_BY_MC
-    /*
-    NumericalTrials::multipleApproximationsByMandC(
-                mu,g,d,
-                0.1,10.0,0.1,
-                0.1,50.0,0.1,
-                //2.0,2.1,0.1,
-                //17.0,22.01,0.1,
-                dt,NUMBER_TIME_LOOP,
-                LEGENDRE_POLY_DEGREE,
-                MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-                SKIP_PRINT_UPDATE,SKIP_FILE_SAVE,
-                NUMBER_THREADS,
-                "/tmp/results.csv");
-    */
-
-    struct remoteProcess {
-        std::thread process;
-        std::atomic<bool> running;
-        NumericalTrials* trial;
-    };
-
-    NumericalTrials *trial    = new NumericalTrials();
-    remoteProcess* newProcess = new remoteProcess;
-    newProcess->running = true;
-    newProcess->trial = trial;
-    c = 0.7;
-    m = 10.0;
-    //trial->approximateSystem(
-    //            mu,c,g,d,m,
-    //            dt,NUMBER_TIME_LOOP,
-    //            LEGENDRE_POLY_DEGREE,
-    //            MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-    //            "/tmp/testing.bin",
-    //            SKIP_PRINT_UPDATE,SKIP_FILE_SAVE);
-    trial->approximateSystemCheckOscillation(
-                mu,c,g,d,m,
-                dt,NUMBER_TIME_LOOP,
-                LEGENDRE_POLY_DEGREE,
-                MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-                "/tmp/testing.bin",
-                SKIP_PRINT_UPDATE,SKIP_FILE_SAVE,
-                nullptr,&(newProcess->running)
-            );
-    delete trial;
-
-#endif
 
 //#define ONE_APPROXIMATION
 #ifdef ONE_APPROXIMATION
