@@ -8,6 +8,8 @@
 #include "util.h"
 #include "limInf.h"
 
+#include "mainRoutines.h"
+
 #define SKIP_PRINT_UPDATE 100000000
 #define SKIP_FILE_SAVE 1500
 #define NUMBER_TIME_LOOP 3000000000
@@ -18,46 +20,8 @@
 
 int main()
 {
-    // Set up the temporal variables.
-    double dt = 0.00001;
 
-    //NumericalTrials *trials = new NumericalTrials();
-
-    // Define the default values of the parameters.
-    double mu = 0.01; // 0.0095
-    double c  = 2.75;
-    double g  = 0.6;
-    double d  = 0.1;
-    double m  = 0.2;
-
-    std::ostringstream filename("");
-
-    std::cout << "Starting" << std::endl;
-
-
-//#define ODE_APPROXIMATION
-#ifdef ODE_APPROXIMATION
-
-    filename.str("");
-    filename.clear();
-    filename << "rk45_c-"
-             <<  std::setw(6) << std::fixed << std::setprecision(4) << std::setfill('0') << c
-             << ".csv";
-    std::cout << "Writing to " << filename.str() << std::endl;
-
-    double theta = 1.0;
-    double initialCond[2];
-    RungaKutta45 odeApprox;
-
-    initialCond[0] = c*d/((g-d)*(1.0+m))*0.95;
-    initialCond[1] = (1.0-initialCond[0])*(c+initialCond[0]*(1.0+m));
-    odeApprox.approximationByM(c,g,d,theta,
-                               0.1,15.0,300,
-                               0.0,500.0,dt,1.0E-5,
-                               initialCond,1.0E-6,
-                               filename.str(),false,NUMBER_THREADS);
-
-#endif
+    //odeApproximation();
 
 //#define APPROXIMATE_MULTIPLE_M
 #ifdef APPROXIMATE_MULTIPLE_M
@@ -74,7 +38,7 @@ int main()
             NUMBER_THREADS);
 #endif
 
-#define APPROXIMATE_OSCILLATION_BY_MC
+//#define APPROXIMATE_OSCILLATION_BY_MC
 #ifdef APPROXIMATE_OSCILLATION_BY_MC
     /*
     NumericalTrials::multipleApproximationsByMandC(
@@ -126,14 +90,17 @@ int main()
 //#define ONE_APPROXIMATION
 #ifdef ONE_APPROXIMATION
     NumericalTrials trial;
-    c = 2.0; // 8.0;
-    m = 18.0;  // 5.0;
+    c = 2.0;  // 2.0; // 8.0;
+    m = 10.0; //18.0;  // 5.0;
+    d = 0.1;
+    g = 0.6;
+    mu = 0.01;
     trial.approximateSystem(
             mu,c,g,d, m,
             dt,NUMBER_TIME_LOOP,
             LEGENDRE_POLY_DEGREE,
             MAX_DELTA_NORM,MAX_NEWTON_STEPS,
-            "/tmp/approximation-c-2.0-m-18.0-mu-0.01.bin",
+            "/tmp/trialApprox.bin", //approximation-c-2.0-m-18.0-mu-0.01.bin",
             SKIP_PRINT_UPDATE,SKIP_FILE_SAVE);
 
     /*
