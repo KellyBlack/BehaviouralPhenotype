@@ -8,10 +8,12 @@ class Butterflies : public PDESolver
 public:
     Butterflies(int number=0,int sizeState=0);
     virtual ~Butterflies();
-
-    virtual void buildJacobian();
+    
+    virtual void buildJacobianTimeStepping();
+    virtual void buildjacobianSteadyState();
     virtual void updateNewtonStep();
-    virtual void calculateRHS();
+    virtual void calculateRHSTimeStepping();
+    virtual void calculateRHSSteadyState();
     virtual void copyCurrentStateToTemp();
     virtual void copyCurrentState(double *ptr);
     double totalButterflyPopulation();

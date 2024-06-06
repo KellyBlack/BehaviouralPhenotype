@@ -24,7 +24,7 @@ Butterflies::~Butterflies()
 
 // Routine to set up the entries in the Jacobian for the
 // full nonlinear implicit time step.
-void Butterflies::buildJacobian()
+void Butterflies::buildJacobianTimeStepping()
 {
     // integers used in various loops.
     int outerLupe;
@@ -92,6 +92,10 @@ void Butterflies::buildJacobian()
         jacobian[N+1][outerLupe] =
                 0.5*gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)));
 
+        // These are the partial derivatives associated with the wasp terms in the PDE
+        jacobian[outerLupe][N+1] =
+            -0.5*gaussWeights[outerLupe]*0.5*dt*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+
         // Add the integral terms to the base function for the wasps. Also keep track of the partial derivative of
         // the integral with respect to the wasps.
         // 0.5 from time stepping and 0.5 from mapping the integral to theta in [0,1] from xi in [-1,1].
@@ -101,6 +105,91 @@ void Butterflies::buildJacobian()
 
     // Finally update the Jacobian for the partial derivative of the wasps with respect to the wasps.
     jacobian[N+1][N+1] = 1.0+0.5*dt*getD() - integralSum;
+
+}
+
+// Routine to set up the entries in the Jacobian for the
+// full nonlinear system at steady state.
+void Butterflies::buildjacobianSteadyState()
+{
+    // integers used in various loops.
+    int outerLupe;
+    int innerLupe;
+
+    // Build an approximation to an ODE
+    // Set up the pointers that are used to step through the
+    // columns of the matrix. (Assumes the arrays are in
+    // row major order.)
+    double *j;
+    double *s;
+    double *b = baseFunc;
+
+    // Add the coefficients of the stiffness matrix for the
+    // whole Jacobian assocated with the butterfly state vector.
+    for(outerLupe=0;outerLupe<=N;++outerLupe)
+    {
+        // Initialize the base function to zero.
+        *b = 0.0;
+        j = jacobian[outerLupe];
+        s = stiff[outerLupe];
+
+        // For each column in the current row set the entries in the
+        // Jacobian to be the associated entries in the stiffness matrix.
+        // Add up the dot product with the row in the stiffness matrix
+        // and the butterfly state vector for the function base function.
+        for(innerLupe=0;innerLupe<=N;++innerLupe)
+        {
+            *j++ = mu*(*s)*4.0;                      // coresponding entry in the stiffness matrix.
+            *b -= (*s++)*butterflies[innerLupe];
+        }
+        // Multiply the stiffness matrix product by the diffusion term and
+        // the time step associated with the implicit scheme.
+        *b++ *= mu;   // multiply current 2nd derivative by mu
+    }
+
+    // Now go through and add the terms associated with the diagonal entries
+    // of the Jacobian as well as the terms associated with the equation
+    // for the wasps.
+
+    // Initialize the base function term associated with the wasps.
+    baseFunc[N+1] = butterflies[N+1]*(getD()); //-rhs[N+1];
+    double theta;
+    double integralSum = 0.0;
+    for(outerLupe=0;outerLupe<=N;++outerLupe)
+    {
+        // Add all of the derivatives associated with the diagonal entries of the Jacobian.
+        theta = 0.5*(gaussAbscissa[outerLupe]+1.0);
+        jacobian[outerLupe][outerLupe] += gaussWeights[outerLupe]*
+                                          (
+                                              (1.0-2.0*butterflies[outerLupe])*parameterDistribution(theta)
+                                              + butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)))
+                                          );
+
+        // Add all of the function values associated with the diagonal entries to the base function.
+        baseFunc[outerLupe] += gaussWeights[outerLupe]*(
+                                   -parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe])
+                                   +butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta)));
+                               //- rhs[outerLupe];
+
+        // These are the partial derivatives associated with the wasp terms in the PDE
+        jacobian[outerLupe][N+1] =
+            -0.5*gaussWeights[outerLupe]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+
+        // Add all of the remaining nonlinear terms to the bottom row of the Jacobian.
+        // These are the partial derivatives associated with the integral of the butterfly state space.
+        // 0.5 from time stepping and 0.5 from mapping the integral to theta in [0,1] from xi in [-1,1].
+        jacobian[N+1][outerLupe] =
+            0.5*gaussWeights[outerLupe]*getG()*butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)));
+
+        // Add the integral terms to the base function for the wasps. Also keep track of the partial derivative of
+        // the integral with respect to the wasps.
+        // 0.5 from time stepping and 0.5 from mapping the integral to theta in [0,1] from xi in [-1,1].
+        baseFunc[N+1] -= 0.5*gaussWeights[outerLupe]*getG()*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+        integralSum   += 0.5*gaussWeights[outerLupe]*getG()*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+    }
+
+    // Finally update the Jacobian for the partial derivative of the wasps with respect to the wasps.
+    jacobian[N+1][N+1] = -getD() + integralSum;
 
 }
 
@@ -119,7 +208,7 @@ void Butterflies::updateNewtonStep()
 // Method to calculate the function value associated with the
 // previous time step. These are the known values of the time
 // stepping equation.
-void Butterflies::calculateRHS()
+void Butterflies::calculateRHSTimeStepping()
 {
     // loop variables.
     int outerLupe;
@@ -158,7 +247,7 @@ void Butterflies::calculateRHS()
                 gaussWeights[outerLupe]*(
                     butterflies[outerLupe] +
                     0.5*dt*parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) -
-                    0.5*dt*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta))
+                    0.5*dt*parameterDistribution(theta)*butterflies[N+1]*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta))
                     );
 
         // Add the terms associated with the integral in the wasp equation.
@@ -166,6 +255,64 @@ void Butterflies::calculateRHS()
         rhs[N+1] += 0.5*gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*
                 butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
     }
+}
+
+// Method to calculate the function value associated with the
+// steady state.
+void Butterflies::calculateRHSSteadyState()
+{
+    // loop variables.
+    int outerLupe;
+    //int innerLupe;
+
+    double *r = rhs;
+    for(outerLupe=0;outerLupe<=N+1;++outerLupe)
+    {
+        *r++ = 0.0;
+    }
+
+    /*
+    // Initialize the values associated with the linear terms in the equation for the wasps.
+    rhs[N+1] = butterflies[N+1]*(-getD());
+
+    // Initialize the pointer to the rhs vector.
+    double *r = rhs;
+    double *s;
+    double *b;
+    for(outerLupe=0;outerLupe<=N;++outerLupe)
+    {
+        // Initialize the value in the RHS vector to be zero.
+        // Later we will add the terms from the function evaluation.
+        double theta = 0.5*(gaussAbscissa[outerLupe]+1.0);
+        *r = 0.0;
+
+        // Initialize the pointers to the current row of the stiffness matrix
+        // and the starting of the state vector for the butterflies.
+        s = stiff[outerLupe];
+        b = butterflies;
+        for(innerLupe=0;innerLupe<=N;++innerLupe)
+        {
+            // Add the terms to the RHS for the dot product of the
+            // current row in the stiffness matrix and the butterfly
+            // state vector.
+            // 4.0 comes from mapping theta in [0,1] from xi in [-1,1].
+            *r += (*s++)*(*b++)*4.0;
+        }
+
+        // Add all of the terms associated with the remaining terms in the butterfly
+        // equation. (All of the terms not associated with the stiffness matrix.)
+        *r++ = mu*rhs[outerLupe] +
+               gaussWeights[outerLupe]*(
+                   parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) -
+                   parameterDistribution(theta)*butterflies[N+1]*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta))
+                   );
+
+        // Add the terms associated with the integral in the wasp equation.
+        // 0.5comes from mapping theta in [0,1] from xi in [-1,1].
+        rhs[N+1] += 0.5*gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*
+                      butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+    }
+    */
 }
 
 // Method to copy the current state vector to the prevTimeStep vector.
