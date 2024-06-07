@@ -267,4 +267,37 @@ void performManyApproximations_by_m_mu()
 
 }
 
+void determineSteadyState()
+{
+
+    //NumericalTrials *trials = new NumericalTrials();
+
+    // Define the default values of the parameters.
+    double dt = 0.00001;
+    double mu = 0.01; // 0.0095
+    double c  = 2.75;
+    double g  = 0.6;
+    double d  = 0.1;
+    double m  = 0.2;
+
+    std::ostringstream filename("");
+    filename.str("");
+    filename.clear();
+    filename << "/tmp/steadyState_c-"
+             <<  std::setw(6) << std::fixed << std::setprecision(4) << std::setfill('0') << c
+             << ".bin";
+    std::cout << "Writing to " << filename.str() << std::endl;
+
+    NumericalTrials trial;
+    trial.approximateSteadyState(
+        mu,c,g, d, m,
+        dt,
+        LEGENDRE_POLY_DEGREE,
+        MAX_DELTA_NORM,MAX_NEWTON_STEPS,
+        filename.str(),
+        SKIP_PRINT_UPDATE,SKIP_FILE_SAVE);
+
+}
+
+
 #endif // MAINROUTINES_H
