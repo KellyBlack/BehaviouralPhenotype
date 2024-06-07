@@ -91,7 +91,6 @@ public:
 
     int approximateSteadyState(
         double mu, double c, double g, double d, double m,
-        double dt,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
         std::string filename,

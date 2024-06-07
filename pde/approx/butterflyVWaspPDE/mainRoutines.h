@@ -273,7 +273,6 @@ void determineSteadyState()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double dt = 0.00001;
     double mu = 0.01; // 0.0095
     double c  = 2.75;
     double g  = 0.6;
@@ -291,7 +290,6 @@ void determineSteadyState()
     NumericalTrials trial;
     trial.approximateSteadyState(
         mu,c,g, d, m,
-        dt,
         LEGENDRE_POLY_DEGREE,
         MAX_DELTA_NORM,MAX_NEWTON_STEPS,
         filename.str(),

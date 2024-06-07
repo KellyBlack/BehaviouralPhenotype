@@ -1272,7 +1272,6 @@ int NumericalTrials::approximateSystemGivenInitial(Butterflies *theButterflies,
 
 int NumericalTrials::approximateSteadyState(
     double mu, double c, double g, double d, double m,
-    double dt,
     int legendrePolyDegree,
     double maxDeltaNorm, int maxNewtonSteps,
     std::string filename,
@@ -1295,11 +1294,11 @@ int NumericalTrials::approximateSteadyState(
     theButterflies->setG(g);
     theButterflies->setD(d);
     theButterflies->setM(m);
-    theButterflies->setDT(dt);
+    theButterflies->setDT(0.0);
 
     //theButterflies->initializeButterfliesGaussian(1.0,mu);
     theButterflies->initializeButterfliesConstant(1.0);
-    if(!skipFileSave)
+    if(skipFileSave)
     {
         theButterflies->writeParameters(binFile);
         theButterflies->writeBinaryHeader(binFile);
@@ -1327,11 +1326,12 @@ int NumericalTrials::approximateSteadyState(
     }
 
 
-    if(!skipFileSave)
+    if(skipFileSave>0)
     {
         theButterflies->writeBinaryCurrentApprox(t,binFile);
         // Clean up the data file and close it
         binFile.close();
+        std::cout << std::endl << "Binary file written" << std::endl;
     }
     delete theButterflies;
 
