@@ -152,7 +152,7 @@ void Butterflies::buildjacobianSteadyState()
     // for the wasps.
 
     // Initialize the base function term associated with the wasps.
-    baseFunc[N+1] = butterflies[N+1]*(getD()); //-rhs[N+1];
+    baseFunc[N+1] = butterflies[N+1]*(getD());
     double theta;
     double integralSum = 0.0;
     for(outerLupe=0;outerLupe<=N;++outerLupe)
@@ -169,21 +169,20 @@ void Butterflies::buildjacobianSteadyState()
         baseFunc[outerLupe] += gaussWeights[outerLupe]*(
                                    -parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe])
                                    +butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta)));
-                               //- rhs[outerLupe];
 
         // These are the partial derivatives associated with the wasp terms in the PDE
         jacobian[outerLupe][N+1] =
-            -0.5*gaussWeights[outerLupe]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+            -gaussWeights[outerLupe]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
 
         // Add all of the remaining nonlinear terms to the bottom row of the Jacobian.
         // These are the partial derivatives associated with the integral of the butterfly state space.
-        // 0.5 from time stepping and 0.5 from mapping the integral to theta in [0,1] from xi in [-1,1].
+        // 0.5 from mapping the integral to theta in [0,1] from xi in [-1,1].
         jacobian[N+1][outerLupe] =
             0.5*gaussWeights[outerLupe]*getG()*butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)));
 
         // Add the integral terms to the base function for the wasps. Also keep track of the partial derivative of
         // the integral with respect to the wasps.
-        // 0.5 from time stepping and 0.5 from mapping the integral to theta in [0,1] from xi in [-1,1].
+        // 0.5 from mapping the integral to theta in [0,1] from xi in [-1,1].
         baseFunc[N+1] -= 0.5*gaussWeights[outerLupe]*getG()*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
         integralSum   += 0.5*gaussWeights[outerLupe]*getG()*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
     }
