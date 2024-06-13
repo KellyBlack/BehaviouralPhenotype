@@ -263,56 +263,12 @@ void Butterflies::calculateRHSSteadyState()
 {
     // loop variables.
     int outerLupe;
-    //int innerLupe;
-
     double *r = rhs;
     for(outerLupe=0;outerLupe<=N+1;++outerLupe)
     {
         *r++ = 0.0;
     }
 
-    /*
-    // Initialize the values associated with the linear terms in the equation for the wasps.
-    rhs[N+1] = butterflies[N+1]*(-getD());
-
-    // Initialize the pointer to the rhs vector.
-    double *r = rhs;
-    double *s;
-    double *b;
-    for(outerLupe=0;outerLupe<=N;++outerLupe)
-    {
-        // Initialize the value in the RHS vector to be zero.
-        // Later we will add the terms from the function evaluation.
-        double theta = 0.5*(gaussAbscissa[outerLupe]+1.0);
-        *r = 0.0;
-
-        // Initialize the pointers to the current row of the stiffness matrix
-        // and the starting of the state vector for the butterflies.
-        s = stiff[outerLupe];
-        b = butterflies;
-        for(innerLupe=0;innerLupe<=N;++innerLupe)
-        {
-            // Add the terms to the RHS for the dot product of the
-            // current row in the stiffness matrix and the butterfly
-            // state vector.
-            // 4.0 comes from mapping theta in [0,1] from xi in [-1,1].
-            *r += (*s++)*(*b++)*4.0;
-        }
-
-        // Add all of the terms associated with the remaining terms in the butterfly
-        // equation. (All of the terms not associated with the stiffness matrix.)
-        *r++ = mu*rhs[outerLupe] +
-               gaussWeights[outerLupe]*(
-                   parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe]) -
-                   parameterDistribution(theta)*butterflies[N+1]*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta))
-                   );
-
-        // Add the terms associated with the integral in the wasp equation.
-        // 0.5comes from mapping theta in [0,1] from xi in [-1,1].
-        rhs[N+1] += 0.5*gaussWeights[outerLupe]*0.5*dt*getG()*butterflies[N+1]*parameterDistribution(theta)*
-                      butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
-    }
-    */
 }
 
 // Method to copy the current state vector to the prevTimeStep vector.
