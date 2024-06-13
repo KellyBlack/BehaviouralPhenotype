@@ -1278,8 +1278,6 @@ int NumericalTrials::approximateSteadyState(
     int skipPrint,
     int skipFileSave)
 {
-    double t        = 0.0;
-    unsigned long timeLupe = 0;
 
     // Variables used to save the results of calculations into a
     // data file.
@@ -1317,9 +1315,8 @@ int NumericalTrials::approximateSteadyState(
     }
 
     if(
-       theButterflies->
-        steadyStateApprox(maxDeltaNorm,maxNewtonSteps,timeLupe%(static_cast<unsigned long>(skipPrint))==0)
-            < 0)
+       theButterflies->steadyStateApprox(maxDeltaNorm,maxNewtonSteps,true)< 0
+        )
     {
         std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
         return(0);
@@ -1328,6 +1325,7 @@ int NumericalTrials::approximateSteadyState(
 
     if(skipFileSave>0)
     {
+        double t = 0.0;
         theButterflies->writeBinaryCurrentApprox(t,binFile);
         // Clean up the data file and close it
         binFile.close();
