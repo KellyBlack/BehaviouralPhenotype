@@ -263,9 +263,9 @@ int PDESolver::steadyStateApprox(double maxNewtonDiffNorm,int maxNewtonSteps,boo
         {
             // Life is good. Perform the Newton step and update the current state vector.
             updateNewtonStep();
-            if(printInfo)
-                std::cout << "  step: " << totalStepsPossible - maxNewtonSteps << std::endl;
             stepDeltaNorm = normDelta();
+            if(printInfo)
+                std::cout << "  step: " << totalStepsPossible - maxNewtonSteps << "  " << stepDeltaNorm << std::endl;
         }
         else
         {
