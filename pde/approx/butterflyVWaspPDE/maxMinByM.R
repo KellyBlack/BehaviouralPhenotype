@@ -94,7 +94,7 @@ results$colours <- c(results$colours,1)
 
 #legend(max(ode$m)*0.85,0.5,results$labels,lty=results$plotTypes,
 #       pch=results$pchTypes,col=results$colours,lwd=2)
-legend(0.1,0.55,as.character(results$labels),lty=results$plotTypes,
+legend(30,.9,as.character(results$labels),lty=results$plotTypes,
        pch=results$pchTypes,col=results$colours,lwd=2)
 #legend(0.2,1.1,
 #       c(expression(paste(mu,'=0.2')),
