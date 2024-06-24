@@ -176,8 +176,17 @@ long RungaKutta45::approximation(long which,
     setMinimumDT(minimumDT);
 
     // Set the initial condition.
-    state[0] = initialCond[0];
-    state[1] = initialCond[1];
+    if(initialCond[0]<0.0)
+    {
+        state[0] = fabs(cValue*dValue/((gValue-dValue)*(1.0+mValue)))*0.99;
+        state[1] = fabs((1.0-state[0])*(cValue+state[0]*(1.0+mValue)));
+
+    }
+    else
+    {
+        state[0] = initialCond[0];
+        state[1] = initialCond[1];
+    }
 
     // Set up the variables used to determine the max and min of a cycle.
     double maxButterfliesDensity = state[0];
@@ -211,9 +220,9 @@ long RungaKutta45::approximation(long which,
         double currentButterflyDensity = state[0];
         double currentWaspDensity      = state[1];
 
-        if((fabs(currentWaspDensity-prevWaspDensity)<1.0E-7)&&(fabs(currentButterflyDensity-prevButterflyDensity)<1.0E-7))
+        if((fabs(currentWaspDensity-prevWaspDensity)<1.0E-8)&&(fabs(currentButterflyDensity-prevButterflyDensity)<1.0E-8))
         {
-            if(((fabs(prevWaspCheck-currentWaspDensity)>1.0E-7)||(fabs(prevButterflyCheck-currentButterflyDensity)>1.0E-7)))
+            if(((fabs(prevWaspCheck-currentWaspDensity)>1.0E-8)||(fabs(prevButterflyCheck-currentButterflyDensity)>1.0E-8)))
             {
                 prevValueClose = 0;
                 prevWaspCheck = currentWaspDensity;
@@ -345,15 +354,16 @@ long RungaKutta45::approximation(long which,
 // Given a state and time calculate the rate of change.
 void RungaKutta45::rateFunction(double,double *x,double *rate)
 {
+    double p = 1.0+m*theta;
     rate[0] =  dt*x[0];
     rate[1] = -dt*x[1];
 
     rate[0] = dt*(
-            (1.0+m*theta)*x[0]*(1.0-x[0]) -
-             x[1]*(1.0+m*theta)*x[0]/(c+x[0]*(1.0+m*theta))
+            p*x[0]*(1.0-x[0]) -
+             x[1]*p*x[0]/(c+x[0]*p)
             );
     rate[1] = dt*(
-         -d*x[1]+g*x[1]*(1.0+m*theta)*x[0]/(c+x[0]*(1.0+m*theta))
+         -d*x[1]+g*x[1]*p*x[0]/(c+x[0]*p)
             );
 }
 

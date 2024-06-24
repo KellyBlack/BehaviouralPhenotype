@@ -846,7 +846,7 @@ int NumericalTrials::approximateSystemQuietResponse(
 
     //theButterflies->initializeButterflies();
     //theButterflies->initializeButterfliesGaussian(1.0,mu*0.25);
-    theButterflies->initializeButterfliesConstant(1.0);
+    theButterflies->initializeButterfliesConstant(0.7);
     theButterflies->copyCurrentState(maxButterflyProfile);
     double maxButterfliesDensity = theButterflies->totalButterflyPopulation();
     double prevButterflyDensity = maxButterfliesDensity;

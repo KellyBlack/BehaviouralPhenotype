@@ -41,6 +41,7 @@ filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.5.csv
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.6.csv'
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.7500.csv'
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.7500_smallMu.csv'
+filename <- '/tmp/changingMResults_c=3.0000.csv'
 a <- read.csv(filename)
 
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c1.1.csv'
@@ -51,11 +52,12 @@ odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.5.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.6.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c-2.7500.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c-2.7500.csv'
+odeFilename <- '/tmp/rk45_c-3.0000.csv'
 ode <- read.csv(odeFilename)
 
 plot.new()
-plot.window(xlim=c(0,1.05*max(a$m)),
-            ylim=c(0,1.05*max(ode$maxButterfly)))
+plot.window(xlim=c(0,1.05*max(a$m,ode$m)),
+            ylim=c(0,1.05*max(ode$maxButterfly,a$maxButterfly)))
 title(main="Max and Min Of The Butterfly Density After A Long Time Span",
       xlab='m',
       ylab='Butterfly Density')
@@ -83,16 +85,16 @@ results <- plotResults(a)
 
 
 odeOrder <- sort(ode$m,index.return=TRUE)
-points(ode$m[odeOrder$ix],ode$minButterfly[odeOrder$ix],type='l',lty=3,lwd=4)
-points(ode$m[odeOrder$ix],ode$maxButterfly[odeOrder$ix],type='l',lty=3,lwd=4)
+points(ode$m[odeOrder$ix],ode$minButterfly[odeOrder$ix],type='l',lty=1,lwd=3)
+points(ode$m[odeOrder$ix],ode$maxButterfly[odeOrder$ix],type='l',lty=1,lwd=3)
 results$labels <- c(results$labels,as.expression('ODE'))
-results$plotTypes <- c(results$plotTypes,3)
+results$plotTypes <- c(results$plotTypes,1)
 results$pchTypes <- c(results$pchTypes,-1)
 results$colours <- c(results$colours,1)
 
 #legend(max(ode$m)*0.85,0.5,results$labels,lty=results$plotTypes,
 #       pch=results$pchTypes,col=results$colours,lwd=2)
-legend(0.2,1.0,as.character(results$labels),lty=results$plotTypes,
+legend(0.1,0.55,as.character(results$labels),lty=results$plotTypes,
        pch=results$pchTypes,col=results$colours,lwd=2)
 #legend(0.2,1.1,
 #       c(expression(paste(mu,'=0.2')),

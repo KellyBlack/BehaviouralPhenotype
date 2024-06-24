@@ -27,10 +27,10 @@ void odeApproximation()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double c  = 2.75;
-    double g  = 0.6;
-    double d  = 0.1;
-    double m  = 0.2;
+    double c  = 3.0;
+    double g  = 1.0;
+    double d  = 0.5;
+    double m  = 2.0;
 
     std::ostringstream filename("");
     filename.str("");
@@ -44,10 +44,10 @@ void odeApproximation()
     double initialCond[2];
     RungaKutta45 odeApprox;
 
-    initialCond[0] = c*d/((g-d)*(1.0+m))*0.95;
+    initialCond[0] = -1.0; //c*d/((g-d)*(1.0+m))*0.95;
     initialCond[1] = (1.0-initialCond[0])*(c+initialCond[0]*(1.0+m));
     odeApprox.approximationByM(c,g,d,theta,
-                               0.1,15.0,300,
+                               0.01,40.0,100,
                                0.0,500.0,dt,1.0E-5,
                                initialCond,1.0E-6,
                                filename.str(),false,NUMBER_THREADS);
@@ -65,7 +65,7 @@ void performManyApprpoximations_m()
 
     // Define the default values of the parameters.
     double mu = 0.01; // 0.0095
-    double c  = 2.75;
+    double c  = 6.0;
     double g  = 0.6;
     double d  = 0.1;
     //double m  = 0.2;
@@ -73,7 +73,7 @@ void performManyApprpoximations_m()
     NumericalTrials::multipleApproximationsByM(
         mu,c,g,d,
         //0.01,1.0,0.1,
-        6.5,13.1,3.25,
+        9,20.0,0.1,
         //10.5,12.0,0.5,
         //13.0,15.0,2.5,
         dt,NUMBER_TIME_LOOP,
@@ -238,10 +238,13 @@ void performManyApproximations_by_m_mu()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
+    double c  = 3.0;
+    double g  = 1.0;
+    double d  = 0.5;
     double mu = 0.01; // 0.0095
-    double c  = 2.75;
-    double g  = 0.6;
-    double d  = 0.1;
+    //double c  = 6.0;
+    //double g  = 0.6;
+    //double d  = 0.1;
     //double m  = 0.2;
 
     std::ostringstream filename("");
@@ -257,7 +260,7 @@ void performManyApproximations_by_m_mu()
         mu,2.5*mu,6,
         c,g,d,
         //7.01,15.5,120,
-        0.1,15.0,160,
+        0.1,40,120,
         dt,NUMBER_TIME_LOOP,
         LEGENDRE_POLY_DEGREE,
         MAX_DELTA_NORM,MAX_NEWTON_STEPS,
