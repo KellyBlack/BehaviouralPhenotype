@@ -104,8 +104,8 @@ in place on the matrix A[][]
 
   for (i=0;i<num;++i)
   {
-    place[i] = i;
-    work[i] = fabs(a[i][0]);
+    place[i] = i;                   // initialize the permutation vector
+    work[i] = fabs(a[i][0]);        // determine which entry in each row is "largest"
     for (j=1;j<num;++j)
       if (work[i] < fabs(a[i][j]))
                 work[i] = fabs(a[i][j]);
@@ -113,31 +113,37 @@ in place on the matrix A[][]
 
   for (i=0;i<num;++i)
   {
-    pivot = i;
-    for (j=i+1;j<num;++j)
+    pivot = i;                                                     // Determine if we need to pivot
+    for (j=i+1;j<num;++j)                                          // see which row has biggest ratio
             if (fabs(a[place[j]][i])/work[place[j]] >
                     fabs(a[place[pivot]][i])/work[place[pivot]])
-                pivot = j;
+                pivot = j;                                         // This ratio is more bigger than
+                                                                   // the current one.
 
     tmp = place[i];
     place[i] = place[pivot];
     place[pivot] = tmp;
 
-    if (a[place[i]][i] == 0.0)
+    if (fabs(a[place[i]][i]) < 1.0E-9)
             {
                 arrays.delonetensor(work);
                 return(0);
             }
 
     for (j=i+1;j<num;++j)
-        if (a[place[j]][i] != 0.0)
-        {
-            a[place[j]][i] = a[place[j]][i]/a[place[i]][i];
-            for (k=i+1;k<num;++k)
-                a[place[j]][k] -= a[place[j]][i]*a[place[i]][k];
-        }
+            {
+                if (fabs(a[place[j]][i]) > 1.0E-12)
+                {
+                    a[place[j]][i] = a[place[j]][i]/a[place[i]][i];
+                    for (k=i+1;k<num;++k)
+                        a[place[j]][k] -= a[place[j]][i]*a[place[i]][k];
+                }
+            }
 
-    }
+  }
+
+  //for(i=0;i<num;++i)
+  //      std::cout << i << " " << place[i] << std::endl;
 
   arrays.delonetensor(work);
   return(1);
@@ -167,21 +173,21 @@ void LU_Decomposition<number>::solve_lu(number **a,number *x,number *b,int *plac
     ArrayUtils<number> arrays;
     c = arrays.onetensor(num);
 
-    c[place[0]] = b[place[0]];
+    c[0] = b[place[0]];
     for (i=1;i<num;++i)
     {
-            c[place[i]] = b[place[i]];
-            for (j=0;j<i;++j)
-                c[place[i]] -= a[place[i]][j]*c[place[j]];
+        c[i] = b[place[i]];
+        for (j=0;j<i;++j)
+            c[i] -= a[place[i]][j]*c[j];
     }
 
-    x[place[num-1]] = c[place[num-1]]/a[place[num-1]][num-1];
+    x[num-1] = c[num-1]/a[place[num-1]][num-1];
     for (i=num-2;i>=0;--i)
     {
-            x[place[i]] = c[place[i]];
-            for (j=i+1;j<num;++j)
-        x[place[i]] -= x[place[j]]*a[place[i]][j];
-            x[place[i]] = x[place[i]]/a[place[i]][i];
+        x[i] = c[i];
+        for (j=i+1;j<num;++j)
+            x[i] -= x[j]*a[place[i]][j];
+        x[i] = x[i]/a[place[i]][i];
     }
 
     arrays.delonetensor(c);
