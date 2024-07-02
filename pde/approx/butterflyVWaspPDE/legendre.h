@@ -602,6 +602,7 @@ void Legendre<number>::leg_der(number **d1,number **lval,number *x,int n,int) {
       else
                 d1[l][j] = 0.0;
     }
+
 }
 
 // Legendre (Gauss) collocation derivative matrix
@@ -640,12 +641,12 @@ void Legendre<number>::stiffLeg(number **stiff,number *w,number **D1,int N)
 
   int i,j,m;
 
-  for (m=0;m<=N;++m)
-    for(i=0;i<=N;++i) {
+    for (m=0;m<=N;++m)
+        for(i=0;i<=N;++i) {
 
-      stiff[m][i] = 0.0;
-      for(j=0;j<=N;++j)
-        stiff[m][i] -= D1[j][m]*D1[j][i]*w[j];
+            stiff[m][i] = 0.0;
+            for(j=0;j<=N;++j)
+                stiff[m][i] -= D1[j][m]*D1[j][i]*w[j];
 
         }
 
