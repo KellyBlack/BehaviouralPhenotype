@@ -1294,9 +1294,8 @@ int NumericalTrials::approximateSteadyState(
     theButterflies->setM(m);
     theButterflies->setDT(0.0);
 
-    //theButterflies->initializeButterfliesGaussian(1.0,mu);
+    theButterflies->initializeButterfliesGaussian(1.0,mu);
     //theButterflies->initializeButterfliesConstant(1.0);
-    theButterflies->initializeButterfliesConstant(d*c/(g-d),g*c/(g-d)*(g-d-d*c)/(g-d));
     if(skipFileSave)
     {
         theButterflies->writeParameters(binFile);
@@ -1318,11 +1317,16 @@ int NumericalTrials::approximateSteadyState(
     }
 
     if(
-       theButterflies->steadyStateApprox(maxDeltaNorm,maxNewtonSteps,true)< 0
+        theButterflies->steadyStateApprox(maxDeltaNorm,maxNewtonSteps,true)< 0
         )
     {
-        std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
-        return(0);
+        std::cout << "Gaussian did not work. Trying a constant." << std::endl;
+        theButterflies->initializeButterfliesConstant(d*c/(g-d),g*c/(g-d)*(g-d-d*c)/(g-d));
+        if(theButterflies->steadyStateApprox(maxDeltaNorm,maxNewtonSteps,true)< 0)
+        {
+            std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
+            return(0);
+        }
     }
 
 
