@@ -746,22 +746,27 @@ int NumericalTrials::approximateSystemTrackRepeating(
             newProcess->d     = d;
             newProcess->m     = currentM;
 
-            newTrial->approximateSteadyState(
-                currentDiffusion,c,g, d, currentM,
-                legendrePolyDegree,
-                maxDeltaNorm,maxNewtonSteps,
-                "/tmp/checkSteadyState.bin",
-                skipPrint,1,
-                theButterflies);
+            if(
+                newTrial->approximateSteadyState(
+                    currentDiffusion,c,g, d, currentM,
+                    legendrePolyDegree,
+                    maxDeltaNorm,maxNewtonSteps,
+                    "/tmp/checkSteadyState.bin",
+                    skipPrint,1,
+                    theButterflies) <= 0)
+            {
+                theButterflies->initializeButterfliesConstant(d*c/(g-d),g*c/(g-d)*(g-d-d*c)/(g-d));
+            }
 
             newProcess->trial = static_cast<ApproximationBase*>(newTrial);
             newProcess->process = new std::thread(
                             &NumericalTrials::approximateSystemQuietResponse,newTrial,
                             currentDiffusion,c,g,d,currentM,dt,maxTimeLupe,
-                            legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,totalRuns
+                            legendrePolyDegree,maxDeltaNorm,maxNewtonSteps,skipPrint,msgID,totalRuns,
+                            theButterflies
                             );
             processes.push_back(newProcess);
-            std::cout << "starting " << currentDiffusion << "/" << currentM << ": " << totalRuns << "  " << newProcess->process << std::endl;
+            std::cout << "starting " << currentDiffusion << "/" << currentM << ": " << totalRuns << "  " << newProcess->process <<  std::endl;
 
             totalRuns += 1;
             if(++currentNumberProcesses>=static_cast<long>(numProcesses))
@@ -846,7 +851,9 @@ int NumericalTrials::approximateSystemQuietResponse(
         double dt, unsigned long maxTimeLupe,
         int legendrePolyDegree,
         double maxDeltaNorm, int maxNewtonSteps,
-        int skipPrint, int msgID,long which)
+        int skipPrint, int msgID,long which,
+        Butterflies *initialCondition
+    )
 {
     const long MAX_CHECK_CONSTANT = 2000;
     ArrayUtils<double> arrays;
@@ -856,6 +863,7 @@ int NumericalTrials::approximateSystemQuietResponse(
 
 
     //std::cout << "Pre-processing: " << which << std::endl;
+    //std::cout << "caught: " << initialCondition << std::endl;
     int N = legendrePolyDegree;
     Butterflies *theButterflies = new Butterflies(N,N+2);
     theButterflies->initializeLegendreParams();
@@ -870,6 +878,7 @@ int NumericalTrials::approximateSystemQuietResponse(
     //theButterflies->initializeButterfliesGaussian(1.0,mu*0.25);
     theButterflies->initializeButterfliesConstant(0.7);
     theButterflies->copyCurrentState(maxButterflyProfile);
+    theButterflies->copyState(initialCondition);
     double maxButterfliesDensity = theButterflies->totalButterflyPopulation();
     double prevButterflyDensity = maxButterfliesDensity;
     double minButterfliesDensity = maxButterfliesDensity;

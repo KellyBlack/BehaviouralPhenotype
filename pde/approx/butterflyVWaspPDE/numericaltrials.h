@@ -70,7 +70,9 @@ public:
             double dt, unsigned long maxTimeLupe,
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
-            int skipPrint, int msgID, long which);
+            int skipPrint, int msgID, long which,
+            Butterflies *initialCondition
+        );
 
     int approximateSystemHysteresis(double mu,
             double c, double g, double d,
