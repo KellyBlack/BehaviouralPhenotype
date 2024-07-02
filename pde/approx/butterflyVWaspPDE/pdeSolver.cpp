@@ -61,6 +61,14 @@ double PDESolver::getDT()
     return(dt);
 }
 
+// Method to copy the current state vector from another butterfly object that
+// is passed in as the argument.
+void PDESolver::copyCurrentState(PDESolver *ptr)
+{
+    for(int lupe=0;lupe<getStateSize();++lupe)
+        setState(lupe,ptr->getState(lupe));
+}
+
 // Routine to allocate the space used for the vectors and
 // arrays associated with the class.
 void PDESolver::createArrays()

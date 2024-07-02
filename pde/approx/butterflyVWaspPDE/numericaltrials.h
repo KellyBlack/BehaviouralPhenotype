@@ -95,7 +95,8 @@ public:
         double maxDeltaNorm, int maxNewtonSteps,
         std::string filename,
         int skipPrint,
-        int skipFileSave);
+        int skipFileSave,
+        Butterflies *butterflies = nullptr);
 
     Butterflies* getButterflies() { return(theButterflies); }
     void printState() { theButterflies->printState(); }

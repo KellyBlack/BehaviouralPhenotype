@@ -16,6 +16,9 @@ public:
     virtual void calculateRHSSteadyState();
     virtual void copyCurrentStateToTemp();
     virtual void copyCurrentState(double *ptr);
+    virtual void setState(int n,double value);
+    double getState(int n);
+
     double totalButterflyPopulation();
     double waspPopulation();
 

@@ -22,9 +22,9 @@ int main()
     //performManyApprpoximations_m_c();
     //makeOneApproximation();
     //checkHysteresis_by_m();
-    //performManyApproximations_by_m_mu();
+    performManyApproximations_by_m_mu();
 
-    determineSteadyState();
+    //determineSteadyState();
 
     std::cout << "Done" << std::endl;
 

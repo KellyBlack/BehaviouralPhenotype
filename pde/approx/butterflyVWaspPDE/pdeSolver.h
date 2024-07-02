@@ -33,6 +33,9 @@ public:
     virtual void calculateRHSSteadyState() = 0;
     virtual void copyCurrentStateToTemp() = 0;
     virtual void copyCurrentState(double *ptr) = 0;
+    void copyCurrentState(PDESolver *ptr);
+    virtual void setState(int n,double value) = 0;
+    virtual double getState(int n) = 0;
     bool solveLinearizedSystem();
     double normDelta();
     int singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool printInfo);

@@ -299,6 +299,21 @@ void Butterflies::copyCurrentState(double *ptr)
         *dest++ = *source++;
 }
 
+// Method to set the value of the current state
+// at a specified position.
+void Butterflies::setState(int n,double value)
+{
+    butterflies[n] = value;
+}
+
+// Method to get the value of the current state
+// at a specified position.
+double Butterflies::getState(int n)
+{
+    return(butterflies[n]);
+}
+
+
 // Method to approximate the total butterfly population by
 // integrating the current state.
 double Butterflies::totalButterflyPopulation()
@@ -606,7 +621,7 @@ void Butterflies::copyState(Butterflies* butterfly)
         for(lupe=0;lupe<num;++lupe)
         {
             setButterfly(lupe,butterfly->getButterfly(lupe));
-            std::cout << "copying " << getButterfly(lupe) << " " << butterfly->getButterfly(lupe) << std::endl;
+            //std::cout << "copying " << getButterfly(lupe) << " " << butterfly->getButterfly(lupe) << std::endl;
         }
         copyCurrentStateToTemp();
     }

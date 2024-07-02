@@ -710,6 +710,16 @@ int NumericalTrials::approximateSystemTrackRepeating(
         std::cout << "Previous message in the queue: " << msgValue.which << std::endl;
     }
 
+    // Set up the object used to copy over the initial condition.
+    Butterflies *theButterflies = new Butterflies(legendrePolyDegree,legendrePolyDegree+2);
+    theButterflies->initializeLegendreParams();
+    //theButterflies->setMu(mu);
+    theButterflies->setC(c);
+    theButterflies->setG(g);
+    theButterflies->setD(d);
+    //theButterflies->setM(m);
+    theButterflies->setDT(0.0);
+
     // Loop through all possible values of the diffusion and value of m.
     unsigned long mLupe;
     unsigned long diffusionLupe;
@@ -722,6 +732,9 @@ int NumericalTrials::approximateSystemTrackRepeating(
             currentM = mLow + static_cast<double>(mLupe)*(mHigh-mLow)/static_cast<double>(numberM-1);
             currentDiffusion = muLow + static_cast<double>(diffusionLupe)*(muHigh-muLow)/static_cast<unsigned long>(numberMu-1);
 
+            theButterflies->setMu(currentDiffusion);
+            theButterflies->setM(currentM);
+
             // Set up the data structure that will keep track of the values of the coefficient for this numerical trial.
             // Then start a new thread.
             NumericalTrials *newTrial = new NumericalTrials();
@@ -732,6 +745,15 @@ int NumericalTrials::approximateSystemTrackRepeating(
             newProcess->g     = g;
             newProcess->d     = d;
             newProcess->m     = currentM;
+
+            newTrial->approximateSteadyState(
+                currentDiffusion,c,g, d, currentM,
+                legendrePolyDegree,
+                maxDeltaNorm,maxNewtonSteps,
+                "/tmp/checkSteadyState.bin",
+                skipPrint,1,
+                theButterflies);
+
             newProcess->trial = static_cast<ApproximationBase*>(newTrial);
             newProcess->process = new std::thread(
                             &NumericalTrials::approximateSystemQuietResponse,newTrial,
@@ -1276,7 +1298,8 @@ int NumericalTrials::approximateSteadyState(
     double maxDeltaNorm, int maxNewtonSteps,
     std::string filename,
     int skipPrint,
-    int skipFileSave)
+    int skipFileSave,
+    Butterflies *butterflies)
 {
 
     // Variables used to save the results of calculations into a
@@ -1338,6 +1361,8 @@ int NumericalTrials::approximateSteadyState(
         binFile.close();
         std::cout << std::endl << "Binary file written" << std::endl;
     }
+    if(butterflies != nullptr)
+        butterflies->copyState(theButterflies);
     delete theButterflies;
 
     return(1);
