@@ -1295,11 +1295,14 @@ int NumericalTrials::approximateSteadyState(
     theButterflies->setDT(0.0);
 
     //theButterflies->initializeButterfliesGaussian(1.0,mu);
-    theButterflies->initializeButterfliesConstant(1.0);
+    //theButterflies->initializeButterfliesConstant(1.0);
+    theButterflies->initializeButterfliesConstant(d*c/(g-d),g*c/(g-d)*(g-d-d*c)/(g-d));
     if(skipFileSave)
     {
         theButterflies->writeParameters(binFile);
         theButterflies->writeBinaryHeader(binFile);
+        double t = 0.0;
+        theButterflies->writeBinaryCurrentApprox(t,binFile);
     }
 
 

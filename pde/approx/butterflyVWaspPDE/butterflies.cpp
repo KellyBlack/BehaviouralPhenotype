@@ -140,55 +140,62 @@ void Butterflies::buildjacobianSteadyState()
         for(innerLupe=0;innerLupe<=N;++innerLupe)
         {
             *j++ = mu*(*s)*4.0;                      // coresponding entry in the stiffness matrix.
-            *b -= (*s++)*butterflies[innerLupe];
+            *b  += (*s++)*butterflies[innerLupe];
         }
         // Multiply the stiffness matrix product by the diffusion term and
         // the time step associated with the implicit scheme.
-        *b++ *= mu;   // multiply current 2nd derivative by mu
+        *b++ *= 4.0*mu;   // multiply current 2nd derivative by 4*mu
     }
+
+
 
     // Now go through and add the terms associated with the diagonal entries
     // of the Jacobian as well as the terms associated with the equation
     // for the wasps.
 
     // Initialize the base function term associated with the wasps.
-    baseFunc[N+1] = butterflies[N+1]*(getD());
     double theta;
+    double denominator;
     double integralSum = 0.0;
     for(outerLupe=0;outerLupe<=N;++outerLupe)
     {
         // Add all of the derivatives associated with the diagonal entries of the Jacobian.
         theta = 0.5*(gaussAbscissa[outerLupe]+1.0);
+        denominator = getC()+butterflies[outerLupe]*parameterDistribution(theta);
         jacobian[outerLupe][outerLupe] += gaussWeights[outerLupe]*
-                                          (
-                                              (1.0-2.0*butterflies[outerLupe])*parameterDistribution(theta)
-                                              + butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)))
-                                          );
+                                    (
+                                      (1.0-2.0*butterflies[outerLupe])*parameterDistribution(theta)
+                                      - butterflies[N+1]*parameterDistribution(theta)*getC()/(denominator*denominator)
+                                    );
 
         // Add all of the function values associated with the diagonal entries to the base function.
-        baseFunc[outerLupe] += gaussWeights[outerLupe]*(
-                                   -parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe])
-                                   +butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta)));
+        baseFunc[outerLupe] += gaussWeights[outerLupe]*
+                               (
+                                   parameterDistribution(theta)*butterflies[outerLupe]*(1.0-butterflies[outerLupe])
+                                   -butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/denominator
+                                );
 
         // These are the partial derivatives associated with the wasp terms in the PDE
         jacobian[outerLupe][N+1] =
-            -gaussWeights[outerLupe]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+            -gaussWeights[outerLupe]*parameterDistribution(theta)*butterflies[outerLupe]/denominator;
 
         // Add all of the remaining nonlinear terms to the bottom row of the Jacobian.
         // These are the partial derivatives associated with the integral of the butterfly state space.
         // 0.5 from mapping the integral to theta in [0,1] from xi in [-1,1].
         jacobian[N+1][outerLupe] =
-            0.5*gaussWeights[outerLupe]*getG()*butterflies[N+1]*parameterDistribution(theta)*c/((c+butterflies[outerLupe]*parameterDistribution(theta))*(c+butterflies[outerLupe]*parameterDistribution(theta)));
+            0.5*gaussWeights[outerLupe]*getG()*parameterDistribution(theta)*getC()/
+                                     (denominator*denominator);
 
         // Add the integral terms to the base function for the wasps. Also keep track of the partial derivative of
         // the integral with respect to the wasps.
         // 0.5 from mapping the integral to theta in [0,1] from xi in [-1,1].
-        baseFunc[N+1] -= 0.5*gaussWeights[outerLupe]*getG()*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
-        integralSum   += 0.5*gaussWeights[outerLupe]*getG()*parameterDistribution(theta)*butterflies[outerLupe]/(c+butterflies[outerLupe]*parameterDistribution(theta));
+        //baseFunc[N+1] += 0.5*gaussWeights[outerLupe]*getG()*butterflies[N+1]*parameterDistribution(theta)*butterflies[outerLupe]/denominator;
+        integralSum   += 0.5*gaussWeights[outerLupe]*parameterDistribution(theta)*butterflies[outerLupe]/denominator;
     }
 
-    // Finally update the Jacobian for the partial derivative of the wasps with respect to the wasps.
-    jacobian[N+1][N+1] = -getD() + integralSum;
+    // Finally update the function and the Jacobian for the partial derivative of the wasps with respect to the wasps.
+    baseFunc[N+1] = (-getD() + getG()*integralSum);
+    jacobian[N+1][N+1] = 0.0; //-getD() + integralSum*getG();
 
 }
 
@@ -200,7 +207,8 @@ void Butterflies::updateNewtonStep()
     double *dx = deltaX;
     for(lupe=0;lupe<=N+1;++lupe)
     {
-        *b++ -= *dx++;
+        //std::cout << "base: " << baseFunc[lupe] << std::endl;
+        *b++ -= (*dx++);
     }
 }
 
@@ -437,18 +445,18 @@ void Butterflies::initializeButterfliesGaussian(double center,double variance)
 
         // First set the initial profile for the butterflies. It is a
         // simple Gaussian with the given center and variance.
-        double butterflyIntegral = 0.0;
+        //double butterflyIntegral = 0.0;
         for(int lupe=0;lupe<=number;++lupe)
          {
             double theta = 0.5*(gaussAbscissa[lupe]+1.0);
             butterflies[lupe]  = exp(-(theta-center)*(theta-center)/variance);
-            butterflyIntegral += gaussWeights[lupe]*butterflies[lupe];
+            //butterflyIntegral += gaussWeights[lupe]*butterflies[lupe];
          }
 
         double steady = d*c/(parameterDistribution(0.5)*(g-d));
         butterflies[number+1] = fabs(1.0-steady)*(c+steady*parameterDistribution(0.0));
-        steady /= (0.5*butterflyIntegral);
         /*
+        steady /= (0.5*butterflyIntegral);
         for(int lupe=0;lupe<=number;++lupe)
          {
             butterflies[lupe] *= steady;
@@ -481,6 +489,28 @@ void Butterflies::initializeButterfliesConstant(double theta)
          }
         butterflies[number+1] = fabs(1.0-steady)*(c+steady*parameterDistribution(theta));
          copyCurrentStateToTemp();
+    }
+}
+
+void Butterflies::initializeButterfliesConstant(double b,double w){
+    int number = getNumber();
+    if(number>0)
+    {
+        // Allocate the space if the size of the state space is known.
+        ArrayUtils <double> arrays;
+        if(butterflies==nullptr)
+            butterflies  = arrays.onetensor(getStateSize());
+        if(prevTimeStep==nullptr)
+            prevTimeStep = arrays.onetensor(getStateSize());
+
+        // First set the initial profile for the butterflies. It is a
+        // constant at the given value of theta.
+        for(int lupe=0;lupe<=number;++lupe)
+        {
+            butterflies[lupe]  = b;
+        }
+        butterflies[number+1] = w;
+        copyCurrentStateToTemp();
     }
 }
 

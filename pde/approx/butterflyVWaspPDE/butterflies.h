@@ -23,6 +23,7 @@ public:
     void initializeButterflies(double *initial);
     void initializeButterfliesGaussian(double center, double variance);
     void initializeButterfliesConstant(double theta);
+    void initializeButterfliesConstant(double b,double w);
     void deleteButterflies();
     virtual void writeParameters(std::fstream &resultsFile);
     virtual void writeCurrentApprox(double time,std::ofstream &resultsFile);

@@ -168,11 +168,13 @@ void PDESolver::initializeLegendreParams()
     {
         Legendre<double> legendre;
         // Define the Gauss quadrature.
-        legendre.leg_quad(gaussAbscissa,gaussWeights,N);
+        //legendre.leg_quad(gaussAbscissa,gaussWeights,N);
+        legendre.leg_quad_Gauss(gaussAbscissa,gaussWeights,N);
 
         // Define the stiffness and mass matrices for the Legendre collocation method.
         legendre.leg_val(lval,gaussAbscissa,N,N);
-        legendre.leg_der(D1,lval,gaussAbscissa,N,N);
+        //legendre.leg_der(D1,lval,gaussAbscissa,N,N);
+        legendre.leg_gauss_der(D1,gaussAbscissa,N);
         legendre.stiffLeg(stiff,gaussWeights,D1,N);
     }
 
@@ -249,7 +251,7 @@ int PDESolver::singleTimeStep(double maxNewtonDiffNorm,int maxNewtonSteps,bool p
 int PDESolver::steadyStateApprox(double maxNewtonDiffNorm,int maxNewtonSteps,bool printInfo)
 {
     // Build the system and solve.
-    calculateRHSTimeStepping();
+    calculateRHSSteadyState();
     bool canInvert(true);
     double stepDeltaNorm = 0.0;
     int totalStepsPossible = maxNewtonSteps;
