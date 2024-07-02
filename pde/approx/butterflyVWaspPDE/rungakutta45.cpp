@@ -178,15 +178,15 @@ long RungaKutta45::approximation(long which,
     // Set the initial condition.
     if(initialCond[0]<0.0)
     {
-        state[0] = fabs(cValue*dValue/((gValue-dValue)*(1.0+mValue)))*0.99;
+        state[0] = fabs(cValue*dValue/((gValue-dValue)*(1.0+mValue)))*1.0001;
         state[1] = fabs((1.0-state[0])*(cValue+state[0]*(1.0+mValue)));
-
     }
     else
     {
         state[0] = initialCond[0];
         state[1] = initialCond[1];
     }
+
 
     // Set up the variables used to determine the max and min of a cycle.
     double maxButterfliesDensity = state[0];

@@ -4,7 +4,7 @@
 #define SKIP_PRINT_UPDATE 100000000
 #define SKIP_FILE_SAVE 1500
 #define NUMBER_TIME_LOOP 3000000000
-#define MAX_NEWTON_STEPS 100
+#define MAX_NEWTON_STEPS 20000
 #define LEGENDRE_POLY_DEGREE 30
 #define MAX_DELTA_NORM 0.0001
 #define NUMBER_THREADS 14
@@ -27,9 +27,9 @@ void odeApproximation()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double c  = 3.0;
-    double g  = 1.0;
-    double d  = 0.5;
+    double c  = 2.0;
+    double g  = 0.6;
+    double d  = 0.1;
     double m  = 2.0;
 
     std::ostringstream filename("");
@@ -47,7 +47,7 @@ void odeApproximation()
     initialCond[0] = -1.0; //c*d/((g-d)*(1.0+m))*0.95;
     initialCond[1] = (1.0-initialCond[0])*(c+initialCond[0]*(1.0+m));
     odeApprox.approximationByM(c,g,d,theta,
-                               0.01,40.0,100,
+                               0.01,30.0,150,
                                0.0,500.0,dt,1.0E-5,
                                initialCond,1.0E-6,
                                filename.str(),false,NUMBER_THREADS);
@@ -233,14 +233,14 @@ void checkHysteresis_by_m()
 void performManyApproximations_by_m_mu()
 {
     // Set up the temporal variables.
-    double dt = 0.00001;
+    double dt = 0.0001;
 
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double c  = 3.0;
-    double g  = 1.0;
-    double d  = 0.5;
+    double c  = 2.0;
+    double g  = 0.6;
+    double d  = 0.1;
     double mu = 0.01; // 0.0095
     //double c  = 6.0;
     //double g  = 0.6;
@@ -260,7 +260,7 @@ void performManyApproximations_by_m_mu()
         mu,2.5*mu,6,
         c,g,d,
         //7.01,15.5,120,
-        0.1,40,120,
+        0.01,40,120,
         dt,NUMBER_TIME_LOOP,
         LEGENDRE_POLY_DEGREE,
         MAX_DELTA_NORM,MAX_NEWTON_STEPS,
@@ -277,10 +277,10 @@ void determineSteadyState()
 
     // Define the default values of the parameters.
     double mu = 0.01; // 0.0095
-    double c  = 2.75;
+    double c  = 2.0;
     double g  = 0.6;
     double d  = 0.1;
-    double m  = 0.2;
+    double m  = 0.01;
 
     std::ostringstream filename("");
     filename.str("");
