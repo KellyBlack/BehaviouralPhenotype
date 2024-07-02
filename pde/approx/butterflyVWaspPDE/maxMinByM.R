@@ -41,7 +41,7 @@ filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.5.csv
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.6.csv'
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.7500.csv'
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.7500_smallMu.csv'
-filename <- '/tmp/changingMResults_c=3.0000.csv'
+filename <- '/tmp/changingMResults_c=2.0000.csv'
 a <- read.csv(filename)
 
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c1.1.csv'
@@ -52,13 +52,13 @@ odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.5.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.6.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c-2.7500.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c-2.7500.csv'
-odeFilename <- '/tmp/rk45_c-3.0000.csv'
+odeFilename <- '/tmp/rk45_c-2.0000.csv'
 ode <- read.csv(odeFilename)
 
 plot.new()
 plot.window(xlim=c(0,1.05*max(a$m,ode$m)),
             ylim=c(0,1.05*max(ode$maxButterfly,a$maxButterfly)))
-title(main="Max and Min Of The Butterfly Density After A Long Time Span",
+title(main="Butterfly Density Max/Min After A Long Time Span",
       xlab='m',
       ylab='Butterfly Density')
 axis(1)
