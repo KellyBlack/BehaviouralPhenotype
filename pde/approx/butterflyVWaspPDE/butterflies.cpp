@@ -200,7 +200,7 @@ void Butterflies::buildjacobianSteadyState()
 }
 
 // Method to add the deltaX from the Newton method solve to the current state space.
-void Butterflies::updateNewtonStep()
+void Butterflies::updateNewtonStep(double jumpFraction,bool positize)
 {
     int lupe;
     double *b = butterflies;
@@ -208,7 +208,17 @@ void Butterflies::updateNewtonStep()
     for(lupe=0;lupe<=N+1;++lupe)
     {
         //std::cout << "base: " << baseFunc[lupe] << std::endl;
-        *b++ -= (*dx++);
+        *b++ -= jumpFraction*(*dx++);
+    }
+
+    if(positize)
+    {
+        b = butterflies;
+        for(lupe=0;lupe<=N+1;++lupe)
+        {
+            //std::cout << "base: " << baseFunc[lupe] << std::endl;
+            *b++ = fabs(*b);
+        }
     }
 }
 
@@ -464,7 +474,7 @@ void Butterflies::initializeButterfliesGaussian(double center,double variance)
         for(int lupe=0;lupe<=number;++lupe)
          {
             double theta = 0.5*(gaussAbscissa[lupe]+1.0);
-            butterflies[lupe]  = exp(-(theta-center)*(theta-center)/variance);
+            butterflies[lupe]  = 0.5*exp(-(theta-center)*(theta-center)/variance);
             //butterflyIntegral += gaussWeights[lupe]*butterflies[lupe];
          }
 

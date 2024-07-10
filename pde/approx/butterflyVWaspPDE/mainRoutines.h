@@ -5,7 +5,7 @@
 #define SKIP_FILE_SAVE 1500
 #define NUMBER_TIME_LOOP 3000000000
 #define MAX_NEWTON_STEPS 20000
-#define LEGENDRE_POLY_DEGREE 30
+#define LEGENDRE_POLY_DEGREE 50
 #define MAX_DELTA_NORM 0.0001
 #define NUMBER_THREADS 14
 
@@ -27,10 +27,10 @@ void odeApproximation()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double c  = 2.0;
+    double c  = 12.0;
     double g  = 0.6;
     double d  = 0.1;
-    double m  = 2.0;
+    double m  = 4.0;
 
     std::ostringstream filename("");
     filename.str("");
@@ -44,8 +44,8 @@ void odeApproximation()
     double initialCond[2];
     RungaKutta45 odeApprox;
 
-    initialCond[0] = -1.0; //c*d/((g-d)*(1.0+m))*0.95;
-    initialCond[1] = (1.0-initialCond[0])*(c+initialCond[0]*(1.0+m));
+    initialCond[0] = 0.9; //-1.0; //c*d/((g-d)*(1.0+m))*0.95;
+    initialCond[1] = 0.05; //(1.0-initialCond[0])*(c+initialCond[0]*(1.0+m));
     odeApprox.approximationByM(c,g,d,theta,
                                0.01,30.0,150,
                                0.0,500.0,dt,1.0E-5,
@@ -238,7 +238,7 @@ void performManyApproximations_by_m_mu()
     //NumericalTrials *trials = new NumericalTrials();
 
     // Define the default values of the parameters.
-    double c  = 2.0;
+    double c  = 12.0;
     double g  = 0.6;
     double d  = 0.1;
     double mu = 0.01; // 0.0095
@@ -280,7 +280,7 @@ void determineSteadyState()
     double c  = 2.0;
     double g  = 0.6;
     double d  = 0.1;
-    double m  = 0.01;
+    double m  = 40.0;
 
     std::ostringstream filename("");
     filename.str("");
@@ -299,6 +299,8 @@ void determineSteadyState()
         SKIP_PRINT_UPDATE,SKIP_FILE_SAVE);
 
 }
+
+
 
 
 #endif // MAINROUTINES_H

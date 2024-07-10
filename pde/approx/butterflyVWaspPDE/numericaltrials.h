@@ -71,7 +71,7 @@ public:
             int legendrePolyDegree,
             double maxDeltaNorm, int maxNewtonSteps,
             int skipPrint, int msgID, long which,
-            Butterflies *initialCondition
+            Butterflies *initialCondition = nullptr
         );
 
     int approximateSystemHysteresis(double mu,
@@ -102,6 +102,7 @@ public:
 
     Butterflies* getButterflies() { return(theButterflies); }
     void printState() { theButterflies->printState(); }
+    void setButterflyState(Butterflies *state) { if (theButterflies != nullptr) theButterflies->copyState(state); };
 
 protected:
 

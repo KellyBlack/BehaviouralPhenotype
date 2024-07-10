@@ -11,7 +11,7 @@ public:
     
     virtual void buildJacobianTimeStepping();
     virtual void buildjacobianSteadyState();
-    virtual void updateNewtonStep();
+    virtual void updateNewtonStep(double jumpFraction=1.0,bool positize=false);
     virtual void calculateRHSTimeStepping();
     virtual void calculateRHSSteadyState();
     virtual void copyCurrentStateToTemp();

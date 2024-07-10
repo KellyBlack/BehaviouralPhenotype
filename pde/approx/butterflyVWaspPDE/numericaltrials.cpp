@@ -726,10 +726,17 @@ int NumericalTrials::approximateSystemTrackRepeating(
     long currentNumberProcesses = 0;
     long totalRuns = 0;
     for(mLupe=0;mLupe<static_cast<unsigned long>(numberM);++mLupe)
+    {
+        // Calculate the value of m and reset the initial estimate of the steady state.
+        currentM = mLow + static_cast<double>(mLupe)*(mHigh-mLow)/static_cast<double>(numberM-1);
+        theButterflies->initializeButterfliesConstant(d*c/(g-d),g*c/(g-d)*(g-d-d*c)/(g-d));
+        theButterflies->setMu(currentDiffusion);
+        theButterflies->setM(currentM);
+        theButterflies->initializeButterfliesConstant(d*c/(g-d),g*c/(g-d)*(g-d-d*c)/(g-d));
+
         for(diffusionLupe=0;diffusionLupe<static_cast<unsigned long>(numberMu);++diffusionLupe)
         {
-            // Calculate the value of m and the diffusion coefficient.
-            currentM = mLow + static_cast<double>(mLupe)*(mHigh-mLow)/static_cast<double>(numberM-1);
+            // Calculate the value of the diffusion coefficient.
             currentDiffusion = muLow + static_cast<double>(diffusionLupe)*(muHigh-muLow)/static_cast<unsigned long>(numberMu-1);
 
             theButterflies->setMu(currentDiffusion);
@@ -757,6 +764,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
             {
                 theButterflies->initializeButterfliesConstant(d*c/(g-d),g*c/(g-d)*(g-d-d*c)/(g-d));
             }
+            //newTrial->setButterflyState(theButterflies);
 
             newProcess->trial = static_cast<ApproximationBase*>(newTrial);
             newProcess->process = new std::thread(
@@ -798,6 +806,7 @@ int NumericalTrials::approximateSystemTrackRepeating(
 
             }
         }
+    }
     std::cout << std::endl << std::endl << "All processes finished. " << currentNumberProcesses  << std::endl;
 
     // All of the process have been started. Now wait for them all to end and record the results.
@@ -875,10 +884,11 @@ int NumericalTrials::approximateSystemQuietResponse(
     theButterflies->setDT(dt);
 
     //theButterflies->initializeButterflies();
-    //theButterflies->initializeButterfliesGaussian(1.0,mu*0.25);
-    theButterflies->initializeButterfliesConstant(0.7);
-    theButterflies->copyCurrentState(maxButterflyProfile);
-    theButterflies->copyState(initialCondition);
+    theButterflies->initializeButterfliesGaussian(1.0,mu*0.25);
+    //theButterflies->initializeButterfliesConstant(0.7);
+    //theButterflies->copyCurrentState(maxButterflyProfile);
+    if(initialCondition != nullptr)
+        theButterflies->copyState(initialCondition);
     double maxButterfliesDensity = theButterflies->totalButterflyPopulation();
     double prevButterflyDensity = maxButterfliesDensity;
     double minButterfliesDensity = maxButterfliesDensity;
@@ -1357,6 +1367,10 @@ int NumericalTrials::approximateSteadyState(
         if(theButterflies->steadyStateApprox(maxDeltaNorm,maxNewtonSteps,true)< 0)
         {
             std::cout << std::endl << "Error - Newton's Method did not converge." << std::endl;
+
+            double t = 0.0;
+            theButterflies->writeBinaryCurrentApprox(t,binFile);
+
             return(0);
         }
     }
@@ -1371,11 +1385,12 @@ int NumericalTrials::approximateSteadyState(
         std::cout << std::endl << "Binary file written" << std::endl;
     }
     if(butterflies != nullptr)
-        butterflies->copyState(theButterflies);
+        theButterflies->copyState(butterflies);
     delete theButterflies;
 
     return(1);
 }
+
 
 void NumericalTrials::saveResults(std::string filename)
 {

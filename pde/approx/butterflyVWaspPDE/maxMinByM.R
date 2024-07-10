@@ -41,7 +41,7 @@ filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.5.csv
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.6.csv'
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.7500.csv'
 filename <- '../build-butterflyVWaspPDE-Desktop-Debug/changingMResults_c=2.7500_smallMu.csv'
-filename <- '/tmp/changingMResults_c=2.0000.csv'
+filename <- '/tmp/changingMResults_c=12.0000.csv'
 a <- read.csv(filename)
 
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c1.1.csv'
@@ -52,7 +52,7 @@ odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.5.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c2.6.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c-2.7500.csv'
 odeFilename <- '../build-butterflyVWaspPDE-Desktop-Debug/rk45_c-2.7500.csv'
-odeFilename <- '/tmp/rk45_c-2.0000.csv'
+odeFilename <- '/tmp/rk45_c-12.0000.csv'
 ode <- read.csv(odeFilename)
 
 plot.new()

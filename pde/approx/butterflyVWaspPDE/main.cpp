@@ -17,7 +17,7 @@ int main()
 
      std::cout << "Starting" << std::endl;
 
-    //odeApproximation();
+    odeApproximation();
     //performManyApprpoximations_m();
     //performManyApprpoximations_m_c();
     //makeOneApproximation();
